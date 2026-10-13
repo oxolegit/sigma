@@ -17,16 +17,7 @@ chapters:
     title: Диффузия
     lessons:
       - { n: 7, title: Баланс и закон Фика, ref: '§2.1–2.2' }
-      - n: 8
-        title: Уравнение диффузии и граничные условия
-        ref: '§2.3–2.5'
-        formulas:
-          - { title: Уравнение диффузии, tex: '\Delta\Phi - \frac{\Phi}{L^2} + \frac{S}{D} = 0,\qquad L^2 = \frac{D}{\Sigma_a}', note: '$\overline{r^2} = 6L^2$ — от рождения до поглощения.' }
-          - { title: Граница двух сред, tex: '\Phi_1 = \Phi_2,\qquad D_1\nabla_n\Phi_1 = D_2\nabla_n\Phi_2' }
-          - { title: Граница с вакуумом, tex: '\frac{\nabla_n\Phi}{\Phi} = -\frac{1}{2D},\qquad \alpha = \tfrac{2}{3}\lambda_{tr}\ (0.71\,\lambda_{tr})', note: 'Поток обращается в ноль на расстоянии $\alpha$ за поверхностью.' }
-          - { title: Условие на источнике, tex: '\lim_{R\to0}\oint i_n\,dS = q' }
-          - { title: Точечный источник, tex: '\Phi(r) = \frac{q\,e^{-r/L}}{4\pi D r}' }
-          - { title: Плоский и нитевой источники, tex: '\Phi_{\text{пл}} = \frac{qL}{2D}\,e^{-|x|/L},\qquad \Phi_{\text{нит}} = \frac{q}{2\pi D}\,K_0\!\left(\frac{\rho}{L}\right)' }
+      - { n: 8, title: Уравнение диффузии и граничные условия, ref: '§2.3–2.5' }
   - title: Дополнения
     lessons:
       - { n: 9, title: Квантовая картина взаимодействия }
