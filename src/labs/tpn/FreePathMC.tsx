@@ -51,13 +51,16 @@ export default function FreePathMC() {
     const hist = densityHistogram(xs.current, BINS, xmax);
     const bw = xmax / BINS;
     f.clip(() => {
-      g.fillStyle = token('accent-soft');
+      // Заливка — цвет серии с прозрачностью 0.22, как знак «столбец» в легенде.
+      g.fillStyle = token(SERIES.hist.color);
       g.strokeStyle = token(SERIES.hist.color);
       g.lineWidth = 1;
       hist.forEach((v, b) => {
         if (!v) return;
         const x0 = f.X(b * bw), x1 = f.X((b + 1) * bw), y = f.Y(v), y0 = f.Y(0);
+        g.globalAlpha = 0.22;
         g.fillRect(x0, y, x1 - x0, y0 - y);
+        g.globalAlpha = 1;
         g.strokeRect(Math.round(x0) + 0.5, Math.round(y) + 0.5, Math.round(x1 - x0), Math.round(y0 - y));
       });
       const pts: [number, number][] = [];

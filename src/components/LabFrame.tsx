@@ -21,13 +21,17 @@ export interface LegendItem {
 export interface LabFrameProps {
   n?: string; title: string; kind?: '2D' | '3D';
   readout?: Readout[]; legend?: LegendItem[]; controls?: ReactNode; actions?: ReactNode; caption?: ReactNode; children: ReactNode;
+  /** Вывод из чисел словами: «ƛ ≥ R — нейтрон ведёт себя как волна». Тон — знаком и словом, не только цветом. */
+  status?: { tone: 'ok' | 'warn' | 'bad'; text: ReactNode };
 }
+
+const STATUS_MARK = { ok: '✓', warn: '!', bad: '✕' } as const;
 
 function Swatch({ color, mark = 'line' }: Pick<LegendItem, 'color' | 'mark'>) {
   const stroke = { stroke: `var(--${color})` } as CSSProperties;
   return (
     <svg className={`rz-legend-mark is-${mark}`} viewBox="0 0 22 12" data-token={color} aria-hidden="true">
-      {mark === 'bar' && <rect x="4" y="1" width="14" height="10" style={{ ...stroke, fill: 'var(--accent-soft)' }} />}
+      {mark === 'bar' && <rect x="4" y="1" width="14" height="10" style={{ ...stroke, fill: `var(--${color})`, fillOpacity: 0.22 }} />}
       {mark === 'zigzag' && <polyline points="1,9 6,3 11,9 16,3 21,9" style={stroke} />}
       {(mark === 'line' || mark === 'dot') && <line x1="1" y1="6" x2={mark === 'dot' ? 17 : 21} y2="6" style={stroke} />}
       {mark === 'dash' && <line x1="1" y1="6" x2="21" y2="6" strokeDasharray="4 3" style={stroke} />}
@@ -37,7 +41,7 @@ function Swatch({ color, mark = 'line' }: Pick<LegendItem, 'color' | 'mark'>) {
 }
 
 /** Рамка лаборатории: метка, заголовок, сцена, легенда, строка чисел (объявляется скринридером), ручки, подпись. */
-export function LabFrame({ n, title, kind, readout, legend, controls, actions, caption, children }: LabFrameProps) {
+export function LabFrame({ n, title, kind, readout, legend, controls, actions, caption, children, status }: LabFrameProps) {
   return (
     <figure className={cx('rz-lab', kind === '3D' && 'rz-lab-3d')}>
       <figcaption className="rz-lab-head">
@@ -76,6 +80,12 @@ export function LabFrame({ n, title, kind, readout, legend, controls, actions, c
             </span>
           ))}
         </div>
+      )}
+      {status && (
+        <p className={`rz-lab-status is-${status.tone}`} role="status">
+          <span className="rz-lab-status-mark" aria-hidden="true">{STATUS_MARK[status.tone]}</span>
+          <span><Rich>{status.text}</Rich></span>
+        </p>
       )}
       {controls && <div className="rz-lab-controls">{controls}</div>}
       {caption && <p className="rz-lab-caption"><Rich>{caption}</Rich></p>}
