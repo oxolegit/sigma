@@ -29,13 +29,15 @@
 
 ## Быстрый старт
 
-Нужен Node.js 22+.
+Нужен Node.js 22+. E2E-тесты локально запускаются в установленном Microsoft Edge.
 
 ```sh
 npm install
-npm run dev       # http://localhost:4321
-npm run build     # astro check + сборка в dist/
-npm run preview   # просмотр собранного сайта
+npm run dev        # http://localhost:4321, витрина компонентов — /dev/components/
+npm run build      # astro check + сборка в dist/
+npm run preview    # просмотр собранного сайта
+npm test           # юнит-тесты (Vitest)
+npm run test:e2e   # смоук-тесты в браузере (Playwright): 1280px светлая и 390px тёмная тема
 ```
 
 ## Структура
@@ -80,7 +82,11 @@ $$I(x) = I_0\, e^{-\Sigma_t x}$$
 <BeamAttenuation client:visible />
 ```
 
-TeX во frontmatter пишите в одинарных кавычках — тогда обратные слэши не нужно экранировать.
+Тонкости:
+
+- TeX во frontmatter — в одинарных кавычках, тогда обратные слэши не нужно экранировать.
+- Текстовые пропсы компонентов (вопрос, варианты ответа, объяснение, шаги вывода, пункты «Что спросят», подписи) понимают строчные формулы `$…$`: в острова Astro можно передать только строки, не JSX.
+- В файлах `.astro` TeX в атрибуте передавайте через `String.raw`: ``<TeX tex={String.raw`\lambda = 1/\Sigma_t`} />``. Обычная строка `tex="\frac…"` теряет обратные слэши.
 
 ## Прогресс
 
