@@ -77,14 +77,15 @@ const meta = [
 
   /* Тело урока: текст — колонкой 68 знаков серифом, лаборатории и выводы — шире */
   .sg-lesson-body { display: flex; flex-direction: column; }
-  .sg-lesson-body > :is(p, ul, ol, blockquote, .math-display, h2, h3) { max-width: var(--measure); }
+  .sg-lesson-body > :is(p, ul, ol, blockquote, .katex-display, h2, h3) { max-width: var(--measure); }
   .sg-lesson-body > :is(p, ul, ol) { margin: 0 0 18px; font: 400 18px/30px var(--font-serif); }
   .sg-lesson-body > :is(ul, ol) { padding-left: 1.4em; }
   .sg-lesson-body li + li { margin-top: 6px; }
   .sg-lesson-body > h2 { margin: var(--space-8) 0 14px; font: 600 22px/28px var(--font-sans); }
   .sg-lesson-body > h2:first-child { margin-top: 0; }
   .sg-lesson-body > h3 { margin: var(--space-6) 0 10px; font: 600 18px/24px var(--font-sans); }
-  .sg-lesson-body > .math-display { margin: 0 0 18px; overflow-x: auto; overflow-y: hidden; }
+  /* Выносная формула из MDX — span.katex-display прямо в теле урока: на узком экране прокручивается, а не вылезает */
+  .sg-lesson-body > .katex-display { display: block; margin: 0 0 18px; padding: 2px 0; overflow-x: auto; overflow-y: hidden; }
   .sg-lesson-body .katex-display { margin: 0.4em 0; }
   .sg-lesson-body > blockquote { margin: 0 0 18px; padding: 2px 0 2px var(--space-4); border-left: 2px solid var(--rule-strong); }
   .sg-lesson-body > blockquote p { margin: 0 0 10px; font: 400 17px/28px var(--font-serif); }
