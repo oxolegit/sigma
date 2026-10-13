@@ -89,6 +89,27 @@ export function decodeProgress(s: string): [string, number][] {
   return out;
 }
 
+/** Последний открытый урок — для «Продолжить» в каталоге и на странице курса. */
+export interface LastVisit { course: string; n: number; title: string; courseTitle: string; href: string }
+const LAST_KEY = 'sigma:last';
+
+export function rememberVisit(v: LastVisit) {
+  try { localStorage.setItem(LAST_KEY, JSON.stringify(v)); } catch {}
+}
+
+/** Читает последний урок; всё подозрительное (чужая ссылка, битый JSON) — null. */
+export function lastVisit(course?: string): LastVisit | null {
+  try {
+    const v = JSON.parse(localStorage.getItem(LAST_KEY) ?? 'null') as Partial<LastVisit> | null;
+    if (!v || typeof v.href !== 'string' || !/^\/[a-z0-9-]+\/[a-z0-9-]+\/$/.test(v.href)) return null;
+    if (typeof v.course !== 'string' || typeof v.n !== 'number' || typeof v.title !== 'string') return null;
+    if (course && v.course !== course) return null;
+    return { course: v.course, n: v.n, title: v.title, courseTitle: String(v.courseTitle ?? ''), href: v.href };
+  } catch {
+    return null;
+  }
+}
+
 /** Ссылка, открыв которую на другом устройстве, получишь этот прогресс. */
 export function progressLink(origin: string, map: ProgressMap = $progress.get()): string {
   return `${origin}/#p=${encodeProgress(map)}`;
