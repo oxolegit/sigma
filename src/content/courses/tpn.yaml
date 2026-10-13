@@ -1,22 +1,68 @@
 title: Теория переноса нейтронов
 source: Крючков, Юрова · МИФИ, 2007
-subject: Ядерная физика
+description: По пособию В. П. Крючкова и Н. В. Юровой и лекциям курса. От нейтрона как частицы до уравнения диффузии с граничными условиями.
+subject: Физика реакторов
 semester: 1 семестр
 chapters:
   - n: 1
     title: Нейтрон и среда
     lessons:
-      - { n: 1, title: Нейтрон как объект теории, ref: '§1.2' }
-      - { n: 2, title: Источники нейтронов и деление, ref: '§1.3' }
-      - { n: 3, title: Взаимодействия и сечения, ref: '§1.4–1.5' }
+      - n: 1
+        title: Нейтрон как объект теории
+        ref: '§1.2'
+        formulas:
+          - { title: Скорость нейтрона, tex: 'V = 1.383\cdot10^{6}\sqrt{E\,[\text{эВ}]}\ \text{см/с}', note: 'Тепловой нейтрон: $E = 0.0253$ эВ, $V = 2200$ м/с.' }
+          - { title: Приведённая длина волны де Бройля, tex: '\bar\lambda = \frac{\hbar}{\sqrt{2mE}} = \frac{4.55\cdot10^{-10}}{\sqrt{E\,[\text{эВ}]}}\ \text{см}' }
+          - { title: Радиус ядра, tex: 'R \approx 1.4\cdot10^{-13}\,A^{1/3}\ \text{см}' }
+      - n: 2
+        title: Источники нейтронов и деление
+        ref: '§1.3'
+        formulas:
+          - { title: Энергия возбуждения составного ядра, tex: 'E^* = E_{\text{св}} + E', note: 'Ядро делящееся, если $E_{\text{св}} > U_{\text{б}} \approx 5.5$–$6$ МэВ.' }
+          - { title: Спектр нейтронов деления, tex: '\bar E \approx 2\ \text{МэВ},\qquad E_{\text{наиб}} \approx 0.7\ \text{МэВ}' }
+      - n: 3
+        title: Взаимодействия и сечения
+        ref: '§1.4–1.5'
+        formulas:
+          - { title: Микросечение из опыта, tex: '\sigma = \frac{R}{I N S X},\qquad 1\ \text{б} = 10^{-24}\ \text{см}^2', note: 'Тонкий образец: $X \ll \lambda$.' }
+          - { title: Состав полного сечения, tex: '\sigma_{t} = \sigma_a + \sigma_s,\quad \sigma_a = \sigma_c + \sigma_f + \sigma_{n,2n} + \dots,\quad \sigma_s = \sigma_{el} + \sigma_{in}' }
+          - { title: Макросечение смеси, tex: '\Sigma = \sum_k N_k \sigma^k,\qquad N = \frac{\rho N_A}{M}', note: '$N$ — ядерная плотность, см⁻³.' }
       - { n: 4, title: Длина свободного пробега, ref: '§1.6' }
-      - { n: 5, title: 'Нейтронное поле: поток и ток', ref: '§1.7' }
-      - { n: 6, title: Группы и усреднение сечений }
+      - n: 5
+        title: 'Нейтронное поле: поток и ток'
+        ref: '§1.7'
+        formulas:
+          - { title: Поток и ток, tex: '\Phi = nV,\qquad i_n = \Phi\,(\vec\Omega\cdot\vec n),\qquad \vec i = \int_{4\pi}\vec\Omega\,\Phi\,d\vec\Omega' }
+          - { title: Полный и односторонние токи, tex: 'i_n = \vec i\cdot\vec n = i_n^+ - i_n^-', note: 'Односторонние токи неотрицательны; полный ток может быть отрицательным.' }
+          - { title: Односторонние токи в почти изотропном поле, tex: 'i^\pm = \frac{\Phi}{4} \pm \frac{i_n}{2}', note: 'В изотропном поле $i^\pm = \Phi/4$.' }
+          - { title: Скорость реакций, tex: 'R_i = \Sigma_i\,\Phi\,\Delta V' }
+      - n: 6
+        title: Группы и усреднение сечений
+        ref: лекции
+        formulas:
+          - { title: Групповой поток, tex: '\Phi_g = \int_{\Delta E_g}\Phi\,dE', note: 'Группа 1 — самые быстрые нейтроны.' }
+          - { title: Групповое сечение, tex: '\Sigma_g = \frac{\int_{\Delta E_g}\Sigma\,\Phi\,dE}{\int_{\Delta E_g}\Phi\,dE}', note: 'Вес — поток: так сохраняется скорость реакций в группе.' }
   - n: 2
     title: Диффузия
     lessons:
-      - { n: 7, title: Баланс и закон Фика, ref: '§2.1–2.2' }
-      - { n: 8, title: Уравнение диффузии и граничные условия, ref: '§2.3–2.5' }
+      - n: 7
+        title: Баланс и закон Фика
+        ref: '§2.1–2.2'
+        formulas:
+          - { title: Уравнение баланса, tex: '-\operatorname{div}\vec i - \Sigma_a\Phi + \nu_f\Sigma_f\Phi + S = \frac{1}{V}\frac{\partial\Phi}{\partial t}' }
+          - { title: Закон Фика, tex: '\vec i = -D\,\nabla\Phi,\qquad D = \frac{1}{3\Sigma_{tr}}' }
+          - { title: Транспортное сечение, tex: '\Sigma_{tr} = \Sigma_t - \bar\mu\,\Sigma_s,\qquad \bar\mu = \frac{2}{3A}' }
+          - { title: Односторонние токи по Фику, tex: 'i_n^\pm = \frac{\Phi}{4} \mp \frac{D}{2}\nabla_n\Phi' }
+      - n: 8
+        title: Уравнение диффузии и граничные условия
+        ref: '§2.3–2.5'
+        formulas:
+          - { title: Уравнение диффузии, tex: '\Delta\Phi - \frac{\Phi}{L^2} + \frac{S}{D} = 0,\qquad L^2 = \frac{D}{\Sigma_a}', note: '$\overline{r^2} = 6L^2$ — от рождения до поглощения.' }
+          - { title: Граница двух сред, tex: '\Phi_1 = \Phi_2,\qquad D_1\nabla_n\Phi_1 = D_2\nabla_n\Phi_2' }
+          - { title: Граница с вакуумом, tex: '\frac{\nabla_n\Phi}{\Phi} = -\frac{1}{2D},\qquad \alpha = \tfrac{2}{3}\lambda_{tr}\ (0.71\,\lambda_{tr})', note: 'Поток обращается в ноль на расстоянии $\alpha$ за поверхностью.' }
+          - { title: Условие на источнике, tex: '\lim_{R\to0}\oint i_n\,dS = q' }
+          - { title: Точечный источник, tex: '\Phi(r) = \frac{q\,e^{-r/L}}{4\pi D r}' }
+          - { title: Плоский и нитевой источники, tex: '\Phi_{\text{пл}} = \frac{qL}{2D}\,e^{-|x|/L},\qquad \Phi_{\text{нит}} = \frac{q}{2\pi D}\,K_0\!\left(\frac{\rho}{L}\right)' }
   - title: Дополнения
     lessons:
       - { n: 9, title: Квантовая картина взаимодействия }
