@@ -116,8 +116,9 @@ export function strokeCurve(g: CanvasRenderingContext2D, pts: [number, number][]
   g.restore();
 }
 
-/** Вертикальный маркер характерной величины: пунктир signal с подписью. */
-export function markerLine(g: CanvasRenderingContext2D, f: Frame, x: number, label: string, color = token('signal')) {
+/** Вертикальный маркер характерной величины: пунктир signal с подписью.
+ *  row — ряд подписи сверху вниз, чтобы подписи соседних маркеров не накладывались. */
+export function markerLine(g: CanvasRenderingContext2D, f: Frame, x: number, label: string, color = token('signal'), row = 0) {
   const px = Math.round(f.X(x)) + 0.5;
   g.save();
   g.strokeStyle = color;
@@ -130,6 +131,6 @@ export function markerLine(g: CanvasRenderingContext2D, f: Frame, x: number, lab
   const right = px + 8 + g.measureText(label).width < f.left + f.width;
   g.textAlign = right ? 'left' : 'right';
   g.textBaseline = 'top';
-  g.fillText(label, right ? px + 8 : px - 8, f.top + 22);
+  g.fillText(label, right ? px + 8 : px - 8, f.top + 22 + row * 18);
   g.restore();
 }
