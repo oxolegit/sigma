@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import ProgressImport from '../components/live/ProgressImport';
+import SiteFooter from '../components/SiteFooter.astro';
 import { SITE } from '../lib/site';
 interface Props {
   title: string;
@@ -69,6 +70,7 @@ const image = new URL(SITE.image.src, Astro.site);
   </head>
   <body>
     <slot />
+    <SiteFooter />
     <ProgressImport client:idle />
   </body>
 </html>

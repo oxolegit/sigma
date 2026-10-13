@@ -1,0 +1,23 @@
+---
+/** Подвал сайта: о проекте, исходный код, лицензия. */
+import { SITE } from '../lib/site';
+---
+<footer class="sg-foot">
+  <div class="sg-foot-in">
+    <span class="sg-foot-name">Σ {SITE.name}</span>
+    <span>Открытый проект: тексты и код — под лицензией <a href={SITE.license.href} rel="license">{SITE.license.name}</a>, со ссылкой на репозиторий.</span>
+    <nav class="sg-foot-nav" aria-label="Ссылки">
+      <a href="/#about">О проекте</a>
+      <a href={SITE.repo}>Исходный код на GitHub</a>
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .sg-foot { border-top: 1px solid var(--rule); background: var(--surface-1); }
+  .sg-foot-in { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-6); max-width: var(--content-max); margin: 0 auto; padding: var(--space-6); font: 400 14px/22px var(--font-sans); color: var(--ink-muted); }
+  .sg-foot-name { font-weight: 600; color: var(--ink); }
+  .sg-foot-nav { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4); margin-left: auto; }
+  .sg-foot-nav a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 500; }
+  @media print { .sg-foot { display: none; } }
+</style>
