@@ -1,0 +1,87 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import { Button, FormulaCard } from '../../components';
+import PrintButton from '../../components/live/PrintButton';
+import { courseHref, examHref, getCourse, type CourseData } from '../../lib/courses';
+import { plural } from '../../lib/plural';
+
+export async function getStaticPaths() {
+  const courses = (await getCollection('courses')).filter((c) => !c.data.example);
+  return Promise.all(courses.map(async (c) => ({ params: { course: c.id }, props: { data: await getCourse(c.id) } })));
+}
+
+const { data } = Astro.props as { data: CourseData };
+const c = data.course.data;
+const groups = data.lessons.filter((l) => l.formulas.length);
+const count = groups.reduce((s, g) => s + g.formulas.length, 0);
+const range = groups.length ? `Уроки ${groups[0]!.n}–${groups[groups.length - 1]!.n}` : '';
+---
+<Base title={`Шпаргалка — ${c.title} — Sigma`}>
+  <div class="sg-page">
+    <div class="sg-no-print"><SiteHeader course={{ title: c.title, href: courseHref(data.id) }} /></div>
+
+    <section class="sg-sheet-head">
+      <div class="sg-sheet-text">
+        <div class="sg-eyebrow sg-eyebrow-accent">Шпаргалка формул</div>
+        <h1>{c.title}</h1>
+        <p>{[c.source, range && `${range}, ${count} ${plural(count, 'формула', 'формулы', 'формул')}`].filter(Boolean).join('. ')}. Печатается на А4 в две колонки.</p>
+      </div>
+      <div class="sg-row sg-no-print">
+        <PrintButton client:idle />
+        {data.exam && <Button href={examHref(data.id)}>Пробная контрольная</Button>}
+      </div>
+    </section>
+
+    <div class="rz-sheet sg-sheet">
+      {groups.map((l) => (
+        <details class="sg-sheet-group" open>
+          <summary>
+            <span class="sg-sheet-n">{l.n}.</span> {l.title}
+            {l.href && <a class="sg-sheet-link sg-no-print" href={l.href}>к уроку</a>}
+          </summary>
+          {l.formulas.map((f, i) => (
+            <FormulaCard n={`${l.n}.${i + 1}`} title={f.title} tex={f.tex} ref={l.ref} note={f.note} />
+          ))}
+        </details>
+      ))}
+    </div>
+  </div>
+</Base>
+
+<script>
+  // Свёрнутые на телефоне уроки иначе не попадут на бумагу.
+  addEventListener('beforeprint', () => document.querySelectorAll<HTMLDetailsElement>('.sg-sheet-group').forEach((d) => { d.open = true; }));
+</script>
+
+<style is:global>
+  .sg-sheet-head { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-4) var(--space-8); padding: 40px 0 24px; border-bottom: 1px solid var(--rule); }
+  .sg-sheet-text { flex: 1 1 520px; display: flex; flex-direction: column; gap: 10px; }
+  .sg-sheet-text h1 { margin: 0; font: 600 34px/40px var(--font-sans); letter-spacing: -0.015em; }
+  .sg-sheet-text p { margin: 0; font: 400 16px/26px var(--font-serif); color: var(--ink-muted); }
+  .sg-sheet { padding-top: 28px; }
+  .sg-sheet-group { break-inside: avoid-column; margin-bottom: 28px; }
+  .sg-sheet-group > summary { display: flex; align-items: baseline; gap: var(--space-2); min-height: 32px; margin: 0 0 4px; font: 600 17px/24px var(--font-sans); cursor: pointer; list-style: none; }
+  .sg-sheet-group > summary::-webkit-details-marker { display: none; }
+  .sg-sheet-group > summary::before { content: '▾'; flex: none; width: 1em; color: var(--ink-muted); font-size: 13px; }
+  .sg-sheet-group:not([open]) > summary::before { content: '▸'; }
+  .sg-sheet-n { color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+  .sg-sheet-link { margin-left: auto; font: 500 13px/18px var(--font-sans); color: var(--accent); }
+  .sg-sheet .rz-fcard { break-inside: avoid; }
+
+  @media (max-width: 899px) {
+    .sg-sheet-head { padding-top: var(--space-6); }
+    .sg-sheet-text h1 { font-size: 26px; line-height: 32px; }
+  }
+  @media print {
+    @page { size: A4; margin: 14mm 12mm; }
+    body { background: #fff; }
+    .sg-page { max-width: none; padding: 0; }
+    .sg-no-print { display: none !important; }
+    .sg-sheet-head { padding: 0 0 8px; }
+    .sg-sheet-text h1 { font-size: 20px; line-height: 26px; }
+    .sg-sheet { columns: 2; column-gap: 10mm; padding-top: 10px; }
+    .sg-sheet-group > summary::before { content: none; }
+  }
+</style>
