@@ -1,3 +1,5 @@
+import { useId } from 'react';
+
 export interface SelectProps {
   label: string;
   options: { value: string; label: string }[];
@@ -5,14 +7,16 @@ export interface SelectProps {
   onChange?: (v: string) => void;
 }
 
-/** Выпадающий список для ручек лаборатории — когда вариантов больше четырёх и переключатель не помещается. */
+/** Выпадающий список для ручек лаборатории — когда вариантов больше четырёх и переключатель не помещается.
+ *  Подпись связана со списком через for/id, а не обёрткой: иначе в доступное имя попадает и выбранный вариант. */
 export function Select({ label, options, value, onChange }: SelectProps) {
+  const id = useId();
   return (
-    <label className="rz-select">
-      <span className="rz-select-label">{label}</span>
-      <select value={value} onChange={(e) => onChange?.(e.target.value)}>
+    <div className="rz-select">
+      <label className="rz-select-label" htmlFor={id}>{label}</label>
+      <select id={id} value={value} onChange={(e) => onChange?.(e.target.value)}>
         {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
       </select>
-    </label>
+    </div>
   );
 }
