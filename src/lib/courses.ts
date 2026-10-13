@@ -2,9 +2,15 @@ import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
 import type { NavLesson } from '../components';
 
 type Formula = { title: string; tex: string; note?: string };
+export type Source = { id: string; cite: string; url?: string; note?: string };
+/** Ссылка урока на литературу, уже с описанием источника. */
+export type Reference = { source: Source; where: string };
 
 export interface OutlineLesson {
   n: number; title: string; ref?: string; chapter: string; href?: string;
+  /** «Глава 2», «Модуль 1» — для метки над заголовком урока. */
+  chapterNo?: string;
+  refs: Reference[];
   entry?: CollectionEntry<'lessons'>;
   formulas: Formula[];
 }
@@ -46,7 +52,7 @@ export async function getCourse(id: string): Promise<CourseData> {
   const lessons: OutlineLesson[] = [];
   const chapters = course.data.chapters.map((ch) => {
     // У глав без номера («Дополнения») метки нет — иначе название повторится дважды.
-    const label = ch.n ? `Глава ${ch.n}` : '';
+    const label = ch.n ? `${course.data.chapterLabel} ${ch.n}` : '';
     const title = ch.n ? `${label} · ${ch.title}` : ch.title;
     return {
       title, label, name: ch.title,
@@ -56,7 +62,12 @@ export async function getCourse(id: string): Promise<CourseData> {
           throw new Error(`Урок ${entry.id}: формулы заданы и в уроке, и в оглавлении курса — оставьте их в уроке`);
         }
         const href = entry ? lessonHref(id, entry) : undefined;
-        lessons.push({ n: l.n, title: l.title, ref: l.ref, chapter: title, href, entry, formulas: entry?.data.formulas.length ? entry.data.formulas : l.formulas });
+        const refs = (entry?.data.refs ?? []).map((r) => {
+          const source = course.data.literature.find((x) => x.id === r.source);
+          if (!source) throw new Error(`Урок ${entry!.id}: источника «${r.source}» нет в literature курса «${id}»`);
+          return { source, where: r.where };
+        });
+        lessons.push({ n: l.n, title: l.title, ref: l.ref, chapter: title, chapterNo: label || undefined, href, entry, refs, formulas: entry?.data.formulas.length ? entry.data.formulas : l.formulas });
         return { n: l.n, title: l.title, ref: l.ref, href };
       }),
     };

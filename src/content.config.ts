@@ -20,6 +20,21 @@ const courses = defineCollection({
     example: z.boolean().default(false),
     /** Плановое число лабораторий — только для заглушек; у настоящего курса считается по урокам. */
     labs: z.number().int().nonnegative().optional(),
+    /** Как называть разделы оглавления: «Глава», «Модуль». */
+    chapterLabel: z.string().default('Глава'),
+    /**
+     * Литература курса. Уроки ссылаются на неё по id (refs во frontmatter);
+     * на сайте — блок «Литература» в уроке и список на странице курса.
+     */
+    literature: z.array(z.object({
+      id: z.string(),
+      /** Библиографическое описание: автор, название, издание, город, издательство, год. */
+      cite: z.string(),
+      /** Страница издания (каталог, издательство), по которой сверены выходные данные. */
+      url: z.url().optional(),
+      /** Как читать ссылки: например, что главы нумеруются сквозь оба тома. */
+      note: z.string().optional(),
+    })).default([]),
     chapters: z.array(z.object({
       /** Номер главы; у «Дополнений» его нет. */
       n: z.number().optional(),
@@ -47,6 +62,8 @@ const lessons = defineCollection({
     lead: z.string().optional(),
     ask: z.array(z.string()).default([]),
     formulas: z.array(formula).default([]),
+    /** Где это в литературе курса: source — id из literature курса, where — глава или параграф. */
+    refs: z.array(z.object({ source: z.string(), where: z.string() })).default([]),
   }),
 });
 

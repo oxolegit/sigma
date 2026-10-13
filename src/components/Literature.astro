@@ -1,0 +1,40 @@
+---
+/**
+ * Литература: в уроке — источники и под каждым места в нём (главы, параграфы),
+ * на странице курса — весь список с примечаниями. Описание источника — ссылка на страницу издания,
+ * по которой сверены выходные данные.
+ */
+import type { Reference, Source } from '../lib/courses';
+interface Props { refs?: Reference[]; sources?: Source[]; title?: string }
+const { refs, sources, title = 'Литература' } = Astro.props;
+// В уроке один источник может встречаться несколько раз — показываем его один раз со списком мест.
+const groups = refs
+  ? [...new Map(refs.map((r) => [r.source.id, r.source])).values()].map((source) => ({ source, places: refs.filter((r) => r.source.id === source.id).map((r) => r.where) }))
+  : (sources ?? []).map((source) => ({ source, places: [] as string[] }));
+---
+{groups.length > 0 && (
+  <section class="sg-lit" aria-labelledby="sg-lit-title">
+    <h2 id="sg-lit-title">{title}</h2>
+    <ol>
+      {groups.map(({ source, places }) => (
+        <li>
+          <cite>{source.url ? <a href={source.url} rel="noopener">{source.cite}</a> : source.cite}</cite>
+          {places.length > 0 && <ul>{places.map((p) => <li>{p}</li>)}</ul>}
+          {!refs && source.note && <p>{source.note}</p>}
+        </li>
+      ))}
+    </ol>
+  </section>
+)}
+
+<style>
+  .sg-lit { max-width: var(--measure); padding-top: var(--space-6); border-top: 1px solid var(--rule); }
+  .sg-lit h2 { margin: 0 0 var(--space-3); font: 600 17px/24px var(--font-sans); }
+  .sg-lit ol { margin: 0; padding-left: 1.4em; display: flex; flex-direction: column; gap: var(--space-3); }
+  .sg-lit li { font: 400 15px/24px var(--font-serif); color: var(--ink-muted); }
+  .sg-lit cite { font-style: normal; color: var(--ink); }
+  .sg-lit cite a { color: inherit; text-decoration: underline; text-decoration-color: var(--rule-strong); text-underline-offset: 3px; }
+  .sg-lit cite a:hover { color: var(--accent); text-decoration-color: currentColor; }
+  .sg-lit ul { margin: 4px 0 0; padding-left: 1.2em; }
+  .sg-lit p { margin: 4px 0 0; font-size: 14px; line-height: 22px; }
+</style>

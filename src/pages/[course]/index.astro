@@ -5,6 +5,7 @@ import SiteHeader from '../../components/SiteHeader.astro';
 import CourseActions from '../../components/live/CourseActions';
 import CourseOutline from '../../components/live/CourseOutline';
 import LiveCourseProgress from '../../components/live/LiveCourseProgress';
+import Literature from '../../components/Literature.astro';
 import { examHref, getCourse, lessonStats, sheetHref, type CourseData } from '../../lib/courses';
 import { plural } from '../../lib/plural';
 
@@ -57,6 +58,8 @@ const stats = [
     </section>
 
     <CourseOutline client:idle course={data.id} chapters={chapters} />
+
+    <div class="sg-course-lit"><Literature sources={c.literature} /></div>
   </div>
 </Base>
 
@@ -74,6 +77,7 @@ const stats = [
   .sg-course-stats dt { font: 400 13px/18px var(--font-sans); color: var(--ink-muted); white-space: nowrap; }
   .sg-course-stats dd { margin: 0; font: 600 24px/28px var(--font-sans); font-variant-numeric: tabular-nums; }
 
+  .sg-course-lit { margin-top: var(--space-12); }
   .sg-outline { display: flex; flex-direction: column; gap: 40px; padding-top: var(--space-8); }
   .sg-outline-chapter { display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-12); }
   .sg-outline-head { flex: 0 0 240px; display: flex; flex-direction: column; gap: 6px; }
