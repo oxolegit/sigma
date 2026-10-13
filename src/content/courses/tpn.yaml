@@ -16,14 +16,7 @@ chapters:
   - n: 2
     title: Диффузия
     lessons:
-      - n: 7
-        title: Баланс и закон Фика
-        ref: '§2.1–2.2'
-        formulas:
-          - { title: Уравнение баланса, tex: '-\operatorname{div}\vec i - \Sigma_a\Phi + \nu_f\Sigma_f\Phi + S = \frac{1}{V}\frac{\partial\Phi}{\partial t}' }
-          - { title: Закон Фика, tex: '\vec i = -D\,\nabla\Phi,\qquad D = \frac{1}{3\Sigma_{tr}}' }
-          - { title: Транспортное сечение, tex: '\Sigma_{tr} = \Sigma_t - \bar\mu\,\Sigma_s,\qquad \bar\mu = \frac{2}{3A}' }
-          - { title: Односторонние токи по Фику, tex: 'i_n^\pm = \frac{\Phi}{4} \mp \frac{D}{2}\nabla_n\Phi' }
+      - { n: 7, title: Баланс и закон Фика, ref: '§2.1–2.2' }
       - n: 8
         title: Уравнение диффузии и граничные условия
         ref: '§2.3–2.5'
