@@ -131,3 +131,9 @@ button.rz-legend-item:focus-visible { outline: 2px solid var(--accent); outline-
 .sg-channel-fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: var(--radius-sm); background: var(--accent); }
 .sg-channel-err { position: absolute; top: 5px; height: 4px; background: var(--ink); opacity: .55; }
 .sg-channel-expect { position: absolute; top: -3px; bottom: -3px; width: 3px; margin-left: -1.5px; background: var(--signal); }
+
+/* Сцена и график рядом (лаборатория 2.2); на телефоне — друг под другом.
+   minmax(0, …) обязателен: иначе строка подстраивается под собственную высоту canvas и растёт без конца. */
+.sg-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); width: 100%; height: 100%; overflow: hidden; }
+.sg-split > canvas { display: block; width: 100%; height: 100%; }
+@media (max-width: 600px) { .sg-split { grid-template-columns: minmax(0, 1fr); grid-template-rows: repeat(2, minmax(0, 1fr)); } }

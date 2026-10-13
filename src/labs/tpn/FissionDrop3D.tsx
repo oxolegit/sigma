@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { Mesh, SphereGeometry, Vector3, type BufferAttribute } from 'three';
 import { Button, LabFrame, Select, Slider, type LegendItem } from '../../components';
+import { useCanvas } from '../../lib/canvas';
 import { isotropic, mulberry32 } from '../../lib/rng';
 import { LabScene, webglAvailable } from '../../lib/three';
 import { cassiniRadius, excitation, SADDLE, sampleNu, target, TARGETS, turningDeformation, volumeScale } from './fission';
+import { drawPotential, ENERGY_SERIES } from './fissionPlot';
 
 /** Частицы сцены: по этой таблице красятся объекты и строится легенда. */
 const PARTS = {
@@ -12,6 +14,8 @@ const PARTS = {
   neutron: { label: 'нейтроны', color: 'ink', mark: 'ball' },
   gamma: { label: 'γ-кванты', color: 'ink-muted', mark: 'ball' },
 } as const satisfies Record<string, LegendItem>;
+
+const LEGEND = [...Object.values(PARTS), ENERGY_SERIES.potential, ENERGY_SERIES.levelE, ENERGY_SERIES.levelB, ENERGY_SERIES.state];
 
 type Phase = 'idle' | 'in' | 'osc' | 'split';
 type Status = { tone: 'ok' | 'warn' | 'bad'; text: string };
@@ -25,6 +29,8 @@ export default function FissionDrop3D() {
   const [status, setStatus] = useState<Status>({ tone: 'warn', text: 'Выберите ядро и энергию нейтрона и запустите нейтрон.' });
   const [outcome, setOutcome] = useState('—');
   const [no3d, setNo3d] = useState(false);
+  // Деформация капли сейчас — точка на кривой V(ε) рядом со сценой.
+  const [deform, setDeform] = useState(0);
   const host = useRef<HTMLDivElement>(null);
   const lab = useRef<LabScene | null>(null);
   const launch = useRef<(Es: number, ub: number) => void>(() => {});
@@ -65,6 +71,7 @@ export default function FissionDrop3D() {
       }
       pos.needsUpdate = true;
       geo.computeVertexNormals();
+      setDeform(c);
     };
 
     const velocity = new Map<Mesh, Vector3>();
@@ -89,6 +96,7 @@ export default function FissionDrop3D() {
     const finishFission = () => {
       phase = 'split'; time = 0;
       nucleus.visible = false;
+      setDeform(1);
       frag1.visible = frag2.visible = true;
       frag1.position.set(-0.75, 0, 0);
       frag2.position.set(0.85, 0, 0);
@@ -172,11 +180,13 @@ export default function FissionDrop3D() {
     setStatus({ tone: 'warn', text: 'Выберите ядро и энергию нейтрона и запустите нейтрон.' });
   }, [id, E]);
 
+  const pot = useCanvas((g, w, h) => drawPotential(g, 0, 0, w, h, t, Es, deform), [id, E, deform]);
+
   return (
     <LabFrame
-      n="2.2" kind="3D" title="Ядро-капля после захвата нейтрона"
+      n="2.2" kind="3D" title="Ядро-капля после захвата нейтрона" stage="tall"
       actions={<Button variant="ghost" size="sm" onClick={() => lab.current?.resetView()} disabled={no3d}>Сбросить вид</Button>}
-      legend={Object.values(PARTS)}
+      legend={LEGEND}
       readout={[
         { tex: 'E^*', value: `= ${Es.toFixed(2)}`, unit: 'МэВ' },
         { tex: 'U_{\\text{б}}', value: `= ${t.ub.toFixed(2)}`, unit: 'МэВ' },
@@ -190,10 +200,13 @@ export default function FissionDrop3D() {
           <Button variant="primary" size="sm" onClick={() => (no3d ? setStatus({ tone: 'warn', text: 'Без WebGL анимации нет — исход показан в лаборатории 2.1.' }) : launch.current(Es, t.ub))}>Запустить нейтрон</Button>
         </div>
       </>}
-      caption="Рис. 2.2. Капельная модель: форма ядра — овалы Кассини с сохранением объёма. После захвата нейтрона составное ядро возбуждено и колеблется. Если $E^* \ge U_{\text{б}}$, шейка вытягивается и рвётся; иначе капля сбрасывает энергию γ-квантами. Сцену вращают мышью или пальцем, масштаб — колесом с Ctrl."
+      caption="Рис. 2.2. Капельная модель: форма ядра — овалы Кассини с сохранением объёма. После захвата нейтрона составное ядро возбуждено и колеблется. Если $E^* \ge U_{\text{б}}$, шейка вытягивается и рвётся; иначе капля сбрасывает энергию γ-квантами. Рядом — энергия деформации V(ε): точка показывает текущую форму капли и не поднимается выше уровня $E^*$ — перевалить через барьер она может, только если $E^*$ выше него. Сцену вращают мышью или пальцем, масштаб — колесом с Ctrl."
     >
-      <div ref={host} className="sg-scene" role="img" aria-label={`Ядро ${t.compound}: энергия возбуждения ${Es.toFixed(2)} МэВ, барьер ${t.ub} МэВ`}>
-        {no3d && <p className="sg-no3d">3D-сцена недоступна: браузер не поддерживает WebGL.</p>}
+      <div className="sg-split">
+        <div ref={host} className="sg-scene" role="img" aria-label={`Ядро ${t.compound}: энергия возбуждения ${Es.toFixed(2)} МэВ, барьер ${t.ub} МэВ`}>
+          {no3d && <p className="sg-no3d">3D-сцена недоступна: браузер не поддерживает WebGL.</p>}
+        </div>
+        <canvas ref={pot} role="img" aria-label={`Энергия деформации ${t.compound}: E* = ${Es.toFixed(2)} МэВ, барьер ${t.ub} МэВ, деформация ${deform.toFixed(2)}`} />
       </div>
     </LabFrame>
   );
