@@ -1,0 +1,18 @@
+---
+/** Блок «Проверка» в конце урока: метка, заголовок и вопросы (Quiz) внутри. */
+interface Props { title?: string }
+const { title = 'Вопросы к уроку' } = Astro.props;
+---
+<section class="sg-check" aria-labelledby="check-title">
+  <div class="sg-check-head">
+    <div class="sg-eyebrow">Проверка</div>
+    <h2 id="check-title">{title}</h2>
+  </div>
+  <slot />
+</section>
+
+<style>
+  .sg-check { display: flex; flex-direction: column; gap: var(--space-6); margin-top: var(--space-6); padding-top: var(--space-4); border-top: 1px solid var(--rule); }
+  .sg-check-head { display: flex; flex-direction: column; gap: var(--space-1); }
+  .sg-check-head h2 { margin: 0; font: 600 22px/28px var(--font-sans); }
+</style>

@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import ProgressImport from '../components/live/ProgressImport';
 interface Props { title: string; description?: string }
 const { title, description = 'Интерактивные курсы для подготовки к контрольным и экзаменам' } = Astro.props;
 ---
@@ -14,14 +15,17 @@ const { title, description = 'Интерактивные курсы для по�
     <slot name="head" />
     <script is:inline>
       (function () {
-        var t = null;
-        try { t = localStorage.getItem('sigma:theme'); } catch (e) {}
-        if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        document.documentElement.dataset.theme = t;
+        var root = document.documentElement, mq = matchMedia('(prefers-color-scheme: dark)');
+        var saved = function () { try { return localStorage.getItem('sigma:theme'); } catch (e) { return null; } };
+        var apply = function () { root.dataset.theme = saved() || (mq.matches ? 'dark' : 'light'); };
+        apply();
+        // Пока тема не выбрана явно, сайт следует за системой и на лету.
+        mq.addEventListener('change', function () { if (!saved()) apply(); });
       })();
     </script>
   </head>
   <body>
     <slot />
+    <ProgressImport client:idle />
   </body>
 </html>
