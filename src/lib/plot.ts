@@ -13,6 +13,16 @@ export function niceTicks(min: number, max: number, count = 5): number[] {
 }
 
 const SUP: Record<string, string> = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+/** Подписи делений с одинаковым числом знаков, по шагу: [0, 5, 10] → «0», «5», «10»; [0, 0.5, 1] → «0.0», «0.5», «1.0». */
+export function tickFormat(ticks: readonly number[]): (v: number) => string {
+  const step = ticks.length > 1 ? Math.abs(ticks[1]! - ticks[0]!) : 1;
+  // Сколько знаков после точки у самого шага: 0.25 → 2, 0.5 → 1, 5 → 0 (с учётом записи вида 2.5e-7).
+  const [mantissa, exp] = String(Number(step.toPrecision(6))).split('e');
+  const decimals = (mantissa!.split('.')[1]?.length ?? 0) - Number(exp ?? 0);
+  const digits = Math.max(0, Math.min(decimals, 10));
+  return (v) => v.toFixed(digits);
+}
+
 /** Деления логарифмической оси — степени десяти от min до max; при многих декадах — через одну-две. */
 export function decadeTicks(min: number, max: number, maxCount = 9): number[] {
   const e0 = Math.ceil(Math.log10(min) - 1e-9);

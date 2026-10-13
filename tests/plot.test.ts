@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { decadeLabel, decadeTicks, niceTicks, pow10Label } from '../src/lib/plot';
+import { decadeLabel, decadeTicks, niceTicks, pow10Label, tickFormat } from '../src/lib/plot';
 
 describe('decadeTicks', () => {
   it('степени десяти внутри диапазона', () => {
@@ -30,5 +30,14 @@ describe('pow10Label', () => {
     expect(pow10Label(0)).toBe('1');
     expect(pow10Label(-2)).toBe('10⁻²');
     expect(pow10Label(12)).toBe('10¹²');
+  });
+});
+
+describe('tickFormat', () => {
+  it('одинаковое число знаков по шагу оси', () => {
+    const f = (t: number[]) => t.map(tickFormat(t));
+    expect(f([0, 5, 10])).toEqual(['0', '5', '10']);
+    expect(f([0, 0.5, 1])).toEqual(['0.0', '0.5', '1.0']);
+    expect(f([0, 0.25, 0.5])).toEqual(['0.00', '0.25', '0.50']);
   });
 });
