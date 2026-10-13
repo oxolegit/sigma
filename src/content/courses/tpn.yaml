@@ -9,13 +9,7 @@ chapters:
     lessons:
       - { n: 1, title: Нейтрон как объект теории, ref: '§1.2' }
       - { n: 2, title: Источники нейтронов и деление, ref: '§1.3' }
-      - n: 3
-        title: Взаимодействия и сечения
-        ref: '§1.4–1.5'
-        formulas:
-          - { title: Микросечение из опыта, tex: '\sigma = \frac{R}{I N S X},\qquad 1\ \text{б} = 10^{-24}\ \text{см}^2', note: 'Тонкий образец: $X \ll \lambda$.' }
-          - { title: Состав полного сечения, tex: '\sigma_{t} = \sigma_a + \sigma_s,\quad \sigma_a = \sigma_c + \sigma_f + \sigma_{n,2n} + \dots,\quad \sigma_s = \sigma_{el} + \sigma_{in}' }
-          - { title: Макросечение смеси, tex: '\Sigma = \sum_k N_k \sigma^k,\qquad N = \frac{\rho N_A}{M}', note: '$N$ — ядерная плотность, см⁻³.' }
+      - { n: 3, title: Взаимодействия и сечения, ref: '§1.4–1.5' }
       - { n: 4, title: Длина свободного пробега, ref: '§1.6' }
       - n: 5
         title: 'Нейтронное поле: поток и ток'
