@@ -16,8 +16,11 @@ for (const course of readdirSync(lessonsDir)) {
     lessons++;
     const body = readFileSync(join(lessonsDir, course, f), 'utf8');
     for (const [, path] of body.matchAll(/^import\s+\w+\s+from\s+['"]@labs\/([\w/]+)['"]/gm)) {
+      // Лаборатория — компонент в рамке LabFrame (тренажёр ею не считается), как в lessonStats().
+      const src = readFileSync(at('src/labs', `${path}.tsx`), 'utf8');
+      if (!src.includes('<LabFrame')) continue;
       labs++;
-      if (/kind="3D"/.test(readFileSync(at('src/labs', `${path}.tsx`), 'utf8'))) labs3d++;
+      if (/kind="3D"/.test(src)) labs3d++;
     }
   }
 }
@@ -82,8 +85,8 @@ p{position:absolute;left:72px;top:372px;width:600px;font-family:"Source Serif 4"
 </style></head><body>
 <div class="bar"></div>
 <div class="logo"><svg viewBox="0 0 24 24">${sigma(C.accent, 2.6)}</svg>Sigma</div>
-<h1>Физика реакторов, которую можно покрутить руками</h1>
-<p>Интерактивные курсы для подготовки к контрольным в магистратуре МИФИ</p>
+<h1>Физика и математика, которые можно покрутить руками</h1>
+<p>Интерактивные курсы для магистратуры МИФИ: теория переноса нейтронов и матанализ</p>
 <div class="card"><div class="tag">Лаборатория · пробег нейтрона</div>${plot()}</div>
 <div class="chips">${chips.map((c) => `<span>${c}</span>`).join('')}</div>
 <div class="url">sigma.mslv.space</div>

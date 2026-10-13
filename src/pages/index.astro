@@ -12,15 +12,15 @@ const courses = await listCourses();
 const lessonsByCourse = Object.fromEntries(courses.filter((c) => !c.example).map((c) => [c.id, c.lessons]));
 const stats = await siteStats();
 
-// Пока ничего не открыто, «Начать» ведёт к первому написанному уроку первого настоящего курса.
-const first = courses.find((c) => !c.example);
-const firstData = first ? await getCourse(first.id) : undefined;
-const firstLesson = firstData?.lessons.find((l) => l.href);
-const fallback = first && firstLesson
-  ? { course: first.id, n: firstLesson.n, title: firstLesson.title, courseTitle: first.title, href: firstLesson.href! }
+// Пока ничего не открыто, «Начать» ведёт к первому уроку курса, где написано больше всего уроков.
+const real = await Promise.all(courses.filter((c) => !c.example).map((c) => getCourse(c.id)));
+const fullest = real.sort((a, b) => b.lessons.filter((l) => l.href).length - a.lessons.filter((l) => l.href).length)[0];
+const firstLesson = fullest?.lessons.find((l) => l.href);
+const fallback = fullest && firstLesson
+  ? { course: fullest.id, n: firstLesson.n, title: firstLesson.title, courseTitle: fullest.course.data.title, href: firstLesson.href! }
   : undefined;
 // Урок, из которого взята лаборатория на главной.
-const demoLesson = firstData?.lessons.find((l) => l.entry?.body?.includes('@labs/tpn/SlabMC3D'));
+const demoLesson = real.flatMap((d) => d.lessons).find((l) => l.entry?.body?.includes('@labs/tpn/SlabMC3D'));
 
 const numbers = [
   { value: stats.lessons, label: plural(stats.lessons, 'урок', 'урока', 'уроков'), note: 'по учебнику и лекциям' },
@@ -31,10 +31,10 @@ const numbers = [
 
 const features = [
   { mark: '?', title: 'Что спросят', text: 'Урок начинается с вопросов контрольной по этой теме — читаете прицельно и знаете, что важно.' },
-  { mark: '§', title: 'Теория по учебнику', text: 'Со ссылками на параграфы, формулами и выводами по шагам: шаг открывается, когда вы готовы его проверить.' },
+  { mark: '§', title: 'Теория по учебнику', text: 'Со ссылками на главы и параграфы, формулами и выводами по шагам. Числа и формулы проверены тестами.' },
   { mark: '∿', title: 'Лаборатории 2D', text: 'Графики, гистограммы и Монте-Карло. Двигаете ползунок — рисунок и числа под ним меняются сразу.' },
   { mark: '◇', title: '3D-сцены', text: 'Пучок нейтронов в пластине, волна на ядре, деление капли, газ в ящике — вращаются пальцем и мышью.' },
-  { mark: '✓', title: 'Проверка в конце', text: 'Несколько вопросов с объяснением ответа. Пройденный урок отмечается в оглавлении.' },
+  { mark: '✓', title: 'Проверка и тренажёры', text: 'Вопросы в конце урока с объяснением. В математике — тренажёр: ответ вводится формулой и проверяется численно, так что 2x и x·2 засчитываются одинаково.' },
   { mark: 'Σ', title: 'Контрольная и шпаргалка', text: 'Пробная контрольная с пошаговыми решениями и все формулы курса на одной странице для печати.' },
 ];
 ---
@@ -45,10 +45,10 @@ const features = [
     <section class="sg-hero">
       <div class="sg-hero-text">
         <div class="sg-eyebrow">Бесплатно · без регистрации · открытый код</div>
-        <h1>Физика реакторов, которую можно покрутить руками</h1>
-        <p>Sigma — интерактивные курсы для подготовки к контрольным и экзаменам в магистратуре МИФИ. Теория по учебнику, выводы по шагам и лаборатории, где каждую формулу можно проверить ползунком, гистограммой или 3D-сценой.</p>
+        <h1>Физика и математика, которые можно покрутить руками</h1>
+        <p>Sigma — интерактивные курсы для подготовки к контрольным и экзаменам в магистратуре МИФИ. Теория по учебнику со ссылками на главы, выводы по шагам, лаборатории с ползунками и 3D-сценами и тренажёры, которые проверяют ваш ответ, а не сверяют буквы.</p>
         <div class="sg-hero-actions">
-          {first && <a class="rz-btn rz-btn-primary rz-btn-md" href={first.href}>Открыть курс</a>}
+          <a class="rz-btn rz-btn-primary rz-btn-md" href="#courses">Выбрать курс</a>
           <a class="rz-btn rz-btn-ghost rz-btn-md" href={SITE.repo}>Исходный код на GitHub</a>
         </div>
       </div>
