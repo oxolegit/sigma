@@ -21,6 +21,10 @@ const { title, description = 'Интерактивные курсы для по�
         apply();
         // Пока тема не выбрана явно, сайт следует за системой и на лету.
         mq.addEventListener('change', function () { if (!saved()) apply(); });
+        // Печать — всегда в светлой теме, после печати тема возвращается.
+        var before = null;
+        addEventListener('beforeprint', function () { before = root.dataset.theme; root.dataset.theme = 'light'; });
+        addEventListener('afterprint', function () { if (before) root.dataset.theme = before; before = null; });
       })();
     </script>
   </head>
