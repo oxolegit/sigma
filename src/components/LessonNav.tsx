@@ -8,12 +8,18 @@ export interface LessonNavProps { chapters: { title?: string; lessons: NavLesson
  *  В ленте текущий урок прокручивается в видимую область. */
 export function LessonNav({ chapters, layout = 'side' }: LessonNavProps) {
   const strip = layout === 'strip';
+  const nav = useRef<HTMLElement>(null);
   const current = useRef<HTMLAnchorElement>(null);
   useEffect(() => {
-    if (strip) current.current?.scrollIntoView({ inline: 'center', block: 'nearest' });
+    // Двигаем только ленту по горизонтали. scrollIntoView прокрутил бы и окно: лента гидрируется
+    // с client:idle, и страница, которую уже начали читать, прыгала бы обратно к шапке.
+    const s = nav.current, a = current.current;
+    if (!strip || !s || !a) return;
+    const left = a.getBoundingClientRect().left - s.getBoundingClientRect().left + s.scrollLeft;
+    s.scrollLeft = left - (s.clientWidth - a.offsetWidth) / 2;
   }, [strip]);
   return (
-    <nav className={cx('rz-nav', strip ? 'rz-nav-strip' : 'rz-nav-side')} aria-label="Уроки курса">
+    <nav ref={nav} className={cx('rz-nav', strip ? 'rz-nav-strip' : 'rz-nav-side')} aria-label="Уроки курса">
       {chapters.map((ch, i) => (
         <div key={i} className="rz-nav-chapter">
           {!strip && ch.title && <div className="rz-nav-chapter-title">{ch.title}</div>}
