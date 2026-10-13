@@ -120,3 +120,14 @@ button.rz-legend-item:focus-visible { outline: 2px solid var(--accent); outline-
 .sg-checklist .is-ok .sg-checklist-mark { background: var(--correct-soft); color: var(--correct); }
 .sg-checklist .is-warn .sg-checklist-mark { background: var(--signal-soft); color: var(--signal); }
 .sg-checklist .is-bad .sg-checklist-mark { background: var(--wrong-soft); color: var(--wrong); }
+
+/* Доли каналов реакции: наблюдаемая доля полосой, погрешность ±1σ и риска ожидаемой доли */
+.sg-channels { margin: 0; padding: 0; list-style: none; font: 400 14px/20px var(--font-sans); }
+.sg-channels li { display: grid; grid-template-columns: 1fr; gap: 2px var(--space-3); padding: 8px 0; border-bottom: 1px solid var(--rule); }
+.sg-channels li:last-child { border-bottom: 0; }
+.sg-channel-name { font-weight: 600; }
+.sg-channel-nums { color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+.sg-channel-bar { position: relative; height: 14px; margin-top: 4px; border-radius: var(--radius-sm); background: var(--surface-2); }
+.sg-channel-fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: var(--radius-sm); background: var(--accent); }
+.sg-channel-err { position: absolute; top: 5px; height: 4px; background: var(--ink); opacity: .55; }
+.sg-channel-expect { position: absolute; top: -3px; bottom: -3px; width: 3px; margin-left: -1.5px; background: var(--signal); }
