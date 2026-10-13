@@ -4,7 +4,8 @@ import { expect, type Locator, type Page } from '@playwright/test';
  *  Без этого клик может прийти в серверную разметку раньше, чем React навесит обработчики. */
 export async function hydrated(target: Locator): Promise<Locator> {
   await target.scrollIntoViewIfNeeded();
-  await expect(target.locator('xpath=ancestor::astro-island[1]')).not.toHaveAttribute('ssr', /.*/);
+  // client:visible грузит чанк острова только при появлении в кадре; под нагрузкой параллельных воркеров это бывает дольше 5 с.
+  await expect(target.locator('xpath=ancestor::astro-island[1]')).not.toHaveAttribute('ssr', /.*/, { timeout: 15_000 });
   return target;
 }
 

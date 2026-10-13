@@ -164,8 +164,12 @@ test.describe('без прогресса', () => {
 
   test('шпаргалка: формулы по урокам, при печати без шапки и кнопок', async ({ page }) => {
     await page.goto('/tpn/sheet/');
-    await expect(page.locator('.sg-sheet-group')).toHaveCount(8);
-    await expect(page.locator('.rz-fcard')).toHaveCount(28);
+    // Число формул растёт с каждым перенесённым уроком: проверяем, что у каждого урока в шпаргалке они есть.
+    const groups = page.locator('.sg-sheet-group');
+    expect(await groups.count()).toBeGreaterThanOrEqual(8);
+    for (const g of await groups.all()) expect(await g.locator('.rz-fcard').count()).toBeGreaterThan(0);
+    const cards = await page.locator('.rz-fcard').count();
+    await expect(page.locator('.sg-sheet-text p')).toContainText(`${cards} формул`);
     await expect(page.locator('.rz-tex-raw')).toHaveCount(0);
     await expect(page.locator('.sg-sheet-group').filter({ hasText: 'Длина свободного пробега' }).getByRole('link', { name: 'к уроку' })).toHaveAttribute('href', '/tpn/04-mfp/');
 
