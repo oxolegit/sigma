@@ -34,7 +34,7 @@ test.describe('урок 3', () => {
     await expect(l.locator('tfoot')).toContainText('0.700');
     await expect(l.locator('.rz-lab-readout')).toContainText('1.09');
     await expect(l.locator('.rz-lab-status')).toContainText('неприменимо');
-    await l.getByLabel('Материал').selectOption('c');
+    await l.getByLabel('Материал', { exact: true }).selectOption('c');
     await expect(l.locator('tbody tr')).toHaveCount(1);
     await expect(l.locator('tfoot')).toContainText('2.73·10⁻⁴');
     await expect(l.locator('tfoot')).toContainText('0.381');
@@ -77,6 +77,23 @@ test.describe('урок 5', () => {
   });
 });
 
+test.describe('урок 6', () => {
+  test('6.1: скорость реакций сохраняется, захват ²³⁸U зависит от спектра на порядки', async ({ page }) => {
+    await page.goto('/tpn/06-groups/');
+    const l = await lab(page, '6.1');
+    const ro = l.locator('.rz-lab-readout');
+    await expect(ro).toContainText('1.0000');
+    await expect(ro).toContainText('11.2');
+    await expect(l.locator('.rz-lab-table tbody tr')).toHaveCount(5);
+    await l.getByLabel('Спектр', { exact: true }).selectOption('fast');
+    await expect(ro).toContainText('0.17');
+    await l.getByRole('radio', { name: '26' }).click();
+    await expect(l.locator('.rz-lab-table tbody tr')).toHaveCount(26);
+    await l.getByLabel('Сечение', { exact: true }).selectOption('const');
+    await expect(ro).toContainText('5.00');
+  });
+});
+
 test.describe('урок 2', () => {
   test.use({ reducedMotion: 'reduce' });
 
@@ -86,7 +103,7 @@ test.describe('урок 2', () => {
     await expect(l.locator('.rz-lab-status')).toContainText('Не делится');
     await l.getByRole('slider', { name: /Кинетическая энергия/ }).fill('1.5');
     await expect(l.locator('.rz-lab-status')).toContainText('Деление пороговое');
-    await l.getByLabel('Ядро-мишень').selectOption('pu239');
+    await l.getByLabel('Ядро-мишень', { exact: true }).selectOption('pu239');
     await expect(l.locator('.rz-lab-status')).toContainText('любых энергий');
   });
 
@@ -96,7 +113,7 @@ test.describe('урок 2', () => {
     await l.getByRole('button', { name: 'Запустить нейтрон' }).click();
     await expect(l.locator('.rz-lab-status')).toContainText('Радиационный захват');
     await expect(l.locator('.rz-lab-readout')).toContainText('радиационный захват');
-    await l.getByLabel('Ядро-мишень').selectOption('u235');
+    await l.getByLabel('Ядро-мишень', { exact: true }).selectOption('u235');
     await l.getByRole('button', { name: 'Запустить нейтрон' }).click();
     await expect(l.locator('.rz-lab-status')).toContainText('Деление');
     await expect(l.locator('.rz-lab-readout')).toContainText(/деление, ν = [2-4]/);
