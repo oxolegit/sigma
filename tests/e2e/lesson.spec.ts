@@ -88,9 +88,10 @@ test('лаборатория 4.2: нейтроны добавляются, ср�
 test('лаборатория 4.3: считает исходы, колесо без Ctrl прокручивает страницу', async ({ page }) => {
   const lab = page.locator('.rz-lab').filter({ hasText: 'Лаборатория 4.3' });
   await hydrated(lab);
-  await expect(lab.locator('.sg-lab-count')).toHaveText('историй: 300');
+  const readout = lab.locator('.rz-lab-readout');
+  await expect(readout).toContainText(/историй\s*300$/);
   await lab.getByRole('button', { name: '+ 20 000 без треков' }).click();
-  await expect(lab.locator('.sg-lab-count')).toHaveText('историй: 20 300');
+  await expect(readout).toContainText(/историй\s*20\s300$/);
 
   const scene = lab.locator('.sg-scene');
   const box = (await scene.boundingBox())!;
@@ -98,6 +99,46 @@ test('лаборатория 4.3: считает исходы, колесо бе
   const before = await page.evaluate(() => window.scrollY);
   await page.mouse.wheel(0, 300);
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(before);
+});
+
+test('у каждой лаборатории легенда в цветах темы, подписи не называют цвета', async ({ page }) => {
+  await wakeAll(page);
+  const labs = page.locator('.rz-lab');
+  const count = await labs.count();
+  expect(count).toBe(3);
+  for (let i = 0; i < count; i++) {
+    const lab = labs.nth(i);
+    await hydrated(lab);
+    await expect(lab.locator('.rz-lab-legend li')).not.toHaveCount(0);
+    // Цвет знака в легенде совпадает с токеном текущей темы — тем же, которым нарисована серия.
+    const mismatches = await lab.locator('.rz-legend-mark').evaluateAll((marks) => marks.flatMap((m) => {
+      const name = m.getAttribute('data-token');
+      const probe = document.createElement('span');
+      probe.style.color = `var(--${name})`;
+      document.body.append(probe);
+      const want = getComputedStyle(probe).color;
+      probe.remove();
+      const shape = m.firstElementChild;
+      const got = shape ? getComputedStyle(shape).stroke : 'нет фигуры';
+      return name && got === want ? [] : [`${name}: ${got} ≠ ${want}`];
+    }));
+    expect(mismatches).toEqual([]);
+    // Смысл цветов — только в легенде: подпись не должна описывать треки цветами.
+    await expect(lab.locator('.rz-lab-caption')).not.toContainText(/мандарин|фиолет|оранж|зел[её]н|красн|син[иеяй]|сер(ые|ый|ая)/i);
+  }
+});
+
+test('лаборатория 4.3: пункт легенды скрывает и показывает треки своего исхода', async ({ page }) => {
+  const lab = page.locator('.rz-lab').filter({ hasText: 'Лаборатория 4.3' });
+  await hydrated(lab);
+  const items = lab.locator('.rz-lab-legend button');
+  await expect(items).toHaveText([/прошли без столкновений/, /прошли после рассеяний/, /отразились назад/, /поглотились/]);
+  const reflected = items.filter({ hasText: 'отразились назад' });
+  await expect(reflected).toHaveAttribute('aria-pressed', 'true');
+  await reflected.click();
+  await expect(reflected).toHaveAttribute('aria-pressed', 'false');
+  await reflected.click();
+  await expect(reflected).toHaveAttribute('aria-pressed', 'true');
 });
 
 test('проверка: ответ на вопрос показывает объяснение', async ({ page }) => {
