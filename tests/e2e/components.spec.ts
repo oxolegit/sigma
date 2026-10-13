@@ -1,7 +1,9 @@
 import { expect, test } from '@playwright/test';
+import { allHydrated } from './hydration';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/dev/components/');
+  await allHydrated(page);
 });
 
 test('страница не прокручивается по горизонтали', async ({ page }) => {
