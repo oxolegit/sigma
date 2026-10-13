@@ -178,6 +178,57 @@ test.describe('урок 9', () => {
   });
 });
 
+test.describe('урок 10', () => {
+  test('10.1: при μ = 100 разброс √μ, относительная ошибка 10 %', async ({ page }) => {
+    await page.goto('/tpn/10-ensemble/');
+    const l = await lab(page, '10.1');
+    await l.getByRole('slider').fill('2');
+    const ro = l.locator('.rz-lab-readout .rz-readout-v');
+    await expect(ro.nth(2)).toContainText('= 10.00');
+    const mean = Number(await ro.nth(0).textContent());
+    expect(Math.abs(mean - 100)).toBeLessThan(1.5);
+    const sd = Number(await ro.nth(1).textContent());
+    expect(sd).toBeGreaterThan(0.9);
+    expect(sd).toBeLessThan(1.1);
+  });
+
+  test('10.2: тепловая точка — kT = 0.0253 эВ, V_T = 2200 м/с; при 4T₀ σ̄ вдвое меньше', async ({ page }) => {
+    await page.goto('/tpn/10-ensemble/');
+    const l = await lab(page, '10.2');
+    const ro = l.locator('.rz-lab-readout');
+    await expect(ro).toContainText('0.0253');
+    await expect(ro).toContainText(/2\s200/);
+    await expect(ro).toContainText('= 0.886');
+    await l.getByRole('slider').fill('1174');
+    await expect(ro).toContainText('= 0.443');
+  });
+
+  test('10.3: за 10 с счёта односторонние токи близки к Φ/4', async ({ page }) => {
+    await page.goto('/tpn/10-ensemble/');
+    const l = await lab(page, '10.3');
+    await l.getByRole('button', { name: '+10 с без анимации' }).click();
+    const ro = l.locator('.rz-lab-readout .rz-readout-v');
+    for (const i of [2, 3]) {
+      const v = Number((await ro.nth(i).textContent())!.match(/= ([\d.]+)/)![1]);
+      expect(v).toBeGreaterThan(0.2);
+      expect(v).toBeLessThan(0.3);
+    }
+  });
+
+  test('10.4: при k = 1.05 угасает около 95 %, при k = 0.8 — все', async ({ page }) => {
+    await page.goto('/tpn/10-ensemble/');
+    const l = await lab(page, '10.4');
+    const ro = l.locator('.rz-lab-readout .rz-readout-v');
+    await expect(ro.nth(1)).toHaveText('94.9 %');
+    await l.getByRole('button', { name: 'Оценить по 5000 цепочек' }).click();
+    const mc = Number((await ro.nth(3).textContent())!.replace(/[^\d.]/g, ''));
+    expect(Math.abs(mc - 94.9)).toBeLessThan(1.5);
+    await l.getByRole('slider').fill('0.8');
+    await expect(ro.nth(1)).toHaveText('100.0 %');
+    await expect(ro.nth(2)).toHaveText('40');
+  });
+});
+
 test.describe('урок 2', () => {
   test.use({ reducedMotion: 'reduce' });
 
