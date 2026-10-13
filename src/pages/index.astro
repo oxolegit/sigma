@@ -1,19 +1,79 @@
 ---
 import Base from '../layouts/Base.astro';
-import Logo from '../components/Logo.astro';
-import { getCollection } from 'astro:content';
-const courses = await getCollection('courses');
-const lessons = await getCollection('lessons');
+import SiteHeader from '../components/SiteHeader.astro';
+import CourseCatalog from '../components/live/CourseCatalog';
+import ContinueCard from '../components/live/ContinueCard';
+import { getCourse, listCourses } from '../lib/courses';
+
+const courses = await listCourses();
+const lessonsByCourse = Object.fromEntries(courses.filter((c) => !c.example).map((c) => [c.id, c.lessons]));
+
+// Пока ничего не открыто, «Начать» ведёт к первому написанному уроку первого настоящего курса.
+const first = courses.find((c) => !c.example);
+const firstData = first ? await getCourse(first.id) : undefined;
+const firstLesson = firstData?.lessons.find((l) => l.href);
+const fallback = first && firstLesson
+  ? { course: first.id, n: firstLesson.n, title: firstLesson.title, courseTitle: first.title, href: firstLesson.href! }
+  : undefined;
 ---
-<Base title="Sigma — интерактивные курсы">
-  <main style="max-width: var(--content-max); margin: 0 auto; padding: 0 var(--space-6) var(--space-16);">
-    <header style="padding: 18px 0; border-bottom: 1px solid var(--rule);">
-      <Logo />
-    </header>
-    <ul>
-      {courses.map((c) => (
-        <li>{c.data.title} — {lessons.filter((l) => l.id.startsWith(c.id + '/')).length} ур.</li>
-      ))}
-    </ul>
-  </main>
+<Base title="Sigma — интерактивные курсы по техническим дисциплинам">
+  <div class="sg-page">
+    <SiteHeader current="courses" />
+
+    <section class="sg-hero">
+      <div class="sg-hero-text">
+        <div class="sg-eyebrow">Магистратура НИЯУ МИФИ · подготовка к контрольным</div>
+        <h1>Курсы, где формулы можно покрутить руками</h1>
+        <p>Каждый курс собран по учебнику и лекциям: что спросят, вывод по шагам, лаборатории с ползунками и 3D-сценами, короткая проверка в конце урока. К курсу — пробная контрольная и шпаргалка формул.</p>
+      </div>
+      {fallback && <ContinueCard client:idle lessonsByCourse={lessonsByCourse} fallback={fallback} />}
+    </section>
+
+    <CourseCatalog client:idle courses={courses} />
+
+    <section id="about" class="sg-about">
+      <h2>О проекте</h2>
+      <div>
+        <p>Личный проект: курсы для подготовки к контрольным и экзаменам в магистратуре. Курсы с меткой «пример» — заглушки, по ним видно, как будет выглядеть каталог; настоящие курсы появляются по мере подготовки.</p>
+        <p>Регистрации нет. Пройденные уроки запоминаются в этом браузере; перенести прогресс на другое устройство можно ссылкой со страницы курса.</p>
+      </div>
+    </section>
+  </div>
 </Base>
+
+<style is:global>
+  .sg-hero { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-8) var(--space-12); padding: 56px 0 40px; }
+  .sg-hero-text { flex: 1 1 520px; display: flex; flex-direction: column; gap: var(--space-4); }
+  .sg-hero h1 { margin: 0; max-width: 14em; font: 600 44px/48px var(--font-sans); letter-spacing: -0.025em; }
+  .sg-hero p { margin: 0; max-width: 34em; font: 400 18px/30px var(--font-serif); color: var(--ink-muted); }
+  .sg-continue { flex: 0 1 360px; display: flex; flex-direction: column; gap: 10px; padding: 20px 24px; background: var(--surface-1); border: 1px solid var(--rule); border-radius: var(--radius-lg); color: var(--ink); }
+  .sg-continue:hover { color: var(--ink); border-color: var(--rule-strong); }
+  .sg-continue:hover .sg-continue-title { color: var(--accent); }
+  .sg-continue-title { font: 600 17px/24px var(--font-sans); }
+  .sg-continue-meta { font: 400 14px/20px var(--font-sans); color: var(--ink-muted); }
+
+  .sg-filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-4) var(--space-6); padding: 20px 0; border-top: 1px solid var(--rule); }
+  .sg-field-wrap { display: flex; flex-direction: column; gap: 6px; font: 500 14px/20px var(--font-sans); }
+  .sg-field-grow { flex: 1 1 280px; }
+  .sg-field { height: 44px; padding: 0 14px; border: 1px solid var(--rule-strong); border-radius: var(--radius-md); background: var(--surface-1); color: var(--ink); font: 400 15px/22px var(--font-sans); }
+  .sg-field:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .sg-section-head { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 0 16px; }
+  .sg-section-head h2 { margin: 0; font: 600 22px/28px var(--font-sans); }
+  .sg-count { font: 400 14px/20px var(--font-sans); color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+  .sg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-4); }
+  .sg-empty { margin: var(--space-6) 0 0; font: 400 16px/26px var(--font-serif); color: var(--ink-muted); }
+
+  .sg-about { display: flex; flex-wrap: wrap; gap: var(--space-6) var(--space-12); margin-top: var(--space-16); padding-top: var(--space-8); border-top: 1px solid var(--rule); }
+  .sg-about h2 { flex: 0 0 220px; margin: 0; font: 600 17px/24px var(--font-sans); }
+  .sg-about > div { flex: 1 1 420px; max-width: var(--measure); }
+  .sg-about p { margin: 0 0 12px; font: 400 16px/26px var(--font-serif); color: var(--ink-muted); }
+
+  @media (max-width: 899px) {
+    .sg-hero { padding: 32px 0 28px; }
+    .sg-hero h1 { font-size: 32px; line-height: 38px; }
+    .sg-hero p { font-size: 17px; line-height: 28px; }
+    .sg-continue { flex-basis: 100%; }
+    .sg-grid { grid-template-columns: 1fr; }
+  }
+</style>
