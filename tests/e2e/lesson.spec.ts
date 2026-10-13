@@ -26,8 +26,13 @@ test('урок собран из оглавления курса и MDX', async 
   await expect(page.locator('.rz-ask li')).toHaveCount(4);
   await expect(page.locator('.rz-tex-raw')).toHaveCount(0);
   await expect(visibleNav(page).locator('[aria-current="page"]')).toContainText('Длина свободного пробега');
-  // Ненаписанные уроки — не ссылки.
-  await expect(visibleNav(page).locator('a.rz-nav-item')).toHaveCount(1);
+  // Все 10 уроков в оглавлении; ненаписанные — не ссылки, а приглушённые пункты.
+  const nav = visibleNav(page);
+  const links = await nav.locator('a.rz-nav-item').count();
+  const soon = await nav.locator('.rz-nav-item.is-soon').count();
+  expect(links).toBeGreaterThan(0);
+  expect(links + soon).toBe(10);
+  await expect(nav.locator('.is-soon[href]')).toHaveCount(0);
 });
 
 test('нет горизонтальной прокрутки и ошибок в консоли', async ({ page }) => {

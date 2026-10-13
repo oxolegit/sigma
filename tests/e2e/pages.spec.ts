@@ -41,6 +41,23 @@ test.describe('с сохранённым прогрессом', () => {
   });
 });
 
+test('все написанные уроки курса: без горизонтальной прокрутки, битого TeX и ошибок', async ({ page }) => {
+  await page.goto('/tpn/');
+  const hrefs = await page.locator('a.sg-outline-row').evaluateAll((as) => as.map((a) => a.getAttribute('href')!));
+  expect(hrefs.length).toBeGreaterThan(0);
+  for (const href of hrefs) {
+    const errors: string[] = [];
+    page.on('pageerror', (e) => errors.push(String(e)));
+    await page.goto(href);
+    await allHydrated(page);
+    const [scroll, client] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
+    expect(scroll, `${href}: горизонтальная прокрутка`).toBeLessThanOrEqual(client);
+    await expect(page.locator('.rz-tex-raw'), `${href}: битый TeX`).toHaveCount(0);
+    expect(errors, `${href}: ошибки`).toEqual([]);
+    page.removeAllListeners('pageerror');
+  }
+});
+
 test.describe('без прогресса', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
@@ -78,12 +95,16 @@ test.describe('без прогресса', () => {
     await expect(page.locator('.rz-course').filter({ hasText: 'Теплогидравлика' }).getByRole('link')).toHaveCount(0);
   });
 
-  test('страница курса: оглавление из 10 уроков, ссылка только у написанного', async ({ page }) => {
+  test('страница курса: оглавление из 10 уроков, ссылка только у написанных', async ({ page }) => {
     await page.goto('/tpn/');
     await allHydrated(page);
     await expect(page.locator('.sg-outline-row')).toHaveCount(10);
-    await expect(page.locator('a.sg-outline-row')).toHaveCount(1);
-    await expect(page.getByRole('link', { name: 'Начать с урока 4' })).toBeVisible();
+    const written = page.locator('a.sg-outline-row');
+    const soon = page.locator('span.sg-outline-row.is-soon');
+    expect((await written.count()) + (await soon.count())).toBe(10);
+    // Без прогресса — «Начать» с первого написанного урока.
+    const first = await written.first().getAttribute('href');
+    await expect(page.getByRole('link', { name: /^Начать с урока \d+$/ })).toHaveAttribute('href', first!);
     // В разметке подпись (dt) идёт перед числом (dd); число наверху только визуально.
     await expect(page.locator('.sg-course-stats')).toContainText('в контрольной26');
   });
