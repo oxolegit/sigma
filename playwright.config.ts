@@ -9,6 +9,9 @@ export default defineConfig({
     baseURL: 'http://127.0.0.1:4321',
     // Локально — установленный Edge, в CI — скачанный Chromium.
     ...(process.env.CI ? {} : { channel: 'msedge' }),
+    // Без непрерывных 3D-анимаций: в headless WebGL считается на процессоре, и параллельные воркеры
+    // не успевают гидрировать острова. Тесты проверяют числа, а не движение.
+    reducedMotion: 'reduce',
   },
   projects: [
     { name: 'desktop-light', use: { viewport: { width: 1280, height: 900 }, colorScheme: 'light' } },
