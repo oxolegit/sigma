@@ -1,0 +1,47 @@
+{
+  "name": "sigma",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "^7.3.2",
+    "@astrojs/mdx": "^8.0.3",
+    "@astrojs/react": "^7.0.1",
+    "@fontsource/ibm-plex-sans": "^5.3.0",
+    "@fontsource/source-serif-4": "^5.3.1",
+    "@nanostores/react": "^2.0.1",
+    "astro": "^7.3.8",
+    "katex": "^0.19.0",
+    "nanostores": "^1.5.5",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@types/katex": "^0.16.8",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.186.0",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.4"
+  },
+  "description": "Sigma — библиотека интерактивных курсов по техническим дисциплинам",
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "CC-BY-4.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oxolegit/sigma.git"
+  },
+  "homepage": "https://github.com/oxolegit/sigma"
+}
