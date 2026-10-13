@@ -13,6 +13,19 @@ export function niceTicks(min: number, max: number, count = 5): number[] {
 }
 
 const SUP: Record<string, string> = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+/** Деления логарифмической оси — степени десяти от min до max; при многих декадах — через одну-две. */
+export function decadeTicks(min: number, max: number, maxCount = 9): number[] {
+  const e0 = Math.ceil(Math.log10(min) - 1e-9);
+  const e1 = Math.floor(Math.log10(max) + 1e-9);
+  const step = Math.max(1, Math.ceil((e1 - e0 + 1) / maxCount));
+  const out: number[] = [];
+  for (let e = e0; e <= e1; e += step) out.push(10 ** e);
+  return out;
+}
+
+/** Подпись деления логарифмической оси: 10⁻². */
+export const decadeLabel = (v: number) => pow10Label(Math.round(Math.log10(v)));
+
 /** 10 в степени d для подписи логарифмической оси: 10⁻². */
 export const pow10Label = (d: number) => (d === 0 ? '1' : `10${String(d).split('').map((ch) => SUP[ch] ?? ch).join('')}`);
 
@@ -42,10 +55,13 @@ export const plotFont = (weight = 500, size = 11) => `${weight} ${size}px ${toke
 export function drawFrame(g: CanvasRenderingContext2D, w: number, h: number, x: Axis, y: Axis, pad = { l: 48, r: 16, t: 26, b: 34 }): Frame {
   const width = w - pad.l - pad.r;
   const height = h - pad.t - pad.b;
+  const lx = (v: number) => (x.log ? Math.log10(Math.max(v, 1e-300)) : v);
   const ly = (v: number) => (y.log ? Math.log10(Math.max(v, 1e-300)) : v);
+  const x0 = lx(x.min);
+  const x1 = lx(x.max);
   const y0 = ly(y.min);
   const y1 = ly(y.max);
-  const X = (v: number) => pad.l + ((v - x.min) / (x.max - x.min)) * width;
+  const X = (v: number) => pad.l + ((lx(v) - x0) / (x1 - x0)) * width;
   const Y = (v: number) => pad.t + (1 - (ly(v) - y0) / (y1 - y0)) * height;
   const fx = x.format ?? String;
   const fy = y.format ?? String;

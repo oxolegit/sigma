@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { niceTicks, pow10Label } from '../src/lib/plot';
+import { decadeLabel, decadeTicks, niceTicks, pow10Label } from '../src/lib/plot';
+
+describe('decadeTicks', () => {
+  it('степени десяти внутри диапазона', () => {
+    expect(decadeTicks(1e-3, 1e2).map(decadeLabel)).toEqual(['10⁻³', '10⁻²', '10⁻¹', '1', '10¹', '10²']);
+  });
+  it('при многих декадах — через одну', () => {
+    expect(decadeTicks(1e-5, 1e7, 7).map((v) => Math.round(Math.log10(v)))).toEqual([-5, -3, -1, 1, 3, 5, 7]);
+  });
+});
 
 describe('niceTicks', () => {
   it('шаг 1–2–5 × 10ⁿ', () => {
