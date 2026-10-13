@@ -19,6 +19,29 @@ test.describe('урок 1', () => {
   });
 });
 
+test.describe('урок 3', () => {
+  test('3.1: у лёгкого ядра в легенде только полное сечение и захват', async ({ page }) => {
+    await page.goto('/tpn/03-cross-sections/');
+    const l = await lab(page, '3.1');
+    await expect(l.locator('.rz-lab-legend li')).toHaveCount(4);
+    await l.getByRole('radio', { name: /Лёгкое/ }).click();
+    await expect(l.locator('.rz-lab-legend li')).toHaveCount(2);
+  });
+
+  test('3.2: UO₂ 4 % — числа задачи Б3, графит — приложение 2', async ({ page }) => {
+    await page.goto('/tpn/03-cross-sections/');
+    const l = await lab(page, '3.2');
+    await expect(l.locator('tfoot')).toContainText('0.700');
+    await expect(l.locator('.rz-lab-readout')).toContainText('1.09');
+    await expect(l.locator('.rz-lab-status')).toContainText('неприменимо');
+    await l.getByLabel('Материал').selectOption('c');
+    await expect(l.locator('tbody tr')).toHaveCount(1);
+    await expect(l.locator('tfoot')).toContainText('2.73·10⁻⁴');
+    await expect(l.locator('tfoot')).toContainText('0.381');
+    await expect(l.getByRole('slider')).toHaveCount(0);
+  });
+});
+
 test.describe('урок 2', () => {
   test.use({ reducedMotion: 'reduce' });
 
