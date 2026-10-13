@@ -1,6 +1,7 @@
 import {
-  AmbientLight, Color, DirectionalLight, LineBasicMaterial, LineDashedMaterial, MeshStandardMaterial, PerspectiveCamera, PointsMaterial, Scene,
-  WebGLRenderer, type LineBasicMaterialParameters, type LineDashedMaterialParameters, type MeshStandardMaterialParameters,
+  AmbientLight, Color, ConeGeometry, CylinderGeometry, DirectionalLight, Group, LineBasicMaterial, LineDashedMaterial, Mesh,
+  MeshStandardMaterial, PerspectiveCamera, PointsMaterial, Scene, Vector3, WebGLRenderer,
+  type LineBasicMaterialParameters, type LineDashedMaterialParameters, type MeshStandardMaterialParameters,
   type PointsMaterialParameters,
 } from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -118,6 +119,28 @@ export class LabScene {
     apply();
     this.recolor.push(apply);
     return m;
+  }
+
+  /** Объёмная стрелка цвета токена: set(направление, длина) поворачивает и растягивает её из начала координат. */
+  arrow(name: string, radius = 0.03): Group & { set: (dir: Vector3, length: number) => void } {
+    const m = this.mesh(name);
+    const shaft = new Mesh(new CylinderGeometry(radius, radius, 1, 14), m);
+    const head = new Mesh(new ConeGeometry(radius * 2.7, 1, 18), m);
+    const g = new Group() as Group & { set: (dir: Vector3, length: number) => void };
+    g.add(shaft, head);
+    const up = new Vector3(0, 1, 0);
+    g.set = (dir, length) => {
+      const d = dir.clone().normalize();
+      const h = Math.min(length * 0.4, radius * 9);
+      shaft.scale.set(1, Math.max(length - h, 1e-3), 1);
+      shaft.position.set(0, (length - h) / 2, 0);
+      head.scale.set(1, h, 1);
+      head.position.set(0, length - h / 2, 0);
+      if (d.y < -0.9999) g.quaternion.set(1, 0, 0, 0);
+      else g.quaternion.setFromUnitVectors(up, d);
+      g.visible = length > 1e-3;
+    };
+    return g;
   }
 
   /** Своя перекраска при смене темы (например, цвета вершин треков). */

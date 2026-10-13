@@ -116,6 +116,28 @@ export function strokeCurve(g: CanvasRenderingContext2D, pts: [number, number][]
   g.restore();
 }
 
+/** Стрелка от (x1, y1) к (x2, y2) с треугольным наконечником; dash — пунктирное древко. */
+export function arrow(g: CanvasRenderingContext2D, x1: number, y1: number, x2: number, y2: number, color: string, width = 2, head = 10, dash: number[] = []) {
+  const a = Math.atan2(y2 - y1, x2 - x1);
+  g.save();
+  g.strokeStyle = color;
+  g.fillStyle = color;
+  g.lineWidth = width;
+  g.setLineDash(dash);
+  g.beginPath();
+  g.moveTo(x1, y1);
+  g.lineTo(x2 - Math.cos(a) * head * 0.6, y2 - Math.sin(a) * head * 0.6);
+  g.stroke();
+  g.setLineDash([]);
+  g.beginPath();
+  g.moveTo(x2, y2);
+  g.lineTo(x2 - head * Math.cos(a - 0.4), y2 - head * Math.sin(a - 0.4));
+  g.lineTo(x2 - head * Math.cos(a + 0.4), y2 - head * Math.sin(a + 0.4));
+  g.closePath();
+  g.fill();
+  g.restore();
+}
+
 /** Вертикальный маркер характерной величины: пунктир signal с подписью.
  *  row — ряд подписи сверху вниз, чтобы подписи соседних маркеров не накладывались. */
 export function markerLine(g: CanvasRenderingContext2D, f: Frame, x: number, label: string, color = token('signal'), row = 0) {
