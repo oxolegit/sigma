@@ -19,6 +19,7 @@
     "@nanostores/react": "^2.0.1",
     "astro": "^7.3.8",
     "katex": "^0.16.47",
+    "mathjs": "^15.2.0",
     "nanostores": "^1.5.5",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
