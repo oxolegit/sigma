@@ -44,6 +44,26 @@ test('нет горизонтальной прокрутки и ошибок в 
   expect(errors).toEqual([]);
 });
 
+test('лента уроков на телефоне центрирует текущий урок, не прокручивая страницу', async ({ page }) => {
+  test.skip((page.viewportSize()?.width ?? 0) > 700, 'лента — только на узком экране');
+  // Чанк ленты приходит с задержкой: читатель успевает прокрутить страницу до её гидрации.
+  await page.route('**/_astro/*LessonNav*.js', async (route) => {
+    await new Promise((r) => setTimeout(r, 800));
+    await route.continue();
+  });
+  await page.goto('/tpn/08-diffusion/');
+  await page.evaluate(() => window.scrollTo(0, 1500));
+  await allHydrated(page);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(1500);
+  const [strip, cur] = await page.evaluate(() => {
+    const s = document.querySelector('.rz-nav-strip')!;
+    const r = (e: Element) => { const b = e.getBoundingClientRect(); return [b.left, b.right]; };
+    return [r(s), r(s.querySelector('[aria-current="page"]')!)];
+  });
+  expect(cur[0]).toBeGreaterThanOrEqual(strip[0]! - 1);
+  expect(cur[1]).toBeLessThanOrEqual(strip[1]! + 1);
+});
+
 test('«Урок пройден» отмечает урок в оглавлении и прогрессе и переживает перезагрузку', async ({ page }) => {
   await wakeAll(page);
   await page.getByRole('button', { name: 'Урок пройден' }).click();
