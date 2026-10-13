@@ -167,6 +167,32 @@ export class LabScene {
     });
   }
 
+  /**
+   * Непрерывная анимация: tick(dt, t) и кадр — только пока сцена видна на экране, чтобы не тратить батарею.
+   * При prefers-reduced-motion — один статичный кадр в момент t = 0.
+   */
+  animate(tick: (dt: number, t: number) => void) {
+    const reduced = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) { tick(0, 0); this.render(); return; }
+    let raf = 0, last = 0, t = 0;
+    const loop = (now: number) => {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      t += dt;
+      tick(dt, t);
+      this.renderer.render(this.scene, this.camera);
+      raf = requestAnimationFrame(loop);
+    };
+    const io = new IntersectionObserver(([e]) => {
+      if (e?.isIntersecting && !raf) { last = performance.now(); raf = requestAnimationFrame(loop); }
+      else if (!e?.isIntersecting && raf) { cancelAnimationFrame(raf); raf = 0; }
+    });
+    io.observe(this.host);
+    tick(0, 0);
+    this.render();
+    this.cleanup.push(() => { io.disconnect(); cancelAnimationFrame(raf); });
+  }
+
   resetView() {
     this.controls.reset();
     this.render();
