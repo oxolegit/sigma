@@ -72,11 +72,21 @@ describe('пучок на пластину', () => {
     const rng = mulberry32(3);
     for (let i = 0; i < 200; i++) {
       const h = slabHistory(2, 0.8, rng, true);
-      expect(h.path[0]).toEqual([0, 0, 0]);
+      expect(h.path[0]).toEqual([0, 0, 0]); // точка входа по умолчанию — на оси пучка
       const end = h.path[h.path.length - 1]!;
       if (h.fate === 'reflected') expect(end[0]).toBeLessThan(0);
       if (h.fate === 'uncollided' || h.fate === 'scattered') expect(end[0]).toBeGreaterThan(2);
     }
+  });
+  it('точка входа сдвигает трек поперёк, но не меняет физику', () => {
+    const a = slabHistory(2, 0.8, mulberry32(5), true);
+    const b = slabHistory(2, 0.8, mulberry32(5), true, [0.3, -0.2]);
+    expect(b.fate).toBe(a.fate);
+    expect(b.path[0]).toEqual([0, 0.3, -0.2]);
+    b.path.forEach((q, i) => {
+      expect(q[0]).toBeCloseTo(a.path[i]![0], 12);
+      expect(q[1] - a.path[i]![1]).toBeCloseTo(0.3, 12);
+    });
   });
   it('одинаковое зерно — одинаковый результат', () => {
     expect(run(1, 0.5, 1000, 11)).toEqual(run(1, 0.5, 1000, 11));

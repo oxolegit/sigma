@@ -35,12 +35,14 @@ export const emptyTally = (): SlabTally => ({ n: 0, uncollided: 0, scattered: 0,
 
 /**
  * История нейтрона в пластине толщиной X (в длинах свободного пробега, Σ = 1).
- * Пучок падает по нормали в точку (0, 0, 0) и идёт вдоль +x. В каждом столкновении
+ * Пучок падает по нормали в точку входа (0, y, z) и идёт вдоль +x. В каждом столкновении
  * с вероятностью c = Σs/Σt — изотропное рассеяние, иначе поглощение.
+ * Пластина бесконечна поперёк, поэтому точка входа на физику не влияет — она нужна,
+ * чтобы на рисунке пучок имел сечение и нейтроны без столкновений не сливались в одну линию.
  * Путь записывается, только если keepPath: для 20 000 историй треки не нужны.
  */
-export function slabHistory(X: number, c: number, rng: Rng, keepPath = false): History {
-  let p: Point3 = [0, 0, 0];
+export function slabHistory(X: number, c: number, rng: Rng, keepPath = false, entry: [number, number] = [0, 0]): History {
+  let p: Point3 = [0, entry[0], entry[1]];
   let u: Point3 = [1, 0, 0];
   let collisions = 0;
   const path: Point3[] = keepPath ? [p] : [];
