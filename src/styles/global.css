@@ -49,3 +49,23 @@ button.rz-legend-item:focus-visible { outline: 2px solid var(--accent); outline-
 .rz-legend-value { color: var(--ink-muted); font-variant-numeric: tabular-nums; }
 .rz-legend-mark { flex: none; width: 22px; height: 12px; overflow: visible; }
 .rz-legend-mark * { fill: none; stroke-width: 2; stroke-linejoin: round; }
+
+/* Страница и шапка сайта */
+.sg-page { max-width: var(--content-max); margin: 0 auto; padding: 0 var(--space-6) var(--space-16); }
+.sg-top { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-6); padding: 10px 0; border-bottom: 1px solid var(--rule); }
+.sg-top-course { display: inline-flex; align-items: center; min-height: 44px; font: 500 14px/20px var(--font-sans); color: var(--ink-muted); }
+.sg-top-right { margin-left: auto; width: 220px; }
+.sg-top-nav { display: flex; gap: var(--space-1) var(--space-4); margin-left: auto; font: 500 14px/20px var(--font-sans); }
+.sg-top-nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--space-1); }
+.sg-top-nav a[aria-current="page"] { color: var(--accent); }
+.sg-eyebrow { font: 600 11px/14px var(--font-sans); letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-muted); }
+.sg-eyebrow-accent { color: var(--accent); }
+.sg-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.sg-crumbs { padding-top: var(--space-6); font: 400 14px/20px var(--font-sans); color: var(--ink-muted); }
+.sg-crumbs a { color: var(--ink-muted); }
+@media (max-width: 899px) {
+  .sg-page { padding: 0 var(--space-4) var(--space-12); }
+  .sg-top:has(.sg-top-right) .sg-logo-name { display: none; }
+  .sg-top:has(.sg-top-right) .sg-top-course { flex: 1 1 0; min-width: 0; display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; line-height: 44px; }
+  .sg-top-right { width: 120px; }
+}

@@ -1,0 +1,18 @@
+---
+/** Шапка сайта: логотип, необязательная ссылка на курс, справа — слот (прогресс) или разделы сайта. */
+import Logo from './Logo.astro';
+interface Props { course?: { title: string; href: string }; current?: 'courses' | 'about' }
+const { course, current } = Astro.props;
+---
+<header class="sg-top">
+  <Logo />
+  {course && <a class="sg-top-course" href={course.href}>{course.title}</a>}
+  {Astro.slots.has('default')
+    ? <div class="sg-top-right"><slot /></div>
+    : (
+      <nav class="sg-top-nav" aria-label="Разделы">
+        <a href="/" aria-current={current === 'courses' ? 'page' : undefined}>Курсы</a>
+        <a href="/#about">О проекте</a>
+      </nav>
+    )}
+</header>
