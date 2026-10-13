@@ -1,0 +1,1738 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Тетрадь по матанализу</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Unbounded:wght@500;700&display=swap">
+<style>
+/* Layout: a graph-paper notebook sheet (main) on a plain desk; left rail is the course's table of contents */
+:root{
+  --desk:#e9ecf3; --sheet:#fbfcfe; --ink:#141a31; --ink2:#48526f; --ink3:#7a83a0; --rule:#d5dae7;
+  --grid:rgba(42,69,201,.055); --grid2:rgba(42,69,201,.11);
+  --accent:#2a45c9; --accent-ink:#ffffff; --accent-soft:rgba(42,69,201,.09);
+  --mark:#fff09a; --good:#17804a; --good-soft:rgba(23,128,74,.1); --bad:#bf3a2c; --bad-soft:rgba(191,58,44,.08);
+  --f-display:'Unbounded','Arial Black',system-ui,sans-serif;
+  --f-body:'Golos Text',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --desk:#0c0f16; --sheet:#141823; --ink:#e5e8f2; --ink2:#a6aec6; --ink3:#747d99; --rule:#272e42;
+  --grid:rgba(143,162,255,.04); --grid2:rgba(143,162,255,.08);
+  --accent:#8fa2ff; --accent-ink:#0b0f1d; --accent-soft:rgba(143,162,255,.13);
+  --mark:#4a4212; --good:#5fd394; --good-soft:rgba(95,211,148,.12); --bad:#ff8577; --bad-soft:rgba(255,133,119,.1); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --desk:#0c0f16; --sheet:#141823; --ink:#e5e8f2; --ink2:#a6aec6; --ink3:#747d99; --rule:#272e42;
+  --grid:rgba(143,162,255,.04); --grid2:rgba(143,162,255,.08);
+  --accent:#8fa2ff; --accent-ink:#0b0f1d; --accent-soft:rgba(143,162,255,.13);
+  --mark:#4a4212; --good:#5fd394; --good-soft:rgba(95,211,148,.12); --bad:#ff8577; --bad-soft:rgba(255,133,119,.1); color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--desk);color:var(--ink)}
+body{font-family:var(--f-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+code{font-family:var(--f-mono);font-size:.86em;background:var(--accent-soft);padding:.08em .35em;border-radius:3px;white-space:nowrap}
+
+.app{display:grid;grid-template-columns:272px minmax(0,1fr);min-height:100vh}
+.rail{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;height:100vh;overflow-y:auto;padding:22px 14px 40px 18px;border-right:1px solid var(--rule)}
+.brand{display:block;text-decoration:none;color:var(--ink);font-family:var(--f-display);font-weight:700;font-size:15px;line-height:1.25;letter-spacing:.01em;margin:0 0 4px 6px;background:none;border:0;padding:0;cursor:pointer;text-align:left}
+.brand small{display:block;font-family:var(--f-body);font-weight:400;font-size:12.5px;color:var(--ink3);letter-spacing:0;margin-top:4px}
+.railbtn{display:flex;align-items:center;gap:8px;width:100%;margin:18px 0 6px;padding:9px 12px;border-radius:6px;border:1.5px solid var(--ink);background:var(--sheet);font-weight:600;cursor:pointer;text-align:left}
+.railbtn.on{background:var(--ink);color:var(--sheet)}
+.railbtn .k{margin-left:auto;font-family:var(--f-mono);font-size:11px;opacity:.7}
+.mod{margin-top:18px}
+.mod-h{display:flex;align-items:baseline;gap:8px;margin:0 0 4px 6px;font-size:11.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink3);font-weight:600}
+.mod-h b{font-family:var(--f-display);font-size:13px;color:var(--accent);letter-spacing:0}
+.lnk{display:flex;gap:8px;align-items:baseline;width:100%;text-align:left;background:none;border:0;padding:5px 8px;border-radius:5px;cursor:pointer;font-size:14px;line-height:1.35;color:var(--ink2)}
+.lnk:hover{background:var(--accent-soft);color:var(--ink)}
+.lnk.on{background:var(--accent-soft);color:var(--ink);font-weight:600}
+.lnk .no{font-family:var(--f-mono);font-size:11.5px;color:var(--ink3);min-width:26px}
+.lnk .ck{margin-left:auto;color:var(--good);font-size:12px}
+
+.topbar{display:none}
+.sheet{background-color:var(--sheet);background-image:linear-gradient(var(--grid2) 1px,transparent 1px),linear-gradient(90deg,var(--grid2) 1px,transparent 1px),linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:40px 40px,40px 40px,8px 8px,8px 8px;min-width:0}
+.page{max-width:820px;margin:0 auto;padding-inline:clamp(16px,4vw,48px);padding-block:40px 80px}
+
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,4.2vw,38px);line-height:1.12;letter-spacing:-.01em;margin:0 0 14px;text-wrap:balance}
+h2{font-size:20px;font-weight:700;margin:34px 0 10px;text-wrap:balance}
+p,li{max-width:68ch}
+.lead{font-size:18px;color:var(--ink2);margin:0 0 8px}
+.lesson ul,.lesson ol{padding-left:22px}
+.lesson li{margin:4px 0}
+
+.f{overflow-x:auto;overflow-y:hidden;margin:6px 0}
+.key{overflow-x:auto;overflow-y:hidden;margin:14px 0;padding:4px 16px;background:var(--mark);border-radius:2px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.03)}
+mjx-container[display="true"]{overflow-x:auto;overflow-y:hidden;max-width:100%;padding:2px 0}
+.ex{margin:16px 0;padding:12px 16px 6px;border:1px dashed var(--ink3);border-radius:4px;background:var(--sheet)}
+.ex-h{font-family:var(--f-mono);font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin-bottom:2px}
+.ex p{margin:6px 0}
+.tblwrap{overflow-x:auto;margin:12px 0}
+.tbl{border-collapse:collapse;background:var(--sheet);min-width:100%}
+.tbl th,.tbl td{border:1px solid var(--rule);padding:8px 12px;text-align:left;vertical-align:middle}
+.tbl th{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);font-weight:600}
+
+.lfoot{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:40px;padding-top:20px;border-top:1px solid var(--rule)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:6px;border:1.5px solid var(--ink);background:var(--sheet);font-weight:600;font-size:15px;cursor:pointer;line-height:1.2}
+.btn:hover{background:var(--accent-soft)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn.ghost:hover{background:var(--accent-soft)}
+.btn.done{border-color:var(--good);color:var(--good)}
+.spacer{flex:1}
+
+/* home */
+.mods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:28px}
+.mcard{border:1.5px solid var(--ink);border-radius:8px;background:var(--sheet);padding:18px 18px 14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.mcard .mn{font-family:var(--f-display);font-size:13px;color:var(--accent)}
+.mcard h3{margin:0;font-size:20px;line-height:1.2}
+.mcard .ml{display:flex;flex-direction:column;gap:0;margin:4px 0}
+.mcard .ml .lnk{padding:4px 0;font-size:14.5px}
+.mcard .ml .lnk:hover{background:none;text-decoration:underline}
+.meter{height:6px;border-radius:3px;background:var(--rule);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:3px}
+.mstat{display:flex;justify-content:space-between;font-size:13px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.mcard .btn{align-self:flex-start;margin-top:6px}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:18px}
+.how div{font-size:15px;color:var(--ink2)}
+.how b{display:block;color:var(--ink);font-size:15px;margin-bottom:2px}
+.syntax{width:100%;border-collapse:collapse;font-size:14px}
+.syntax td{padding:5px 8px;border-bottom:1px solid var(--rule);vertical-align:top}
+.syntax td:first-child{white-space:nowrap}
+
+/* trainer */
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0 22px}
+.seg{display:inline-flex;flex-wrap:wrap;border:1.5px solid var(--ink);border-radius:6px;overflow:hidden;background:var(--sheet)}
+.seg button{border:0;background:none;padding:7px 12px;font-size:14px;cursor:pointer;border-right:1px solid var(--rule)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--ink);color:var(--sheet);font-weight:600}
+select{font:inherit;font-size:14px;padding:7px 10px;border-radius:6px;border:1.5px solid var(--ink);background:var(--sheet);color:var(--ink);max-width:100%}
+.tgrid{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:22px;align-items:start}
+.task{background:var(--sheet);border:1.5px solid var(--ink);border-radius:8px;padding:20px 22px 22px;box-shadow:4px 4px 0 var(--accent-soft);min-width:0}
+.tmeta{display:flex;flex-wrap:wrap;gap:6px 14px;font-family:var(--f-mono);font-size:12px;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;padding-bottom:10px;border-bottom:1px dashed var(--rule)}
+.tmeta .lv{margin-left:auto;color:var(--accent)}
+.tq{font-size:17px;margin:14px 0 6px;overflow-x:auto}
+.tin{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 12px;align-items:center;margin-top:10px}
+.tin label{font-size:17px;white-space:nowrap}
+.tin input{font-family:var(--f-mono);font-size:16px;padding:10px 12px;border:1.5px solid var(--ink3);border-radius:6px;background:var(--sheet);color:var(--ink);min-width:0;width:100%}
+.tin input:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+.pv{grid-column:2;min-height:44px;padding:4px 10px;border-left:2px solid var(--rule);color:var(--ink2);overflow-x:auto;font-size:15px}
+.pv .muted{color:var(--ink3);font-size:13px}
+.choices{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.choices .btn{font-weight:500}
+.choices .btn.right{border-color:var(--good);background:var(--good-soft);color:var(--good);font-weight:700}
+.choices .btn.wrong{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
+.tact{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.fb{margin-top:14px;padding:10px 14px;border-radius:6px;font-weight:600;font-size:15px}
+.fb:empty{display:none}
+.fb.good{background:var(--good-soft);color:var(--good)}
+.fb.bad{background:var(--bad-soft);color:var(--bad)}
+.panel{margin-top:14px;padding:10px 16px;border-radius:6px;border:1px dashed var(--ink3);overflow-x:auto}
+.panel .ph{font-family:var(--f-mono);font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3)}
+.panel p{margin:6px 0}
+.side{display:flex;flex-direction:column;gap:16px;min-width:0}
+.box{border:1px solid var(--rule);border-radius:8px;background:var(--sheet);padding:14px 14px 12px}
+.box h4{margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3)}
+.big{font-family:var(--f-display);font-size:26px;line-height:1;font-variant-numeric:tabular-nums}
+.big small{font-family:var(--f-body);font-size:13px;color:var(--ink3);margin-left:4px}
+.statrow{display:flex;gap:18px;flex-wrap:wrap}
+.tbar{display:grid;grid-template-columns:76px minmax(0,1fr) 46px;align-items:center;gap:8px;font-size:13px;margin:6px 0;font-variant-numeric:tabular-nums}
+.tbar .meter{height:5px}
+.tbar span:last-child{text-align:right;color:var(--ink3)}
+.box .syntax td{padding:3px 4px;font-size:12.5px}
+.reset{background:none;border:0;padding:0;margin-top:6px;font-size:12.5px;color:var(--ink3);text-decoration:underline;cursor:pointer}
+
+@media (max-width:900px){
+  .tgrid{grid-template-columns:minmax(0,1fr)}
+  .side{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .rail{position:fixed;z-index:20;left:0;top:0;bottom:0;width:min(300px,86vw);height:auto;background:var(--desk);transform:translateX(-102%);transition:transform .2s ease;box-shadow:8px 0 30px rgba(0,0,0,.18);padding-top:calc(22px + env(safe-area-inset-top,0px))}
+  .rail.open{transform:none}
+  .topbar{display:flex;align-items:center;gap:12px;position:sticky;top:env(safe-area-inset-top,0px);z-index:10;padding:10px 16px;background:var(--desk);border-bottom:1px solid var(--rule)}
+  .topbar .t{font-family:var(--f-display);font-size:13.5px;font-weight:700}
+  .topbar .btn{padding:6px 12px;font-size:14px}
+  .scrim{position:fixed;inset:0;z-index:15;background:rgba(0,0,0,.3)}
+  .mods,.how{grid-template-columns:minmax(0,1fr)}
+  .page{padding-block:24px 64px}
+}
+@media (max-width:480px){
+  .tin{grid-template-columns:minmax(0,1fr)}
+  .pv{grid-column:1}
+  .task{padding:16px 14px 18px}
+  .tmeta .lv{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){.rail{transition:none}}
+</style>
+
+<div class="topbar"><button class="btn" id="navOpen" aria-controls="rail" aria-expanded="false">Содержание</button><span class="t">Тетрадь по матанализу</span></div>
+<div class="app">
+  <nav class="rail" id="rail" aria-label="Содержание курса"></nav>
+  <main class="sheet"><div class="page" id="view"></div></main>
+</div>
+<div class="scrim" id="scrim" hidden></div>
+
+<!-- ===================== МОДУЛЬ 1. ПРОИЗВОДНЫЕ ===================== -->
+<template id="L-d1">
+<p>Пусть функция \(y=f(x)\) определена около точки \(x_0\). Дадим аргументу приращение \(\Delta x\); функция получит приращение \(\Delta y=f(x_0+\Delta x)-f(x_0)\). Производная — предел отношения этих приращений:</p>
+<div class="key">\[ f'(x_0)=\lim_{\Delta x\to 0}\frac{\Delta y}{\Delta x}=\lim_{\Delta x\to 0}\frac{f(x_0+\Delta x)-f(x_0)}{\Delta x}. \]</div>
+<p>Если этот предел конечен, функция <b>дифференцируема</b> в точке. Обозначения: \(f'(x)\), \(y'\), \(\dfrac{dy}{dx}\), а для производной по времени — \(\dot y\).</p>
+<h2>Что означает производная</h2>
+<p><b>Геометрически</b> \(f'(x_0)\) — угловой коэффициент касательной к графику: \(f'(x_0)=\operatorname{tg}\alpha\). Уравнение касательной:</p>
+<div class="f">\[ y=f(x_0)+f'(x_0)\,(x-x_0). \]</div>
+<p><b>Физически</b> это скорость изменения величины. Скорость точки \(v=\dot s(t)\), скорость нагрева \(\dfrac{dT}{dt}\), а закон Фурье \(q=-\lambda\dfrac{dT}{dx}\) связывает плотность теплового потока с градиентом температуры.</p>
+<h2>Пример: производная по определению</h2>
+<div class="ex"><div class="ex-h">Пример</div>
+<p>Для \(f(x)=x^2\):</p>
+<div class="f">\[ \frac{(x+\Delta x)^2-x^2}{\Delta x}=\frac{2x\,\Delta x+\Delta x^2}{\Delta x}=2x+\Delta x\ \xrightarrow[\Delta x\to0]{}\ 2x. \]</div>
+<p>Значит, \((x^2)'=2x\). Так же получаются все формулы из таблицы.</p></div>
+<h2>Непрерывность и дифференцируемость</h2>
+<p>Дифференцируемая функция непрерывна. Обратное неверно: \(y=|x|\) непрерывна в нуле, но отношение \(\frac{\Delta y}{\Delta x}\) справа равно \(1\), а слева \(-1\). Предела нет, у графика излом.</p>
+<h2>Замечательные пределы</h2>
+<p>На них держится вывод таблицы производных, и они понадобятся в рядах:</p>
+<div class="f">\[ \lim_{x\to0}\frac{\sin x}{x}=1,\qquad \lim_{x\to\infty}\Bigl(1+\frac1x\Bigr)^x=e, \]</div>
+<div class="f">\[ \lim_{x\to0}\frac{e^x-1}{x}=1,\qquad \lim_{x\to0}\frac{\ln(1+x)}{x}=1,\qquad \lim_{x\to0}\frac{(1+x)^a-1}{x}=a. \]</div>
+<p>Эквивалентности при \(x\to0\): \(\sin x\sim\operatorname{tg}x\sim\arcsin x\sim e^x-1\sim\ln(1+x)\sim x\), \(\;1-\cos x\sim\frac{x^2}{2}\).</p>
+</template>
+
+<template id="L-d2">
+<p>Таблицу нужно знать наизусть: всё остальное сводится к ней правилами дифференцирования.</p>
+<div class="tblwrap"><table class="tbl">
+<thead><tr><th>Функция</th><th>Производная</th><th>Функция</th><th>Производная</th></tr></thead>
+<tbody>
+<tr><td>\(C\)</td><td>\(0\)</td><td>\(\sin x\)</td><td>\(\cos x\)</td></tr>
+<tr><td>\(x^a\)</td><td>\(a\,x^{a-1}\)</td><td>\(\cos x\)</td><td>\(-\sin x\)</td></tr>
+<tr><td>\(\sqrt x\)</td><td>\(\dfrac{1}{2\sqrt x}\)</td><td>\(\operatorname{tg}x\)</td><td>\(\dfrac{1}{\cos^2x}\)</td></tr>
+<tr><td>\(\dfrac1x\)</td><td>\(-\dfrac{1}{x^2}\)</td><td>\(\operatorname{ctg}x\)</td><td>\(-\dfrac{1}{\sin^2x}\)</td></tr>
+<tr><td>\(a^x\)</td><td>\(a^x\ln a\)</td><td>\(\arcsin x\)</td><td>\(\dfrac{1}{\sqrt{1-x^2}}\)</td></tr>
+<tr><td>\(e^x\)</td><td>\(e^x\)</td><td>\(\arccos x\)</td><td>\(-\dfrac{1}{\sqrt{1-x^2}}\)</td></tr>
+<tr><td>\(\log_a x\)</td><td>\(\dfrac{1}{x\ln a}\)</td><td>\(\operatorname{arctg}x\)</td><td>\(\dfrac{1}{1+x^2}\)</td></tr>
+<tr><td>\(\ln x\)</td><td>\(\dfrac1x\)</td><td>\(\operatorname{arcctg}x\)</td><td>\(-\dfrac{1}{1+x^2}\)</td></tr>
+<tr><td>\(\operatorname{sh}x\)</td><td>\(\operatorname{ch}x\)</td><td>\(\operatorname{ch}x\)</td><td>\(\operatorname{sh}x\)</td></tr>
+</tbody></table></div>
+<p>Мнемоника: у «ко-функций» (\(\cos\), \(\operatorname{ctg}\), \(\arccos\), \(\operatorname{arcctg}\)) производная со знаком минус. Корни и дроби удобно сначала переписать как степени: \(\sqrt[3]{x^2}=x^{2/3}\), \(\frac{1}{x^3}=x^{-3}\).</p>
+<div class="ex"><div class="ex-h">Пример</div>
+<div class="f">\[ \Bigl(3x^4-2\sqrt x+\frac5x\Bigr)'=12x^3-\frac{1}{\sqrt x}-\frac{5}{x^2}. \]</div></div>
+</template>
+
+<template id="L-d3">
+<p>Пусть \(u=u(x)\), \(v=v(x)\) дифференцируемы, \(C\) — число.</p>
+<div class="key">\[ (u\pm v)'=u'\pm v',\qquad (Cu)'=C\,u', \]
+\[ (uv)'=u'v+uv',\qquad \Bigl(\frac uv\Bigr)'=\frac{u'v-uv'}{v^2}. \]</div>
+<p>Для трёх множителей: \((uvw)'=u'vw+uv'w+uvw'\) — каждый множитель по очереди дифференцируется, остальные остаются.</p>
+<div class="ex"><div class="ex-h">Пример 1. Произведение</div>
+<div class="f">\[ (x^2\sin x)'=2x\sin x+x^2\cos x. \]</div></div>
+<div class="ex"><div class="ex-h">Пример 2. Частное</div>
+<div class="f">\[ \Bigl(\frac{x+1}{x-1}\Bigr)'=\frac{1\cdot(x-1)-(x+1)\cdot1}{(x-1)^2}=-\frac{2}{(x-1)^2}. \]</div></div>
+<h2>Как упростить себе жизнь</h2>
+<ul>
+<li>Если знаменатель — число или одночлен, сначала разделите почленно: \(\frac{x^3+1}{x}=x^2+x^{-1}\). Правило частного не понадобится.</li>
+<li>Логарифм произведения раскладывается до дифференцирования: \(\ln\frac{x^2}{x+1}=2\ln x-\ln(x+1)\).</li>
+</ul>
+<h2>Типичные ошибки</h2>
+<ul><li>\((uv)'\ne u'v'\).</li><li>В числителе частного порядок важен: \(u'v-uv'\), а не наоборот.</li><li>\((5^x)'\ne x\cdot5^{x-1}\): это показательная функция, а не степенная.</li></ul>
+</template>
+
+<template id="L-d4">
+<p>Если \(y=f(u)\), а \(u=g(x)\), то сложная функция \(y=f(g(x))\) дифференцируется так:</p>
+<div class="key">\[ \bigl(f(g(x))\bigr)'=f'(g(x))\cdot g'(x),\qquad\text{или}\qquad \frac{dy}{dx}=\frac{dy}{du}\cdot\frac{du}{dx}. \]</div>
+<p>Алгоритм: определите, какая операция выполняется <b>последней</b> — это внешняя функция. Дифференцируйте её, оставив аргумент как есть, и умножьте на производную аргумента. Повторяйте, пока не дойдёте до \(x\).</p>
+<h2>Таблица для сложного аргумента</h2>
+<div class="tblwrap"><table class="tbl"><tbody>
+<tr><td>\((u^a)'=a\,u^{a-1}\cdot u'\)</td><td>\((\sin u)'=\cos u\cdot u'\)</td></tr>
+<tr><td>\((e^u)'=e^u\cdot u'\)</td><td>\((\cos u)'=-\sin u\cdot u'\)</td></tr>
+<tr><td>\((a^u)'=a^u\ln a\cdot u'\)</td><td>\((\operatorname{tg}u)'=\dfrac{u'}{\cos^2u}\)</td></tr>
+<tr><td>\((\ln u)'=\dfrac{u'}{u}\)</td><td>\((\operatorname{arctg}u)'=\dfrac{u'}{1+u^2}\)</td></tr>
+<tr><td>\((\sqrt u)'=\dfrac{u'}{2\sqrt u}\)</td><td>\((\arcsin u)'=\dfrac{u'}{\sqrt{1-u^2}}\)</td></tr>
+</tbody></table></div>
+<div class="ex"><div class="ex-h">Пример 1. Три слоя</div>
+<p>\(\sin^3 2x\): снаружи куб, внутри синус, ещё глубже \(2x\).</p>
+<div class="f">\[ (\sin^3 2x)'=3\sin^2 2x\cdot\cos2x\cdot2=6\sin^22x\cos2x. \]</div></div>
+<div class="ex"><div class="ex-h">Пример 2</div>
+<div class="f">\[ \bigl(\ln(x^2+1)\bigr)'=\frac{2x}{x^2+1},\qquad \bigl(e^{\sqrt x}\bigr)'=e^{\sqrt x}\cdot\frac{1}{2\sqrt x}. \]</div></div>
+<p>Самая частая ошибка — забыть множитель от внутренней функции: \((\sin 5x)'=5\cos5x\), а не \(\cos 5x\).</p>
+</template>
+
+<template id="L-d5">
+<h2>Производные высших порядков</h2>
+<p>\(f''=(f')'\), \(f'''=(f'')'\), \(f^{(n)}=\bigl(f^{(n-1)}\bigr)'\). Полезные формулы \(n\)-й производной:</p>
+<div class="f">\[ (e^{kx})^{(n)}=k^ne^{kx},\qquad (\sin x)^{(n)}=\sin\Bigl(x+\frac{\pi n}{2}\Bigr),\qquad (\cos x)^{(n)}=\cos\Bigl(x+\frac{\pi n}{2}\Bigr), \]</div>
+<div class="f">\[ (\ln x)^{(n)}=\frac{(-1)^{n-1}(n-1)!}{x^n},\qquad (uv)^{(n)}=\sum_{k=0}^{n}C_n^k\,u^{(k)}v^{(n-k)}\ \ (\text{формула Лейбница}). \]</div>
+<h2>Неявная функция</h2>
+<p>Если \(y(x)\) задана уравнением \(F(x,y)=0\), продифференцируйте обе части по \(x\), помня, что \(y\) — функция от \(x\) (значит, \((y^2)'=2yy'\)), и выразите \(y'\).</p>
+<div class="ex"><div class="ex-h">Пример</div>
+<div class="f">\[ x^2+y^2=R^2\ \Rightarrow\ 2x+2yy'=0\ \Rightarrow\ y'=-\frac{x}{y}. \]</div></div>
+<h2>Параметрическая функция</h2>
+<p>Если \(x=x(t)\), \(y=y(t)\):</p>
+<div class="key">\[ y'_x=\frac{y'_t}{x'_t},\qquad y''_{xx}=\frac{(y'_x)'_t}{x'_t}. \]</div>
+<div class="ex"><div class="ex-h">Пример. Эллипс</div>
+<p>\(x=a\cos t\), \(y=b\sin t\): \(\;y'_x=\dfrac{b\cos t}{-a\sin t}=-\dfrac ba\operatorname{ctg}t\).</p></div>
+<h2>Логарифмическое дифференцирование</h2>
+<p>Для \(y=u^v\) (основание и показатель зависят от \(x\)) логарифмируем: \(\ln y=v\ln u\). Дифференцируем обе части:</p>
+<div class="f">\[ \frac{y'}{y}=v'\ln u+v\frac{u'}{u}\quad\Rightarrow\quad y'=u^v\Bigl(v'\ln u+\frac{v\,u'}{u}\Bigr). \]</div>
+<div class="ex"><div class="ex-h">Пример</div><div class="f">\[ (x^x)'=x^x(\ln x+1). \]</div></div>
+</template>
+
+<template id="L-d6">
+<h2>Правило Лопиталя</h2>
+<p>Если \(f(x)\to0\) и \(g(x)\to0\) (или обе \(\to\infty\)) и существует предел отношения производных, то</p>
+<div class="key">\[ \lim\frac{f(x)}{g(x)}=\lim\frac{f'(x)}{g'(x)}. \]</div>
+<p>Дифференцируются числитель и знаменатель <b>по отдельности</b>, а не дробь целиком. Правило можно применять повторно.</p>
+<div class="ex"><div class="ex-h">Пример</div>
+<div class="f">\[ \lim_{x\to0}\frac{x-\sin x}{x^3}=\lim_{x\to0}\frac{1-\cos x}{3x^2}=\lim_{x\to0}\frac{\sin x}{6x}=\frac16. \]</div></div>
+<p>Другие неопределённости сводятся к \(\frac00\) или \(\frac\infty\infty\): \(0\cdot\infty\) — переписать как дробь; \(\infty-\infty\) — общий знаменатель; \(1^\infty\), \(0^0\), \(\infty^0\) — через \(u^v=e^{v\ln u}\).</p>
+<h2>Исследование функции</h2>
+<ul>
+<li>\(f'\gt0\) на интервале — функция возрастает, \(f'\lt0\) — убывает.</li>
+<li>Критические точки: \(f'(x)=0\) или не существует. Смена знака \(f'\) с «+» на «−» — максимум, с «−» на «+» — минимум.</li>
+<li>Второй признак: \(f'(x_0)=0\), \(f''(x_0)\lt0\) — максимум, \(f''(x_0)\gt0\) — минимум.</li>
+<li>\(f''\gt0\) — график выпуклый вниз, \(f''\lt0\) — вверх; смена знака \(f''\) — точка перегиба.</li>
+</ul>
+<h2>Дифференциал и приближённые вычисления</h2>
+<div class="f">\[ dy=f'(x)\,dx,\qquad f(x_0+\Delta x)\approx f(x_0)+f'(x_0)\,\Delta x. \]</div>
+<div class="ex"><div class="ex-h">Пример</div><p>\(\sqrt{4{,}02}\approx2+\dfrac{0{,}02}{2\cdot2}=2{,}005\) (точное значение 2,004993…).</p></div>
+<h2>Мостик к рядам</h2>
+<p>Формула Тейлора обобщает линейное приближение на многочлен степени \(n\):</p>
+<div class="f">\[ f(x)=\sum_{k=0}^{n}\frac{f^{(k)}(x_0)}{k!}(x-x_0)^k+o\bigl((x-x_0)^n\bigr). \]</div>
+<p>Подробнее — в модуле 4.</p>
+</template>
+
+<!-- ===================== МОДУЛЬ 2. ИНТЕГРАЛЫ ===================== -->
+<template id="L-i1">
+<p>Функция \(F(x)\) — <b>первообразная</b> для \(f(x)\), если \(F'(x)=f(x)\). Все первообразные отличаются на постоянную, поэтому</p>
+<div class="key">\[ \int f(x)\,dx=F(x)+C. \]</div>
+<p>Свойства: \(\bigl(\int f\,dx\bigr)'=f\); \(\int(af+bg)\,dx=a\int f\,dx+b\int g\,dx\). Любой ответ проверяется дифференцированием — так же работает проверка в тренажёре.</p>
+<h2>Таблица интегралов</h2>
+<div class="tblwrap"><table class="tbl"><tbody>
+<tr><td>\(\displaystyle\int x^a\,dx=\frac{x^{a+1}}{a+1}+C,\ a\ne-1\)</td><td>\(\displaystyle\int\frac{dx}{x}=\ln|x|+C\)</td></tr>
+<tr><td>\(\displaystyle\int e^x\,dx=e^x+C\)</td><td>\(\displaystyle\int a^x\,dx=\frac{a^x}{\ln a}+C\)</td></tr>
+<tr><td>\(\displaystyle\int\sin x\,dx=-\cos x+C\)</td><td>\(\displaystyle\int\cos x\,dx=\sin x+C\)</td></tr>
+<tr><td>\(\displaystyle\int\frac{dx}{\cos^2x}=\operatorname{tg}x+C\)</td><td>\(\displaystyle\int\frac{dx}{\sin^2x}=-\operatorname{ctg}x+C\)</td></tr>
+<tr><td>\(\displaystyle\int\frac{dx}{a^2+x^2}=\frac1a\operatorname{arctg}\frac xa+C\)</td><td>\(\displaystyle\int\frac{dx}{\sqrt{a^2-x^2}}=\arcsin\frac xa+C\)</td></tr>
+<tr><td>\(\displaystyle\int\frac{dx}{x^2-a^2}=\frac{1}{2a}\ln\left|\frac{x-a}{x+a}\right|+C\)</td><td>\(\displaystyle\int\frac{dx}{\sqrt{x^2\pm a^2}}=\ln\left|x+\sqrt{x^2\pm a^2}\right|+C\)</td></tr>
+<tr><td>\(\displaystyle\int\operatorname{sh}x\,dx=\operatorname{ch}x+C\)</td><td>\(\displaystyle\int\operatorname{ch}x\,dx=\operatorname{sh}x+C\)</td></tr>
+</tbody></table></div>
+<div class="ex"><div class="ex-h">Пример</div>
+<div class="f">\[ \int\Bigl(3x^2-\frac4x+2e^x\Bigr)dx=x^3-4\ln|x|+2e^x+C. \]</div>
+<p>Если подынтегральное выражение — произведение или дробь, которые можно раскрыть, раскройте: \(\int\frac{(x+1)^2}{x}dx=\int\bigl(x+2+\frac1x\bigr)dx=\frac{x^2}{2}+2x+\ln|x|+C\).</p></div>
+</template>
+
+<template id="L-i2">
+<p>Если \(x=\varphi(t)\), то \(dx=\varphi'(t)\,dt\) и</p>
+<div class="key">\[ \int f(x)\,dx=\int f(\varphi(t))\,\varphi'(t)\,dt. \]</div>
+<p>Чаще работают в обратную сторону — <b>внесение под знак дифференциала</b>: замечаем в подынтегральном выражении производную от некоторой функции \(u(x)\) и пишем \(u'(x)\,dx=du\).</p>
+<h2>Шпаргалка</h2>
+<div class="tblwrap"><table class="tbl"><tbody>
+<tr><td>\(dx=\frac1k\,d(kx+b)\)</td><td>\(x\,dx=\frac12\,d(x^2)\)</td><td>\(\cos x\,dx=d(\sin x)\)</td></tr>
+<tr><td>\(\sin x\,dx=-d(\cos x)\)</td><td>\(\dfrac{dx}{x}=d(\ln x)\)</td><td>\(e^x dx=d(e^x)\)</td></tr>
+<tr><td>\(\dfrac{dx}{\cos^2x}=d(\operatorname{tg}x)\)</td><td>\(\dfrac{dx}{1+x^2}=d(\operatorname{arctg}x)\)</td><td>\(\dfrac{dx}{2\sqrt x}=d(\sqrt x)\)</td></tr>
+</tbody></table></div>
+<p>Два следствия, которые стоит помнить:</p>
+<div class="f">\[ \int f(kx+b)\,dx=\frac1k F(kx+b)+C,\qquad \int\frac{u'(x)}{u(x)}\,dx=\ln|u(x)|+C. \]</div>
+<div class="ex"><div class="ex-h">Примеры</div>
+<div class="f">\[ \int x\,e^{x^2}dx=\frac12\int e^{x^2}d(x^2)=\frac12e^{x^2}+C, \]</div>
+<div class="f">\[ \int\sin^3x\cos x\,dx=\int\sin^3x\,d(\sin x)=\frac{\sin^4x}{4}+C,\qquad \int\frac{dx}{x\ln x}=\int\frac{d(\ln x)}{\ln x}=\ln|\ln x|+C. \]</div></div>
+<h2>Тригонометрические подстановки</h2>
+<p>\(\sqrt{a^2-x^2}\): \(x=a\sin t\); \(\;\sqrt{a^2+x^2}\): \(x=a\operatorname{tg}t\); \(\;\sqrt{x^2-a^2}\): \(x=\dfrac{a}{\cos t}\). Например,</p>
+<div class="f">\[ \int\sqrt{1-x^2}\,dx=\int\cos^2t\,dt=\frac12\bigl(\arcsin x+x\sqrt{1-x^2}\bigr)+C. \]</div>
+</template>
+
+<template id="L-i3">
+<div class="key">\[ \int u\,dv=uv-\int v\,du. \]</div>
+<p>Задача — разбить подынтегральное выражение на \(u\) и \(dv\) так, чтобы \(\int v\,du\) оказался проще исходного. Правило выбора \(u\) — <b>ЛИАТЭ</b>: за \(u\) берут то, что раньше в списке.</p>
+<p><b>Л</b>огарифмы → <b>И</b>нверсные тригонометрические (\(\operatorname{arctg}\), \(\arcsin\)) → <b>А</b>лгебраические (многочлены) → <b>Т</b>ригонометрические → <b>Э</b>кспоненты.</p>
+<div class="tblwrap"><table class="tbl"><thead><tr><th>Интеграл</th><th>\(u\)</th><th>\(dv\)</th></tr></thead><tbody>
+<tr><td>\(\int P_n(x)\,e^{ax}dx\), \(\int P_n(x)\sin ax\,dx\)</td><td>\(P_n(x)\)</td><td>остальное</td></tr>
+<tr><td>\(\int P_n(x)\ln x\,dx\), \(\int P_n(x)\operatorname{arctg}x\,dx\)</td><td>\(\ln x\), \(\operatorname{arctg}x\)</td><td>\(P_n(x)\,dx\)</td></tr>
+<tr><td>\(\int e^{ax}\sin bx\,dx\)</td><td colspan="2">любой выбор; дважды по частям, затем уравнение для \(I\)</td></tr>
+</tbody></table></div>
+<p>Многочлен степени \(n\) придётся «разбирать» \(n\) раз.</p>
+<div class="ex"><div class="ex-h">Пример 1</div>
+<p>\(u=x\), \(dv=e^{2x}dx\), тогда \(du=dx\), \(v=\frac12e^{2x}\):</p>
+<div class="f">\[ \int x\,e^{2x}dx=\frac x2e^{2x}-\frac12\int e^{2x}dx=\frac x2e^{2x}-\frac14e^{2x}+C. \]</div></div>
+<div class="ex"><div class="ex-h">Пример 2</div>
+<div class="f">\[ \int\ln x\,dx=x\ln x-\int x\cdot\frac1x\,dx=x\ln x-x+C. \]</div></div>
+<div class="ex"><div class="ex-h">Пример 3. Циклический интеграл</div>
+<div class="f">\[ I=\int e^x\sin x\,dx=e^x\sin x-\int e^x\cos x\,dx=e^x\sin x-e^x\cos x-I, \]</div>
+<div class="f">\[ 2I=e^x(\sin x-\cos x)\ \Rightarrow\ I=\frac{e^x}{2}(\sin x-\cos x)+C. \]</div></div>
+</template>
+
+<template id="L-i4">
+<p>Рациональная дробь \(\dfrac{P(x)}{Q(x)}\) интегрируется всегда. План:</p>
+<ol>
+<li>Если степень \(P\) не меньше степени \(Q\), разделите многочлены «уголком»: выделите целую часть.</li>
+<li>Разложите знаменатель на множители: линейные \((x-a)^k\) и неразложимые квадратные \((x^2+px+q)^m\).</li>
+<li>Разложите правильную дробь на простейшие.</li>
+<li>Проинтегрируйте каждую простейшую.</li>
+</ol>
+<div class="key">\[ \frac{P(x)}{(x-a)(x-b)^2(x^2+px+q)}=\frac{A}{x-a}+\frac{B_1}{x-b}+\frac{B_2}{(x-b)^2}+\frac{Mx+N}{x^2+px+q}. \]</div>
+<p>Коэффициенты находят, приводя к общему знаменателю и приравнивая числители: подставляют корни знаменателя или приравнивают коэффициенты при одинаковых степенях.</p>
+<h2>Интегралы от простейших дробей</h2>
+<div class="f">\[ \int\frac{dx}{x-a}=\ln|x-a|,\qquad \int\frac{dx}{(x-a)^k}=-\frac{1}{(k-1)(x-a)^{k-1}}, \]</div>
+<div class="f">\[ \int\frac{Mx+N}{x^2+a^2}\,dx=\frac M2\ln(x^2+a^2)+\frac Na\operatorname{arctg}\frac xa. \]</div>
+<p>Квадратный трёхчлен без действительных корней сводится к этому виду выделением полного квадрата.</p>
+<div class="ex"><div class="ex-h">Пример 1</div>
+<p>\(\dfrac{x+3}{x^2-3x+2}=\dfrac{x+3}{(x-1)(x-2)}=\dfrac{A}{x-1}+\dfrac{B}{x-2}\). Подставляем \(x=1\): \(4=-A\), \(A=-4\). Подставляем \(x=2\): \(5=B\).</p>
+<div class="f">\[ \int\frac{x+3}{x^2-3x+2}\,dx=-4\ln|x-1|+5\ln|x-2|+C. \]</div></div>
+<div class="ex"><div class="ex-h">Пример 2. Полный квадрат</div>
+<div class="f">\[ \int\frac{dx}{x^2+2x+5}=\int\frac{d(x+1)}{(x+1)^2+4}=\frac12\operatorname{arctg}\frac{x+1}{2}+C. \]</div></div>
+</template>
+
+<template id="L-i5">
+<h2>Степени синуса и косинуса</h2>
+<p>\(\int\sin^mx\cos^nx\,dx\):</p>
+<ul>
+<li>Одна из степеней <b>нечётная</b> — отщепите один множитель под дифференциал, остальное выразите через другую функцию: \(\sin^2=1-\cos^2\).</li>
+<li>Обе <b>чётные</b> — понижайте степень: \(\sin^2x=\frac{1-\cos2x}{2}\), \(\cos^2x=\frac{1+\cos2x}{2}\), \(\sin x\cos x=\frac12\sin2x\).</li>
+</ul>
+<div class="ex"><div class="ex-h">Примеры</div>
+<div class="f">\[ \int\sin^3x\,dx=-\int(1-\cos^2x)\,d(\cos x)=-\cos x+\frac{\cos^3x}{3}+C, \]</div>
+<div class="f">\[ \int\sin^2x\,dx=\int\frac{1-\cos2x}{2}dx=\frac x2-\frac{\sin2x}{4}+C. \]</div></div>
+<h2>Произведения с разными аргументами</h2>
+<div class="f">\[ \sin\alpha\cos\beta=\tfrac12[\sin(\alpha+\beta)+\sin(\alpha-\beta)],\quad \cos\alpha\cos\beta=\tfrac12[\cos(\alpha-\beta)+\cos(\alpha+\beta)],\quad \sin\alpha\sin\beta=\tfrac12[\cos(\alpha-\beta)-\cos(\alpha+\beta)]. \]</div>
+<h2>Универсальная подстановка</h2>
+<p>Для любой рациональной функции от \(\sin x\), \(\cos x\) работает \(t=\operatorname{tg}\frac x2\):</p>
+<div class="f">\[ \sin x=\frac{2t}{1+t^2},\qquad \cos x=\frac{1-t^2}{1+t^2},\qquad dx=\frac{2\,dt}{1+t^2}. \]</div>
+<p>Подстановка тяжеловесная; если подходит более простой приём, используйте его. Ещё один полезный результат: \(\int\operatorname{tg}x\,dx=-\ln|\cos x|+C\).</p>
+<h2>Иррациональности</h2>
+<p>\(\int R\bigl(x,\sqrt[n]{ax+b}\bigr)dx\): замена \(t=\sqrt[n]{ax+b}\) превращает интеграл в рациональный. Для \(\sqrt{a^2\pm x^2}\) и \(\sqrt{x^2-a^2}\) — тригонометрические подстановки из урока 2.2.</p>
+</template>
+
+<template id="L-i6">
+<h2>Определение и формула Ньютона–Лейбница</h2>
+<p>Определённый интеграл — предел интегральных сумм: \(\int_a^bf(x)\,dx=\lim\sum f(\xi_i)\Delta x_i\) при измельчении разбиения. Для непрерывной \(f\) он вычисляется через первообразную:</p>
+<div class="key">\[ \int_a^b f(x)\,dx=F(x)\Big|_a^b=F(b)-F(a). \]</div>
+<p>Свойства: \(\int_a^b=-\int_b^a\); \(\int_a^b=\int_a^c+\int_c^b\); для нечётной функции \(\int_{-a}^{a}f\,dx=0\), для чётной \(\int_{-a}^{a}f\,dx=2\int_0^af\,dx\).</p>
+<h2>Замена и «по частям»</h2>
+<p>При замене меняются и пределы, возвращаться к \(x\) не нужно:</p>
+<div class="f">\[ \int_0^1x\,e^{x^2}dx=\Bigl[t=x^2\Bigr]=\frac12\int_0^1e^t\,dt=\frac{e-1}{2}. \]</div>
+<div class="f">\[ \int_a^bu\,dv=uv\Big|_a^b-\int_a^bv\,du. \]</div>
+<h2>Приложения</h2>
+<div class="tblwrap"><table class="tbl"><tbody>
+<tr><td>Площадь между кривыми</td><td>\(S=\int_a^b\bigl(f(x)-g(x)\bigr)dx,\ f\ge g\)</td></tr>
+<tr><td>Объём тела вращения вокруг \(Ox\)</td><td>\(V=\pi\int_a^bf^2(x)\,dx\)</td></tr>
+<tr><td>Длина дуги</td><td>\(L=\int_a^b\sqrt{1+f'^2(x)}\,dx\)</td></tr>
+<tr><td>Работа переменной силы</td><td>\(A=\int_a^bF(x)\,dx\)</td></tr>
+</tbody></table></div>
+<h2>Несобственные интегралы</h2>
+<p>С бесконечным пределом или неограниченной функцией интеграл определяют через предел:</p>
+<div class="f">\[ \int_a^{+\infty}f\,dx=\lim_{b\to+\infty}\int_a^bf\,dx,\qquad \int_a^bf\,dx=\lim_{\varepsilon\to0+}\int_{a+\varepsilon}^bf\,dx\ \ (\text{особенность в }a). \]</div>
+<p>Если предел конечен — интеграл сходится, иначе расходится. Эталоны для сравнения:</p>
+<div class="key">\[ \int_1^{+\infty}\frac{dx}{x^p}\ \text{сходится}\iff p\gt1,\qquad \int_0^1\frac{dx}{x^p}\ \text{сходится}\iff p\lt1. \]</div>
+<div class="ex"><div class="ex-h">Примеры</div>
+<div class="f">\[ \int_0^{+\infty}e^{-x}dx=\lim_{b\to\infty}\bigl(1-e^{-b}\bigr)=1,\qquad \int_1^{+\infty}\frac{dx}{x}=\lim_{b\to\infty}\ln b=\infty. \]</div></div>
+</template>
+
+<!-- ===================== МОДУЛЬ 3. ДИФФЕРЕНЦИАЛЬНЫЕ УРАВНЕНИЯ ===================== -->
+<template id="L-e1">
+<p><b>Обыкновенное дифференциальное уравнение</b> связывает независимую переменную \(x\), неизвестную функцию \(y(x)\) и её производные: \(F(x,y,y',\dots,y^{(n)})=0\). <b>Порядок</b> уравнения — порядок старшей производной.</p>
+<div class="tblwrap"><table class="tbl"><tbody>
+<tr><td>\(y'=x^2+y\)</td><td>1-й порядок, линейное</td></tr>
+<tr><td>\(y''+4y=0\)</td><td>2-й порядок, линейное однородное</td></tr>
+<tr><td>\(y'''-y'=e^x\)</td><td>3-й порядок, линейное неоднородное</td></tr>
+<tr><td>\(y\,y''=(y')^2\)</td><td>2-й порядок, нелинейное</td></tr>
+</tbody></table></div>
+<h2>Решения</h2>
+<ul>
+<li><b>Решение</b> — функция, которая при подстановке превращает уравнение в тождество.</li>
+<li><b>Общее решение</b> уравнения \(n\)-го порядка содержит \(n\) независимых произвольных постоянных \(C_1,\dots,C_n\).</li>
+<li><b>Частное решение</b> получается при конкретных значениях постоянных.</li>
+<li><b>Задача Коши</b>: найти решение, удовлетворяющее \(n\) начальным условиям \(y(x_0)=y_0,\ y'(x_0)=y_1,\dots\) При разумных условиях на уравнение (теорема Пикара) решение существует и единственно.</li>
+</ul>
+<div class="ex"><div class="ex-h">Проверка решения</div>
+<p>Является ли \(y=C_1e^x+C_2e^{-x}\) решением \(y''-y=0\)? \(y''=C_1e^x+C_2e^{-x}=y\), значит, \(y''-y=0\). Да, и это общее решение: две независимые постоянные для уравнения 2-го порядка.</p></div>
+<h2>Откуда берутся уравнения</h2>
+<p>Закон охлаждения Ньютона: скорость остывания пропорциональна разности температур тела и среды:</p>
+<div class="f">\[ \frac{dT}{dt}=-k\,(T-T_{\text{ср}})\quad\Rightarrow\quad T(t)=T_{\text{ср}}+(T_0-T_{\text{ср}})\,e^{-kt}. \]</div>
+<p>Колебания массы на пружине с трением дают \(m\ddot x+c\dot x+kx=F(t)\) — линейное уравнение 2-го порядка с постоянными коэффициентами, центральная тема модуля.</p>
+<p><b>Как вводить ответы в тренажёре:</b> постоянные пишите как <code>C</code> или <code>C1</code>, <code>C2</code>, <code>C3</code>. Проверка подставляет ваш ответ в уравнение и считает число независимых постоянных, поэтому любая эквивалентная запись засчитывается.</p>
+</template>
+
+<template id="L-e2">
+<h2>Уравнения с разделяющимися переменными</h2>
+<p>Вид \(y'=f(x)\,g(y)\). Пишем \(y'=\frac{dy}{dx}\), разносим переменные по разные стороны и интегрируем:</p>
+<div class="key">\[ \frac{dy}{g(y)}=f(x)\,dx\quad\Rightarrow\quad\int\frac{dy}{g(y)}=\int f(x)\,dx+C. \]</div>
+<p>Делить на \(g(y)\) можно, если \(g(y)\ne0\); корни \(g(y)=0\) дают отдельные решения \(y=\text{const}\), которые легко потерять.</p>
+<div class="ex"><div class="ex-h">Пример 1</div>
+<div class="f">\[ y'=xy:\quad\frac{dy}{y}=x\,dx\ \Rightarrow\ \ln|y|=\frac{x^2}{2}+C_0\ \Rightarrow\ y=C\,e^{x^2/2}. \]</div>
+<p>Решение \(y=0\) входит в формулу при \(C=0\).</p></div>
+<div class="ex"><div class="ex-h">Пример 2</div>
+<div class="f">\[ y'=\frac{1+y^2}{1+x^2}:\quad\frac{dy}{1+y^2}=\frac{dx}{1+x^2}\ \Rightarrow\ \operatorname{arctg}y=\operatorname{arctg}x+C. \]</div></div>
+<h2>Однородные уравнения</h2>
+<p>Вид \(y'=\varphi\!\left(\frac yx\right)\): правая часть зависит только от отношения \(\frac yx\). Замена</p>
+<div class="key">\[ y=u(x)\,x,\qquad y'=u+x\,u' \]</div>
+<p>приводит к уравнению с разделяющимися переменными \(x\,u'=\varphi(u)-u\).</p>
+<div class="ex"><div class="ex-h">Пример</div>
+<p>\(y'=\frac yx+1\): \(u+xu'=u+1\), \(\;du=\frac{dx}{x}\), \(\;u=\ln|x|+C\), \(\;y=x(\ln|x|+C)\).</p></div>
+</template>
+
+<template id="L-e3">
+<h2>Линейное уравнение первого порядка</h2>
+<div class="key">\[ y'+P(x)\,y=Q(x). \]</div>
+<p><b>Интегрирующий множитель.</b> Домножим на \(\mu=e^{\int P\,dx}\): левая часть станет производной произведения, \((\mu y)'=\mu Q\). Отсюда</p>
+<div class="f">\[ y=e^{-\int P\,dx}\Bigl(\int Q\,e^{\int P\,dx}\,dx+C\Bigr). \]</div>
+<p><b>Метод Бернулли.</b> Ищем \(y=uv\). Тогда \(u'v+u(v'+Pv)=Q\). Подбираем \(v\) из условия \(v'+Pv=0\) (с разделяющимися переменными, без константы), затем находим \(u\) из \(u'v=Q\).</p>
+<p><b>Метод Лагранжа</b> (вариация постоянной): решаем однородное \(y'+Py=0\), получаем \(y=Ce^{-\int P}\), затем считаем \(C=C(x)\) и подставляем.</p>
+<div class="ex"><div class="ex-h">Пример</div>
+<p>\(y'+\frac yx=x^2\). Здесь \(\mu=e^{\int dx/x}=x\):</p>
+<div class="f">\[ (xy)'=x^3\ \Rightarrow\ xy=\frac{x^4}{4}+C\ \Rightarrow\ y=\frac{x^3}{4}+\frac Cx. \]</div></div>
+<h2>Уравнение Бернулли</h2>
+<div class="f">\[ y'+P(x)\,y=Q(x)\,y^{\alpha},\qquad\alpha\ne0,1. \]</div>
+<p>Делим на \(y^\alpha\) и вводим \(z=y^{1-\alpha}\): получается линейное уравнение для \(z\). Можно сразу применять метод \(y=uv\).</p>
+<div class="ex"><div class="ex-h">Пример</div>
+<p>\(y'+y=y^2\). Замена \(z=\frac1y\), \(z'=-\frac{y'}{y^2}\): \(\;z'-z=-1\), \(\;z=1+Ce^x\), \(\;y=\dfrac{1}{1+Ce^x}\).</p></div>
+<h2>Уравнения в полных дифференциалах</h2>
+<p>\(M(x,y)\,dx+N(x,y)\,dy=0\), если \(\frac{\partial M}{\partial y}=\frac{\partial N}{\partial x}\). Тогда левая часть — дифференциал некоторой \(U(x,y)\), и общее решение \(U(x,y)=C\), где \(U_x=M\), \(U_y=N\).</p>
+</template>
+
+<template id="L-e4">
+<p>Некоторые уравнения высших порядков сводятся к уравнениям меньшего порядка.</p>
+<h2>1. \(y^{(n)}=f(x)\)</h2>
+<p>Интегрируем \(n\) раз, после каждого интегрирования добавляя новую постоянную.</p>
+<div class="ex"><div class="ex-h">Пример</div>
+<div class="f">\[ y'''=e^{2x}:\quad y''=\tfrac12e^{2x}+C_1,\quad y'=\tfrac14e^{2x}+C_1x+C_2,\quad y=\tfrac18e^{2x}+\tfrac{C_1}{2}x^2+C_2x+C_3. \]</div>
+<p>Постоянную \(\frac{C_1}{2}\) можно переобозначить: \(y=\frac18e^{2x}+C_1x^2+C_2x+C_3\).</p></div>
+<h2>2. Нет искомой функции: \(F(x,y',y'')=0\)</h2>
+<p>Замена \(y'=p(x)\), \(y''=p'\) понижает порядок на единицу.</p>
+<div class="ex"><div class="ex-h">Пример</div>
+<p>\(xy''=y'\): \(\;xp'=p\), \(\;p=C_1x\), \(\;y=\frac{C_1}{2}x^2+C_2\), или \(y=C_1x^2+C_2\).</p></div>
+<h2>3. Нет независимой переменной: \(F(y,y',y'')=0\)</h2>
+<p>Считаем \(y'=p(y)\) функцией от \(y\). Тогда</p>
+<div class="key">\[ y''=\frac{dp}{dx}=\frac{dp}{dy}\cdot\frac{dy}{dx}=p\,\frac{dp}{dy}. \]</div>
+<div class="ex"><div class="ex-h">Пример</div>
+<p>\(yy''=(y')^2\): \(\;y\,p\frac{dp}{dy}=p^2\Rightarrow\frac{dp}{p}=\frac{dy}{y}\Rightarrow p=C_1y\). Затем \(y'=C_1y\), \(\;y=C_2e^{C_1x}\).</p></div>
+</template>
+
+<template id="L-e5">
+<p>Рассматриваем уравнения с постоянными коэффициентами:</p>
+<div class="f">\[ y''+py'+qy=0,\qquad y'''+a_1y''+a_2y'+a_3y=0. \]</div>
+<p>Решения образуют линейное пространство размерности \(n\) (порядок уравнения). Любые \(n\) линейно независимых решений \(y_1,\dots,y_n\) — фундаментальная система, а общее решение \(y=C_1y_1+\dots+C_ny_n\). Независимость проверяется определителем Вронского \(W\ne0\).</p>
+<h2>Характеристическое уравнение</h2>
+<p>Подстановка \(y=e^{rx}\) даёт \(y^{(k)}=r^ke^{rx}\), и после сокращения на \(e^{rx}\):</p>
+<div class="key">\[ r^2+pr+q=0\qquad\text{или}\qquad r^3+a_1r^2+a_2r+a_3=0. \]</div>
+<h2>Каждый корень даёт свои решения</h2>
+<div class="tblwrap"><table class="tbl"><thead><tr><th>Корни</th><th>Вклад в фундаментальную систему</th></tr></thead><tbody>
+<tr><td>действительный \(r\), простой</td><td>\(e^{rx}\)</td></tr>
+<tr><td>действительный \(r\) кратности \(k\)</td><td>\(e^{rx},\ xe^{rx},\ \dots,\ x^{k-1}e^{rx}\)</td></tr>
+<tr><td>пара \(\alpha\pm\beta i\)</td><td>\(e^{\alpha x}\cos\beta x,\ e^{\alpha x}\sin\beta x\)</td></tr>
+<tr><td>пара \(\alpha\pm\beta i\) кратности \(k\)</td><td>то же, домноженное на \(1,x,\dots,x^{k-1}\)</td></tr>
+</tbody></table></div>
+<h2>Второй порядок: три случая</h2>
+<div class="ex"><div class="ex-h">Разные действительные корни</div>
+<p>\(y''-y'-6y=0\): \(r^2-r-6=0\), \(r_1=3\), \(r_2=-2\). \(\;y=C_1e^{3x}+C_2e^{-2x}\).</p></div>
+<div class="ex"><div class="ex-h">Кратный корень</div>
+<p>\(y''-4y'+4y=0\): \((r-2)^2=0\). \(\;y=(C_1+C_2x)e^{2x}\).</p></div>
+<div class="ex"><div class="ex-h">Комплексные корни</div>
+<p>\(y''+2y'+5y=0\): \(r=-1\pm2i\). \(\;y=e^{-x}(C_1\cos2x+C_2\sin2x)\).</p></div>
+<h2>Третий порядок</h2>
+<p>Кубическое уравнение решают подбором целого корня: он делит свободный член. Найдя корень \(r_1\), делят многочлен на \((r-r_1)\) (схема Горнера) и решают оставшееся квадратное.</p>
+<div class="ex"><div class="ex-h">Пример 1</div>
+<p>\(y'''-6y''+11y'-6y=0\). Делители \(6\): пробуем \(r=1\): \(1-6+11-6=0\). Делим: \(r^3-6r^2+11r-6=(r-1)(r^2-5r+6)=(r-1)(r-2)(r-3)\).</p>
+<div class="f">\[ y=C_1e^{x}+C_2e^{2x}+C_3e^{3x}. \]</div></div>
+<div class="ex"><div class="ex-h">Пример 2</div>
+<p>\(y'''-y=0\): \(r^3-1=(r-1)(r^2+r+1)\), корни \(1\) и \(-\frac12\pm\frac{\sqrt3}{2}i\).</p>
+<div class="f">\[ y=C_1e^{x}+e^{-x/2}\Bigl(C_2\cos\frac{\sqrt3}{2}x+C_3\sin\frac{\sqrt3}{2}x\Bigr). \]</div></div>
+<div class="ex"><div class="ex-h">Пример 3</div>
+<p>\(y'''+3y''+3y'+y=0\): \((r+1)^3=0\), тройной корень. \(\;y=(C_1+C_2x+C_3x^2)e^{-x}\).</p></div>
+<div class="ex"><div class="ex-h">Пример 4</div>
+<p>\(y'''+4y'=0\): \(r(r^2+4)=0\), корни \(0,\ \pm2i\). \(\;y=C_1+C_2\cos2x+C_3\sin2x\).</p></div>
+</template>
+
+<template id="L-e6">
+<p>Для \(L[y]=f(x)\), где \(L[y]=y^{(n)}+a_1y^{(n-1)}+\dots+a_ny\), общее решение — сумма общего решения однородного уравнения и любого частного решения неоднородного:</p>
+<div class="key">\[ y=y_0+\tilde y. \]</div>
+<p>Если \(f=f_1+f_2\), частные решения для \(f_1\) и \(f_2\) находят отдельно и складывают (принцип суперпозиции).</p>
+<h2>Метод неопределённых коэффициентов</h2>
+<p>Работает, когда правая часть имеет «специальный вид»:</p>
+<div class="f">\[ f(x)=e^{ax}\bigl(P_m(x)\cos bx+Q_k(x)\sin bx\bigr). \]</div>
+<p>Частное решение ищут в форме</p>
+<div class="key">\[ \tilde y=x^s\,e^{ax}\bigl(R_N(x)\cos bx+S_N(x)\sin bx\bigr),\qquad N=\max(m,k), \]</div>
+<p>где \(s\) — кратность числа \(a+bi\) как корня характеристического уравнения (\(s=0\), если не корень). Множитель \(x^s\) — поправка на <b>резонанс</b>. Коэффициенты многочленов \(R_N\), \(S_N\) находят подстановкой в уравнение.</p>
+<div class="tblwrap"><table class="tbl"><thead><tr><th>Правая часть</th><th>Проверяемое число</th><th>Вид \(\tilde y\)</th></tr></thead><tbody>
+<tr><td>\(P_m(x)\)</td><td>\(0\)</td><td>\(x^s R_m(x)\)</td></tr>
+<tr><td>\(A\,e^{ax}\)</td><td>\(a\)</td><td>\(x^s B\,e^{ax}\)</td></tr>
+<tr><td>\(P_m(x)\,e^{ax}\)</td><td>\(a\)</td><td>\(x^s R_m(x)\,e^{ax}\)</td></tr>
+<tr><td>\(A\cos bx+B\sin bx\)</td><td>\(\pm bi\)</td><td>\(x^s(M\cos bx+N\sin bx)\)</td></tr>
+</tbody></table></div>
+<p>Даже если в правой части только синус, в \(\tilde y\) нужны и синус, и косинус.</p>
+<p>Удобный частный случай: для \(f=A\,e^{kx}\) и характеристического многочлена \(P(r)\)</p>
+<div class="f">\[ \tilde y=\frac{A}{P(k)}e^{kx}\ \ (P(k)\ne0),\qquad \tilde y=\frac{A}{P^{(s)}(k)}\,x^se^{kx}\ \ (k\text{ — корень кратности }s). \]</div>
+<div class="ex"><div class="ex-h">Пример 1. Без резонанса</div>
+<p>\(y''-3y'+2y=4e^{3x}\). Корни \(1\) и \(2\), число \(3\) не корень. \(\tilde y=Ae^{3x}\): \((9-9+2)A=4\), \(A=2\).</p>
+<div class="f">\[ y=C_1e^x+C_2e^{2x}+2e^{3x}. \]</div></div>
+<div class="ex"><div class="ex-h">Пример 2. Резонанс</div>
+<p>\(y''-3y'+2y=e^{x}\). Число \(1\) — простой корень, \(\tilde y=Axe^x\). \(A=\frac{1}{P'(1)}=\frac{1}{2-3}=-1\).</p>
+<div class="f">\[ y=C_1e^x+C_2e^{2x}-xe^{x}. \]</div></div>
+<div class="ex"><div class="ex-h">Пример 3. Третий порядок</div>
+<p>\(y'''-y'=x\). Корни \(0,\pm1\); \(0\) — простой корень, поэтому \(\tilde y=x(ax+b)\). Тогда \(\tilde y'=2ax+b\), \(\tilde y'''=0\), и \(-(2ax+b)=x\): \(a=-\frac12\), \(b=0\).</p>
+<div class="f">\[ y=C_1+C_2e^x+C_3e^{-x}-\frac{x^2}{2}. \]</div></div>
+<h2>Вариация постоянных (Лагранж)</h2>
+<p>Работает для любой правой части. Для 2-го порядка с фундаментальной системой \(y_1,y_2\) ищем \(y=C_1(x)y_1+C_2(x)y_2\), где</p>
+<div class="key">\[ \begin{cases}C_1'y_1+C_2'y_2=0,\\ C_1'y_1'+C_2'y_2'=f(x).\end{cases} \]</div>
+<div class="ex"><div class="ex-h">Пример</div>
+<p>\(y''+y=\frac{1}{\cos x}\). \(y_1=\cos x\), \(y_2=\sin x\), \(W=1\). Из системы: \(C_1'=-\operatorname{tg}x\), \(C_2'=1\), то есть \(C_1=\ln|\cos x|+\bar C_1\), \(C_2=x+\bar C_2\).</p>
+<div class="f">\[ y=\bar C_1\cos x+\bar C_2\sin x+\cos x\ln|\cos x|+x\sin x. \]</div></div>
+</template>
+
+<template id="L-e7">
+<p>Задача Коши для уравнения \(n\)-го порядка: найти решение, удовлетворяющее условиям \(y(x_0)=y_0\), \(y'(x_0)=y_1\), …, \(y^{(n-1)}(x_0)=y_{n-1}\).</p>
+<h2>Алгоритм</h2>
+<ol>
+<li>Найдите <b>общее</b> решение — с учётом частного решения, если уравнение неоднородное.</li>
+<li>Продифференцируйте его \(n-1\) раз.</li>
+<li>Подставьте \(x=x_0\): получится линейная система для \(C_1,\dots,C_n\).</li>
+<li>Решите систему и подставьте постоянные в общее решение.</li>
+</ol>
+<p>Частая ошибка: находить постоянные из \(y_0\) без \(\tilde y\). Начальные условия относятся к полному решению \(y=y_0+\tilde y\).</p>
+<div class="ex"><div class="ex-h">Пример 1. Второй порядок</div>
+<p>\(y''+4y=0\), \(y(0)=1\), \(y'(0)=6\). Общее решение \(y=C_1\cos2x+C_2\sin2x\), \(y'=-2C_1\sin2x+2C_2\cos2x\). При \(x=0\): \(C_1=1\), \(2C_2=6\).</p>
+<div class="f">\[ y=\cos2x+3\sin2x. \]</div></div>
+<div class="ex"><div class="ex-h">Пример 2. Третий порядок</div>
+<p>\(y'''-y'=0\), \(y(0)=2\), \(y'(0)=0\), \(y''(0)=2\). Корни \(0,\pm1\): \(y=C_1+C_2e^x+C_3e^{-x}\).</p>
+<div class="f">\[ \begin{cases}C_1+C_2+C_3=2,\\ C_2-C_3=0,\\ C_2+C_3=2\end{cases}\ \Rightarrow\ C_1=0,\ C_2=C_3=1,\qquad y=e^x+e^{-x}=2\operatorname{ch}x. \]</div></div>
+<div class="ex"><div class="ex-h">Пример 3. Неоднородное</div>
+<p>\(y''-y=2\), \(y(0)=0\), \(y'(0)=1\). \(\tilde y=-2\), \(y=C_1e^x+C_2e^{-x}-2\). Условия: \(C_1+C_2-2=0\), \(C_1-C_2=1\), откуда \(C_1=\frac32\), \(C_2=\frac12\).</p>
+<div class="f">\[ y=\tfrac32e^x+\tfrac12e^{-x}-2. \]</div></div>
+</template>
+
+<!-- ===================== МОДУЛЬ 4. РЯДЫ ===================== -->
+<template id="L-s1">
+<p>Числовой ряд \(\sum_{n=1}^{\infty}a_n=a_1+a_2+\dots\) — это последовательность частичных сумм \(S_N=a_1+\dots+a_N\). Если \(S_N\to S\) (конечный предел), ряд <b>сходится</b> и \(S\) — его сумма; иначе ряд расходится.</p>
+<h2>Геометрический ряд</h2>
+<div class="key">\[ \sum_{n=0}^{\infty}q^n=1+q+q^2+\dots=\frac{1}{1-q},\qquad |q|\lt1. \]</div>
+<p>При \(|q|\ge1\) ряд расходится. В общем виде: сумма равна «первый член, делённый на \(1-q\)». Например, \(\sum_{n=1}^\infty\frac{1}{2^n}=\frac{1/2}{1-1/2}=1\).</p>
+<h2>Необходимое условие сходимости</h2>
+<div class="key">\[ \sum a_n\ \text{сходится}\ \Rightarrow\ a_n\to0. \]</div>
+<p>Обратное неверно. Гармонический ряд \(\sum\frac1n\) расходится, хотя \(\frac1n\to0\): группы \(\frac13+\frac14\), \(\frac15+\dots+\frac18\), … каждая больше \(\frac12\). Поэтому условие используют только для доказательства <b>расходимости</b>: если \(a_n\not\to0\), ряд расходится.</p>
+<h2>Телескопические ряды</h2>
+<p>Если общий член раскладывается в разность \(b_n-b_{n+1}\), частичная сумма «складывается»:</p>
+<div class="ex"><div class="ex-h">Пример</div>
+<div class="f">\[ \sum_{n=1}^{\infty}\frac{1}{n(n+1)}=\sum\Bigl(\frac1n-\frac1{n+1}\Bigr),\qquad S_N=1-\frac{1}{N+1}\to1. \]</div></div>
+<h2>Свойства</h2>
+<ul><li>Сходящиеся ряды можно складывать и умножать на число почленно.</li><li>Отбрасывание конечного числа членов не влияет на сходимость, но меняет сумму.</li></ul>
+</template>
+
+<template id="L-s2">
+<p>Здесь \(a_n\gt0\). Частичные суммы растут, поэтому ряд сходится тогда и только тогда, когда они ограничены.</p>
+<h2>Эталонные ряды</h2>
+<div class="key">\[ \sum_{n=1}^{\infty}\frac{1}{n^p}\ \text{сходится}\iff p\gt1;\qquad \sum q^n\ \text{сходится}\iff |q|\lt1. \]</div>
+<h2>Признаки</h2>
+<div class="tblwrap"><table class="tbl"><thead><tr><th>Признак</th><th>Формулировка</th><th>Когда применять</th></tr></thead><tbody>
+<tr><td>Сравнения</td><td>\(a_n\le b_n\): из сходимости \(\sum b_n\) следует сходимость \(\sum a_n\); из расходимости \(\sum a_n\) — расходимость \(\sum b_n\)</td><td>Есть очевидная оценка</td></tr>
+<tr><td>Предельный сравнения</td><td>\(a_n\sim b_n\) (\(\frac{a_n}{b_n}\to c\ne0\)) — ряды ведут себя одинаково</td><td>Дроби от \(n\), корни, \(\sin\frac1n\)</td></tr>
+<tr><td>Даламбера</td><td>\(\frac{a_{n+1}}{a_n}\to q\): \(q\lt1\) — сходится, \(q\gt1\) — расходится</td><td>Факториалы, \(a^n\)</td></tr>
+<tr><td>Радикальный Коши</td><td>\(\sqrt[n]{a_n}\to q\): то же</td><td>Выражения в \(n\)-й степени</td></tr>
+<tr><td>Интегральный</td><td>\(a_n=f(n)\), \(f\downarrow\): ряд и \(\int_1^\infty f\,dx\) ведут себя одинаково</td><td>Логарифмы</td></tr>
+</tbody></table></div>
+<p>При \(q=1\) признаки Даламбера и Коши ничего не говорят — нужен другой признак.</p>
+<h2>Полезные эквивалентности и пределы</h2>
+<div class="f">\[ \sin\frac1n\sim\frac1n,\quad \ln\Bigl(1+\frac1n\Bigr)\sim\frac1n,\quad 1-\cos\frac1n\sim\frac{1}{2n^2},\quad \sqrt[n]{n}\to1,\quad \Bigl(1+\frac1n\Bigr)^n\to e,\quad n!\sim\sqrt{2\pi n}\Bigl(\frac ne\Bigr)^n. \]</div>
+<div class="ex"><div class="ex-h">Пример 1. Даламбер</div>
+<div class="f">\[ \sum\frac{n!}{n^n}:\quad\frac{a_{n+1}}{a_n}=\frac{(n+1)!\,n^n}{(n+1)^{n+1}\,n!}=\Bigl(\frac{n}{n+1}\Bigr)^n\to\frac1e\lt1\ \Rightarrow\ \text{сходится}. \]</div></div>
+<div class="ex"><div class="ex-h">Пример 2. Сравнение</div>
+<div class="f">\[ \sum\frac{n+1}{n^3+2}:\quad\frac{n+1}{n^3+2}\sim\frac{1}{n^2}\ \Rightarrow\ \text{сходится}. \]</div></div>
+<div class="ex"><div class="ex-h">Пример 3. Интегральный</div>
+<p>\(\sum_{n\ge2}\frac{1}{n\ln n}\): \(\int_2^\infty\frac{dx}{x\ln x}=\ln\ln x\big|_2^\infty=\infty\) — расходится.</p></div>
+</template>
+
+<template id="L-s3">
+<h2>Признак Лейбница</h2>
+<p>Ряд \(\sum(-1)^{n}b_n\), \(b_n\gt0\), сходится, если \(b_n\) монотонно убывает и \(b_n\to0\). Остаток оценивается первым отброшенным членом:</p>
+<div class="key">\[ |S-S_N|\le b_{N+1}. \]</div>
+<h2>Абсолютная и условная сходимость</h2>
+<ul>
+<li><b>Абсолютно</b>: сходится ряд из модулей \(\sum|a_n|\). Тогда сходится и сам ряд.</li>
+<li><b>Условно</b>: \(\sum a_n\) сходится, а \(\sum|a_n|\) — нет.</li>
+</ul>
+<p>У абсолютно сходящегося ряда можно переставлять члены без изменения суммы. У условно сходящегося — нельзя: перестановкой можно получить любую сумму (теорема Римана).</p>
+<h2>Порядок исследования</h2>
+<ol><li>Проверить \(a_n\to0\). Если нет — расходится.</li><li>Исследовать \(\sum|a_n|\) признаками из урока 4.2. Сходится — абсолютная сходимость.</li><li>Если ряд из модулей расходится, применить признак Лейбница. Выполнен — условная сходимость.</li></ol>
+<div class="ex"><div class="ex-h">Примеры</div>
+<p>\(\sum\frac{(-1)^n}{n}\): модули дают гармонический ряд, а \(\frac1n\downarrow0\) — <b>условно</b> (сумма \(-\ln2\)).</p>
+<p>\(\sum\frac{(-1)^n}{n^2}\): \(\sum\frac1{n^2}\) сходится — <b>абсолютно</b>.</p>
+<p>\(\sum(-1)^n\frac{n}{n+1}\): \(|a_n|\to1\) — <b>расходится</b>.</p></div>
+</template>
+
+<template id="L-s4">
+<p>Степенной ряд: \(\sum_{n=0}^{\infty}a_n(x-x_0)^n\). По теореме Абеля множество сходимости — интервал с центром \(x_0\) (плюс, возможно, концы).</p>
+<h2>Радиус сходимости</h2>
+<div class="key">\[ R=\lim_{n\to\infty}\left|\frac{a_n}{a_{n+1}}\right|,\qquad R=\frac{1}{\lim\limits_{n\to\infty}\sqrt[n]{|a_n|}}. \]</div>
+<p>При \(|x-x_0|\lt R\) ряд сходится абсолютно, при \(|x-x_0|\gt R\) расходится. Концы \(x_0\pm R\) проверяют отдельно, подставляя их в ряд и исследуя полученные числовые ряды.</p>
+<div class="ex"><div class="ex-h">Пример 1</div>
+<p>\(\sum\frac{x^n}{n}\): \(R=\lim\frac{n+1}{n}=1\). При \(x=1\) — гармонический ряд (расходится), при \(x=-1\) — ряд Лейбница (сходится). Область: \([-1;1)\).</p></div>
+<div class="ex"><div class="ex-h">Пример 2</div>
+<p>\(\sum\frac{x^n}{n!}\): \(R=\lim(n+1)=\infty\), ряд сходится везде. \(\;\sum n!\,x^n\): \(R=0\), сходится только при \(x=0\).</p></div>
+<div class="ex"><div class="ex-h">Ряд с пропусками</div>
+<p>В \(\sum\frac{x^{2n}}{4^n}\) половина коэффициентов нулевая, формулы для \(a_n\) не годятся. Применяем Даламбера к члену целиком: \(\frac{|x|^2}{4}\lt1\), значит, \(R=2\).</p></div>
+<h2>Действия со степенными рядами</h2>
+<p>Внутри интервала сходимости ряд можно почленно дифференцировать и интегрировать, радиус не меняется. Так из геометрического ряда получаются новые разложения:</p>
+<div class="f">\[ \frac{1}{1+t}=\sum(-1)^nt^n\ \Rightarrow\ \ln(1+x)=\int_0^x\frac{dt}{1+t}=\sum_{n=1}^{\infty}\frac{(-1)^{n+1}x^n}{n}. \]</div>
+</template>
+
+<template id="L-s5">
+<p>Если функция бесконечно дифференцируема около \(x_0\), ей сопоставляется ряд Тейлора; при \(x_0=0\) — ряд Маклорена:</p>
+<div class="key">\[ f(x)=\sum_{n=0}^{\infty}\frac{f^{(n)}(x_0)}{n!}(x-x_0)^n,\qquad a_n=\frac{f^{(n)}(0)}{n!}. \]</div>
+<h2>Стандартные разложения</h2>
+<div class="tblwrap"><table class="tbl"><tbody>
+<tr><td>\(e^x=1+x+\frac{x^2}{2!}+\frac{x^3}{3!}+\dots=\sum\frac{x^n}{n!}\)</td><td>\(x\in\mathbb R\)</td></tr>
+<tr><td>\(\sin x=x-\frac{x^3}{3!}+\frac{x^5}{5!}-\dots=\sum\frac{(-1)^nx^{2n+1}}{(2n+1)!}\)</td><td>\(x\in\mathbb R\)</td></tr>
+<tr><td>\(\cos x=1-\frac{x^2}{2!}+\frac{x^4}{4!}-\dots=\sum\frac{(-1)^nx^{2n}}{(2n)!}\)</td><td>\(x\in\mathbb R\)</td></tr>
+<tr><td>\(\frac{1}{1-x}=1+x+x^2+\dots\)</td><td>\(|x|\lt1\)</td></tr>
+<tr><td>\(\ln(1+x)=x-\frac{x^2}{2}+\frac{x^3}{3}-\dots\)</td><td>\(-1\lt x\le1\)</td></tr>
+<tr><td>\((1+x)^m=1+mx+\frac{m(m-1)}{2!}x^2+\dots\)</td><td>\(|x|\lt1\)</td></tr>
+<tr><td>\(\operatorname{arctg}x=x-\frac{x^3}{3}+\frac{x^5}{5}-\dots\)</td><td>\(|x|\le1\)</td></tr>
+</tbody></table></div>
+<h2>Приёмы</h2>
+<ul>
+<li><b>Подстановка</b>: \(e^{-x^2}=\sum\frac{(-1)^nx^{2n}}{n!}\), \(\sin2x=2x-\frac{8x^3}{6}+\dots\)</li>
+<li><b>Умножение на степень</b>: \(x^2e^x=\sum\frac{x^{n+2}}{n!}\), коэффициент при \(x^k\) равен \(\frac{1}{(k-2)!}\).</li>
+<li><b>Почленное интегрирование</b> берёт «неберущиеся» интегралы: \(\int_0^1e^{-x^2}dx=1-\frac13+\frac1{10}-\frac1{42}+\dots\approx0{,}747\).</li>
+<li><b>Пределы</b>: \(\lim\limits_{x\to0}\frac{\sin x-x}{x^3}=\lim\frac{-x^3/6+o(x^3)}{x^3}=-\frac16\).</li>
+</ul>
+<p>Подставляя \(x=1\) в известные ряды, получают суммы числовых рядов: \(\sum\frac{1}{n!}=e\), \(\;\sum\frac{(-1)^{n+1}}{n}=\ln2\), \(\;\sum\frac{(-1)^n}{2n+1}=\frac\pi4\).</p>
+</template>
+
+<template id="L-s6">
+<p>Ряды Фурье придумал Жозеф Фурье для задачи о распространении тепла. Периодическая функция раскладывается не по степеням, а по гармоникам. Для периода \(2\pi\):</p>
+<div class="key">\[ f(x)=\frac{a_0}{2}+\sum_{n=1}^{\infty}\bigl(a_n\cos nx+b_n\sin nx\bigr), \]
+\[ a_n=\frac1\pi\int_{-\pi}^{\pi}f(x)\cos nx\,dx,\qquad b_n=\frac1\pi\int_{-\pi}^{\pi}f(x)\sin nx\,dx. \]</div>
+<ul>
+<li><b>Чётная</b> \(f\): все \(b_n=0\), \(a_n=\frac2\pi\int_0^\pi f\cos nx\,dx\).</li>
+<li><b>Нечётная</b> \(f\): все \(a_n=0\), \(b_n=\frac2\pi\int_0^\pi f\sin nx\,dx\).</li>
+<li>Для периода \(2l\) замените \(nx\) на \(\frac{n\pi x}{l}\), а множитель \(\frac1\pi\) — на \(\frac1l\).</li>
+</ul>
+<p><b>Теорема Дирихле.</b> Для кусочно-гладкой \(f\) ряд сходится к \(f(x)\) в точках непрерывности и к среднему \(\frac{f(x-0)+f(x+0)}{2}\) в точках разрыва.</p>
+<div class="ex"><div class="ex-h">Пример: \(f(x)=x\) на \((-\pi;\pi)\)</div>
+<p>Функция нечётная. По частям: \(b_n=\frac2\pi\int_0^\pi x\sin nx\,dx=\frac{2(-1)^{n+1}}{n}\).</p>
+<div class="f">\[ x=2\Bigl(\sin x-\frac{\sin2x}{2}+\frac{\sin3x}{3}-\dots\Bigr),\quad -\pi\lt x\lt\pi. \]</div>
+<p>При \(x=\frac\pi2\) получается \(\frac\pi4=1-\frac13+\frac15-\dots\)</p></div>
+<div class="ex"><div class="ex-h">Пример: \(f(x)=x^2\)</div>
+<p>\(a_0=\frac{2\pi^2}{3}\), \(a_n=\frac{4(-1)^n}{n^2}\). При \(x=\pi\): \(\pi^2=\frac{\pi^2}{3}+4\sum\frac1{n^2}\), откуда \(\sum\frac{1}{n^2}=\frac{\pi^2}{6}\).</p></div>
+</template>
+
+
+<script>
+var mjReady=false;
+window.MathJax={
+  tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},
+  svg:{fontCache:'global'},
+  options:{enableMenu:false},
+  startup:{typeset:false,ready:function(){MathJax.startup.defaultReady();MathJax.startup.promise.then(function(){mjReady=true;if(window.__onMJ)window.__onMJ();});}}
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+<script>
+/* ===== ENGINE: math helpers, answer checking, problem generators (depends only on global `math`) ===== */
+const T = String.raw;
+const ri = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const rnz = (a, b) => { let v; do { v = ri(a, b); } while (v === 0); return v; };
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const F = (n, d) => (n && n.isFraction) ? n : math.fraction(n, d === undefined ? 1 : d);
+function fact(n) { let r = 1; for (let i = 2; i <= n; i++) r *= i; return r; }
+function fT(f) { f = F(f); const s = f.s < 0 ? '-' : ''; return f.d === 1 ? s + f.n : s + T`\frac{${f.n}}{${f.d}}`; }
+function fS(f) { f = F(f); const s = f.s < 0 ? '-' : ''; return f.d === 1 ? s + f.n : `(${s}${f.n}/${f.d})`; }
+const cx = (c, b) => c === 1 ? b : c === -1 ? '-' + b : `${c}*${b}`;
+const cxT = (c, b) => c === 1 ? b : c === -1 ? '-' + b : `${c}${b}`;
+
+/* linear combination as math.js string: [[coef, body], ...] */
+function S(terms) {
+  let out = '';
+  for (const [c0, b0] of terms) {
+    const c = F(c0); if (c.n === 0) continue;
+    const b = b0 || ''; const neg = c.s < 0; const n = c.n, d = c.d; const one = n === 1 && d === 1;
+    const cs = d === 1 ? String(n) : `(${n}/${d})`;
+    let p;
+    if (!b) p = cs; else if (one) p = b; else if (b.startsWith('1/') && d === 1) p = cs + b.slice(1); else p = cs + '*' + b;
+    out += out === '' ? (neg ? '-' : '') + p : (neg ? ' - ' : ' + ') + p;
+  }
+  return out || '0';
+}
+/* linear combination as TeX */
+function lin(terms) {
+  let out = '';
+  for (const [c0, b0] of terms) {
+    const c = F(c0); if (c.n === 0) continue;
+    const b = b0 || ''; const neg = c.s < 0; const n = c.n, d = c.d; const one = n === 1 && d === 1;
+    const cs = d === 1 ? String(n) : T`\frac{${n}}{${d}}`;
+    const p = !b ? cs : one ? b : cs + ' ' + b;
+    out += out === '' ? (neg ? '-' : '') + p : (neg ? ' - ' : ' + ') + p;
+  }
+  return out || '0';
+}
+const join = (a, b) => b.trim().startsWith('-') ? `${a} - ${b.trim().slice(1)}` : `${a} + ${b}`;
+
+function clean(t) {
+  return t.replace(/\{ /g, '{').replace(/\( /g, '(').replace(/^ +/, '').replace(/([+\-=]) +/g, '$1')
+    .replace(/\\mathrm\{([A-Z])(\d)\}/g, '$1_{$2}')
+    .replace(/\\tan\^\{-1\}/g, '\\operatorname{arctg}').replace(/\\cot\^\{-1\}/g, '\\operatorname{arcctg}')
+    .replace(/\\sin\^\{-1\}/g, '\\arcsin').replace(/\\cos\^\{-1\}/g, '\\arccos')
+    .replace(/\\tan(?![a-z])/g, '\\operatorname{tg}').replace(/\\cot(?![a-z])/g, '\\operatorname{ctg}')
+    .replace(/\\sinh(?![a-z])/g, '\\operatorname{sh}').replace(/\\cosh(?![a-z])/g, '\\operatorname{ch}')
+    .replace(/(\d)\s*\\cdot\s*(?=[a-zA-Z{(]|\\(?!frac)[a-zA-Z])/g, '$1')
+    .replace(/\s*\\cdot\s*(?=[a-zA-Z{(]|\\(?!frac)[a-zA-Z])/g, '\\,')
+    .replace(/(^|[^\\a-zA-Z])([A-Z])(\d)(?![\d}])/g, '$1$2_{$3}');
+}
+function tex(x, par) { const node = typeof x === 'string' ? math.parse(x) : x; return clean(node.toTex({ parenthesis: par || 'auto', implicit: 'hide' })); }
+
+/* ---------- reading user input ---------- */
+function prep(s) {
+  s = String(s);
+  s = s.replace(/[−–—]/g, '-').replace(/[·×]/g, '*').replace(/π/g, 'pi').replace(/∞/g, 'Infinity').replace(/√/g, 'sqrt').replace(/²/g, '^2').replace(/³/g, '^3');
+  s = s.replace(/(\d),(\d)/g, '$1.$2');
+  s = s.replace(/^\s*[a-zA-Z]{1,2}'*\s*(\(\s*[a-z]\s*\))?\s*=(?!=)/, '');
+  s = s.replace(/\+\s*const\b/gi, '');
+  const MAP = { arcctg: 'acot', arctg: 'atan', arcsin: 'asin', arccos: 'acos', tg: 'tan', ctg: 'cot', ln: 'log', lg: 'log10', sh: 'sinh', ch: 'cosh', th: 'tanh' };
+  s = s.replace(/\b(arcctg|arctg|arcsin|arccos|tg|ctg|ln|lg|sh|ch|th)\b/g, m => MAP[m]);
+  s = s.replace(/\|([^|]+)\|/g, '(abs($1))');
+  s = s.replace(/\b(sin|cos|tan|cot|log)\^(\d+)\s*(\([^()]*\)|[a-z0-9.]+)/g, (m, f, p, a) => `(${f}(${a.replace(/^\((.*)\)$/, '$1')}))^${p}`);
+  s = s.replace(/\b(sin|cos|tan|cot|log|sqrt|exp|atan|asin|acos|acot|sinh|cosh|tanh|abs)\s+([a-z0-9.]+)/g, '$1($2)');
+  s = s.replace(/\bC_\{?(\d)\}?/g, 'C$1');
+  s = s.replace(/\binf(inity)?\b/gi, 'Infinity');
+  return s;
+}
+function parseUser(s) { const p = prep(s); if (!p.trim()) throw new Error('Введите ответ.'); return math.parse(p); }
+function num(v) {
+  if (typeof v === 'number') return v;
+  if (v && v.isFraction) return v.valueOf();
+  if (v && v.isBigNumber) return v.toNumber();
+  if (v && typeof v.re === 'number') return Math.abs(v.im) < 1e-9 * (1 + Math.abs(v.re)) ? v.re : NaN;
+  return NaN;
+}
+function evalAt(code, scope) { try { return num(code.evaluate(scope)); } catch (e) { return NaN; } }
+function close(a, b, tol) { tol = tol || 1e-6; if (!isFinite(a) || !isFinite(b)) return a === b; return Math.abs(a - b) <= tol * (1 + Math.abs(b)); }
+function pts(dom, n) { n = n || 8; const [lo, hi] = dom; const r = []; for (let i = 0; i < n; i++) r.push(lo + (hi - lo) * (i + 0.2 + 0.6 * Math.random()) / n); return r; }
+const KNOWN = new Set(['x', 'e', 'pi', 'E', 'i', 'Infinity', 'PI', 'NaN']);
+function freeSyms(node) {
+  const s = new Set();
+  node.traverse((n, path, parent) => { if (n.isSymbolNode && !(parent && parent.isFunctionNode && path === 'fn') && !KNOWN.has(n.name)) s.add(n.name); });
+  return [...s];
+}
+function cmpFunc(node, fn, dom, scope) {
+  const c = node.compile(); let good = 0;
+  for (const x of pts(dom, 8)) {
+    const t = fn(x); if (!isFinite(t)) continue;
+    const u = evalAt(c, Object.assign({}, scope || {}, { x }));
+    if (!isFinite(u)) return { ok: false, msg: 'Ваше выражение не определено при x ≈ ' + x.toFixed(2) + '. Проверьте скобки и запись функций.' };
+    if (!close(u, t)) return { ok: false, msg: 'Неверно.' };
+    good++;
+  }
+  return good >= 4 ? { ok: true } : { ok: false, msg: 'Не удалось проверить ответ на этой области.' };
+}
+function chkAnti(fStr, dom) {
+  const fc = math.parse(fStr).compile();
+  return inp => {
+    const u = parseUser(inp); let d;
+    try { d = math.derivative(u, 'x'); } catch (e) { return { ok: false, msg: 'Не получилось продифференцировать ваш ответ. Проверьте запись функций.' }; }
+    const sc = {}; freeSyms(u).forEach(s => sc[s] = 1.3);
+    const r = cmpFunc(d, x => evalAt(fc, { x }), dom, sc);
+    if (!r.ok && r.msg === 'Неверно.') r.msg = 'Неверно: производная вашего ответа не совпадает с подынтегральной функцией.';
+    return r;
+  };
+}
+function parseNum(s) {
+  const t = String(s).trim().toLowerCase();
+  if (/^(\+?\s*(inf|∞|бесконеч)|расход|div)/.test(t)) return Infinity;
+  if (/^-\s*(inf|∞|бесконеч)/.test(t)) return -Infinity;
+  const node = parseUser(s);
+  const fs = freeSyms(node); if (fs.length) throw new Error('Ответ должен быть числом, а в нём есть ' + fs.join(', ') + '.');
+  return evalAt(node.compile(), {});
+}
+function chkNum(val) {
+  return inp => {
+    const u = parseNum(inp);
+    if (Number.isNaN(u)) return { ok: false, msg: 'Не удалось прочитать число.' };
+    if (!isFinite(val) || !isFinite(u)) return u === val ? { ok: true } : { ok: false, msg: 'Неверно.' };
+    if (close(u, val, 1e-6)) return { ok: true };
+    if (close(u, val, 1e-2)) return { ok: false, msg: 'Почти. Введите точное значение: дробью (1/3) или через pi, e, sqrt(…).' };
+    return { ok: false, msg: 'Неверно.' };
+  };
+}
+function chkFunc(exactStr, dom) {
+  const ec = math.parse(exactStr).compile();
+  return inp => {
+    const u = parseUser(inp); const fs = freeSyms(u);
+    if (fs.length) return { ok: false, msg: 'В ответе остались постоянные (' + fs.join(', ') + '). Найдите их из начальных условий.' };
+    return cmpFunc(u, x => evalAt(ec, { x }), dom);
+  };
+}
+function rank(rows) {
+  const A = rows.map(r => r.slice()); let rk = 0; const m = A[0] ? A[0].length : 0;
+  const scale = Math.max(1e-12, ...A.flat().map(Math.abs));
+  for (let c = 0; c < m && rk < A.length; c++) {
+    let p = rk; for (let r = rk + 1; r < A.length; r++) if (Math.abs(A[r][c]) > Math.abs(A[p][c])) p = r;
+    if (Math.abs(A[p][c]) < 1e-7 * scale) continue;
+    [A[rk], A[p]] = [A[p], A[rk]];
+    for (let r = 0; r < A.length; r++) if (r !== rk) { const f = A[r][c] / A[rk][c]; for (let k = c; k < m; k++) A[r][k] -= f * A[rk][k]; }
+    rk++;
+  }
+  return rk;
+}
+/* general-solution checker: satisfies the ODE + has `need` independent constants */
+function chkODE(n, resid, dom, need) {
+  need = need === undefined ? n : need;
+  return inp => {
+    const u = parseUser(inp);
+    const d = [u];
+    try { for (let k = 1; k <= n; k++) d.push(math.derivative(d[k - 1], 'x')); } catch (e) { return { ok: false, msg: 'Не получилось продифференцировать ваш ответ. Проверьте запись.' }; }
+    const codes = d.map(z => z.compile()); const syms = freeSyms(u);
+    const base = {}; syms.forEach(s => base[s] = 0.6 + Math.random());
+    const P = pts(dom, 7);
+    for (const x of P) {
+      const ys = codes.map(c => evalAt(c, Object.assign({}, base, { x })));
+      if (ys.some(v => !isFinite(v))) return { ok: false, msg: 'Ваше выражение не определено при x ≈ ' + x.toFixed(2) + '. Проверьте запись.' };
+      const r = resid(x, ys); const sc = 1 + ys.reduce((a, v) => a + Math.abs(v), 0);
+      if (!(Math.abs(r) <= 1e-6 * sc)) return { ok: false, msg: 'Функция не удовлетворяет уравнению: подставьте её и проверьте.' };
+    }
+    if (syms.length < need) return { ok: false, msg: `Это лишь частное решение. В общем решении уравнения ${n}-го порядка должно быть ${need} произвольн${need === 1 ? 'ая постоянная' : 'ые постоянные'} (C1${need > 1 ? ', C2' : ''}${need > 2 ? ', C3' : ''}).` };
+    const y0 = codes[0];
+    const vecs = syms.map(s => P.map(x => evalAt(y0, Object.assign({}, base, { [s]: base[s] + 0.5, x })) - evalAt(y0, Object.assign({}, base, { x }))));
+    if (rank(vecs) < need) return { ok: false, msg: `Постоянные зависимы: независимых должно быть ${need}. Проверьте фундаментальную систему решений.` };
+    return { ok: true };
+  };
+}
+
+/* ---------- registry ---------- */
+const TOPICS = { deriv: 'Производные', integ: 'Интегралы', ode: 'Дифуры', series: 'Ряды' };
+const TYPES = [];
+function add(topic, id, name, lvl, gen) { TYPES.push({ topic, id, name, lvl, gen }); }
+function makeProblem(type) {
+  for (let i = 0; i < 12; i++) {
+    try { const p = type.gen(); p.type = type; return p; } catch (e) { if (i === 11) throw e; }
+  }
+}
+function numTask(q, val, valT, valS, hint, sol) {
+  const approx = isFinite(val) && Math.abs(val - Math.round(val)) > 1e-9 && !/^-?\d+$/.test(valT) ? T` \approx ${(+val.toFixed(4)).toString().replace('.', '{,}')}` : '';
+  return { q, label: 'Ответ', ph: 'число: 3/4, pi/2, e^2, sqrt(3), inf', check: chkNum(val), ans: T`\[ ${valT}${approx} \]`, ansStr: valS, hint: hint || '', sol: sol || '' };
+}
+function choiceTask(q, choices, correct, why, hint) { return { q, kind: 'choice', choices, correct, ans: '', sol: why, hint: hint || '' }; }
+
+/* =========================== DERIVATIVES =========================== */
+function derivTask(f, o) {
+  o = o || {}; const ord = o.order || 1, dom = o.dom || [0.3, 1.8];
+  let d = math.parse(f); for (let i = 0; i < ord; i++) d = math.derivative(d, 'x');
+  const dc = d.compile(); let s; try { s = math.simplify(d); } catch (e) { s = d; }
+  const lab = ord === 1 ? "f'(x)" : "f''(x)";
+  return {
+    q: `Найдите ${ord === 1 ? 'производную' : 'вторую производную'} функции` + T`\[ f(x)=${tex(f)} \]`,
+    label: T`\(${lab}\)`, ph: 'например 3*x^2*cos(x) - 2/x',
+    check: inp => { const u = parseUser(inp); const ex = freeSyms(u); if (ex.length) return { ok: false, msg: 'В ответе лишние обозначения: ' + ex.join(', ') + '.' }; return cmpFunc(u, x => evalAt(dc, { x }), dom); },
+    ans: T`\[ ${lab}=${tex(s)} \]`, ansStr: s.toString(), hint: o.hint || '', sol: o.sol || ''
+  };
+}
+add('deriv', 'd_poly', 'Многочлены', 1, () => {
+  const n = ri(3, 6), m = ri(1, n - 1);
+  const f = S([[rnz(-6, 6), `x^${n}`], [rnz(-8, 8), m === 1 ? 'x' : `x^${m}`], [ri(-9, 9), '']]);
+  return derivTask(f, { hint: T`Степень: \((x^n)'=n\,x^{n-1}\). Константа-множитель выносится, производная числа равна нулю, производная суммы — сумма производных.` });
+});
+add('deriv', 'd_pow', 'Корни и отрицательные степени', 1, () => {
+  const v = ri(0, 2); let f;
+  if (v === 0) f = S([[rnz(-6, 6), 'sqrt(x)'], [rnz(-5, 5), `1/x^${ri(2, 3)}`], [rnz(-4, 4), 'x']]);
+  else if (v === 1) { const [p, q] = pick([[1, 3], [2, 3], [3, 2], [5, 2], [4, 3], [-1, 2]]); f = S([[rnz(-4, 4), `x^(${p}/${q})`], [rnz(-6, 6), 'x^2']]); }
+  else f = S([[rnz(-5, 5), '1/sqrt(x)'], [rnz(-3, 3), `x^${ri(2, 4)}`], [rnz(-4, 4), '1/x']]);
+  return derivTask(f, { hint: T`Перепишите корни и дроби как степени: \(\sqrt{x}=x^{1/2}\), \(\dfrac{1}{x^k}=x^{-k}\), \(\dfrac{1}{\sqrt x}=x^{-1/2}\). Затем \((x^a)'=a\,x^{a-1}\).` });
+});
+add('deriv', 'd_elem', 'Табличные функции', 1, () => {
+  const pool = ['sin(x)', 'cos(x)', 'e^x', 'log(x)', 'tan(x)', 'atan(x)', 'x^2', 'sqrt(x)'];
+  const sel = []; while (sel.length < 3) { const b = pick(pool); if (!sel.includes(b)) sel.push(b); }
+  return derivTask(S(sel.map(b => [rnz(-5, 5), b])), { dom: [0.3, 1.4], hint: T`Таблица: \((\sin x)'=\cos x\), \((\cos x)'=-\sin x\), \((e^x)'=e^x\), \((\ln x)'=\frac1x\), \((\operatorname{tg}x)'=\frac{1}{\cos^2x}\), \((\operatorname{arctg}x)'=\frac{1}{1+x^2}\).` });
+});
+add('deriv', 'd_prod', 'Произведение', 2, () => {
+  const n = ri(1, 4), k = rnz(-3, 3), a = rnz(-2, 3), b = ri(2, 3), c = rnz(-5, 5); const xn = n === 1 ? 'x' : `x^${n}`;
+  const f = pick([`${xn}*e^(${cx(k, 'x')})`, `${xn}*sin(${cx(k, 'x')})`, `${xn}*cos(${cx(k, 'x')})`, `${xn}*log(x)`, `e^(${cx(a, 'x')})*cos(${cx(b, 'x')})`, `(${S([[1, 'x^2'], [c, '']])})*e^x`, `sqrt(x)*sin(x)`]);
+  return derivTask(f, { hint: T`Правило произведения: \((uv)'=u'v+uv'\). Выделите \(u\) и \(v\), найдите их производные отдельно.` });
+});
+add('deriv', 'd_quot', 'Частное', 2, () => {
+  let a = rnz(-5, 5), b = rnz(-6, 6); const c = ri(1, 4), d = ri(1, 6); while (a * d === b * c) b = rnz(-6, 6);
+  const n = ri(1, 3), p = ri(1, 5);
+  const f = pick([`(${S([[a, 'x'], [b, '']])})/(${S([[c, 'x'], [d, '']])})`, 'sin(x)/x', n === 1 ? 'log(x)/x' : `log(x)/x^${n}`, 'e^x/(x^2 + 1)', `x^2/(x + ${p})`, `(x^2 - ${p})/(x^2 + ${ri(1, 5)})`, `x/(e^x)`]);
+  return derivTask(f, { hint: T`Правило частного: \(\left(\dfrac uv\right)'=\dfrac{u'v-uv'}{v^2}\). Следите за знаком «минус» в числителе.` });
+});
+add('deriv', 'd_chain', 'Сложная функция', 2, () => {
+  const a = ri(1, 4), b = ri(1, 5), n = ri(2, 6), k = ri(2, 3), s = pick([1, -1]);
+  const f = pick([`(${cx(a, 'x')} + ${b})^${n}`, `sin(${cx(a, 'x^2')} + ${b})`, `e^(${cx(s * a, `x^${k}`)})`, `log(x^2 + ${b})`, `sqrt(${cx(a, 'x^2')} + ${b})`, `sin(x)^${n}`, `cos(x)^${n}`, `atan(${cx(a, 'x')})`, 'e^(sin(x))', 'log(sin(x))', `cos(e^(${cx(a, 'x')}))`, `(x^2 + ${b})^${n}`, `log(log(x + ${b}))`]);
+  return derivTask(f, { dom: [0.3, 1.5], hint: T`Цепное правило: \(\bigl(f(g(x))\bigr)'=f'(g(x))\cdot g'(x)\). Дифференцируйте «снаружи внутрь»: каждый слой даёт множитель.` });
+});
+add('deriv', 'd_point', 'Значение производной в точке', 2, () => {
+  const a = ri(1, 3), b = ri(1, 4), n = ri(2, 5), k = rnz(-2, 3), c = ri(1, 6);
+  const v = pick([
+    () => ({ f: `(${cx(a, 'x')} + ${b})^${n}`, x0: '0', v: F(n * a * b ** (n - 1)) }),
+    () => ({ f: `x^${n}*e^(${cx(k, 'x')})`, x0: '1', vT: lin([[n + k, k === 1 ? 'e' : T`e^{${k}}`]]), vS: `(${n + k})*e^(${k})`, val: (n + k) * Math.exp(k) }),
+    () => ({ f: `log(x^2 + ${c})`, x0: '1', v: F(2, 1 + c) }),
+    () => ({ f: `(x^2 + ${c})/(x + ${b})`, x0: '0', v: F(-c, b * b) }),
+    () => ({ f: `e^(${cx(a, 'x^2')} + ${cx(k, 'x')})`, x0: '0', v: F(k) }),
+    () => ({ f: `sin(${cx(a, 'x')})*cos(${cx(b, 'x')})`, x0: '0', v: F(a) }),
+    () => ({ f: `x^${n}*log(x)`, x0: '1', v: F(1) }),
+    () => ({ f: `sqrt(x^2 + ${c * c})`, x0: '0', v: F(0) })
+  ])();
+  const valT = v.vT || fT(v.v), val = v.val !== undefined ? v.val : v.v.valueOf(), valS = v.vS || fS(v.v);
+  return numTask(`Найдите значение производной \\(f'(x_0)\\) при \\(x_0=${v.x0}\\):` + T`\[ f(x)=${tex(v.f)} \]`, val, T`f'(${v.x0})=${valT}`, valS,
+    'Сначала найдите \\(f\'(x)\\) в общем виде, потом подставьте точку. Удобно упрощать уже после подстановки.');
+});
+add('deriv', 'd_second', 'Вторая производная', 3, () => {
+  const a = ri(1, 3), b = ri(1, 4), n = ri(2, 4), k = rnz(-2, 3);
+  const f = pick([`x*e^(${cx(k, 'x')})`, `x^${n}*log(x)`, `x*sin(${cx(a, 'x')})`, `e^(${cx(k, 'x')})*cos(x)`, `1/(x + ${b})`, 'atan(x)', `log(x^2 + ${b})`, 'x^2*e^(-x)', `e^(x^2)`]);
+  return derivTask(f, { order: 2, hint: T`Вторая производная — производная от первой: \(f''=(f')'\). Найдите \(f'\), упростите, затем дифференцируйте ещё раз.` });
+});
+add('deriv', 'd_logdiff', 'Логарифмическое дифференцирование', 3, () => {
+  const a = ri(2, 3);
+  const f = pick(['x^x', `x^(${a}*x)`, 'x^(sin(x))', 'sin(x)^x', 'x^(1/x)', '(x^2 + 1)^x', 'x^(log(x))', '(1 + x)^(1/x)']);
+  return derivTask(f, { dom: [0.4, 1.5], hint: T`Для \(y=u^v\) прологарифмируйте: \(\ln y=v\ln u\). Тогда \(\dfrac{y'}{y}=v'\ln u+v\dfrac{u'}{u}\), и \(y'=u^v\Bigl(v'\ln u+\dfrac{v\,u'}{u}\Bigr)\).` });
+});
+add('deriv', 'd_param', 'Параметрическая функция', 3, () => {
+  if (Math.random() < 0.5) {
+    const a = ri(1, 4), b = rnz(-5, 5), t0 = ri(1, 2); const v = F(3 * t0 * t0 + b, 2 * t0 + a);
+    return numTask(T`Функция задана параметрически: \[ x=t^2+${cxT(a, 't')},\qquad y=${lin([[1, 't^3'], [b, 't']])}. \] Найдите \(y'_x\) при \(t=${t0}\).`, v.valueOf(), T`y'_x=${fT(v)}`, fS(v),
+      T`\(y'_x=\dfrac{y'_t}{x'_t}\).`, T`<p>\(x'_t=2t+${a}\), \(y'_t=3t^2${b > 0 ? '+' : ''}${b}\). При \(t=${t0}\): \(\dfrac{${3 * t0 * t0 + b}}{${2 * t0 + a}}\).</p>`);
+  }
+  const a = ri(1, 5), b = ri(1, 5); const t = pick(['4', '6', '3']);
+  const val = -(b / a) / Math.tan(Math.PI / +t);
+  const vT = t === '4' ? fT(F(-b, a)) : t === '6' ? T`-\frac{${b}\sqrt3}{${a}}` : lin([[F(-b, 3 * a), T`\sqrt3`]]);
+  const vS = t === '4' ? fS(F(-b, a)) : t === '6' ? `-${b}*sqrt(3)/${a}` : `-${b}*sqrt(3)/${3 * a}`;
+  return numTask(T`Эллипс задан параметрически: \[ x=${a === 1 ? '' : a}\cos t,\qquad y=${b === 1 ? '' : b}\sin t. \] Найдите \(y'_x\) при \(t=\frac{\pi}{${t}}\).`, val, T`y'_x=${vT}`, vS,
+    T`\(y'_x=\dfrac{y'_t}{x'_t}=\dfrac{${b}\cos t}{-${a}\sin t}=-\dfrac{${b}}{${a}}\operatorname{ctg}t\).`);
+});
+add('deriv', 'd_impl', 'Неявная функция', 3, () => {
+  let x0, y0, a, den;
+  do { x0 = ri(-3, 3); y0 = ri(-3, 3); a = ri(1, 3); den = a * x0 + 2 * y0; } while ((x0 === 0 && y0 === 0) || den === 0);
+  const c = x0 * x0 + a * x0 * y0 + y0 * y0; const v = F(-(2 * x0 + a * y0), den);
+  return numTask(T`Функция \(y(x)\) задана неявно уравнением \[ x^2+${a === 1 ? '' : a}xy+y^2=${c}. \] Найдите \(y'\) в точке \((${x0};\,${y0})\).`, v.valueOf(), T`y'=${fT(v)}`, fS(v),
+    T`Продифференцируйте обе части по \(x\), считая \(y=y(x)\): \(2x+${a === 1 ? '' : a}(y+xy')+2yy'=0\). Выразите \(y'\).`,
+    T`<p>\(y'=-\dfrac{2x+${a === 1 ? '' : a}y}{${a === 1 ? '' : a}x+2y}\); подставляем точку.</p>`);
+});
+add('deriv', 'd_lhop', 'Пределы по Лопиталю', 3, () => {
+  const a = ri(1, 4), b = ri(1, 4), n = ri(2, 4);
+  const L = pick([
+    () => ({ t: T`\lim_{x\to0}\frac{e^{${cxT(a, 'x')}}-1}{\sin ${cxT(b, 'x')}}`, v: F(a, b) }),
+    () => ({ t: T`\lim_{x\to0}\frac{1-\cos ${cxT(a, 'x')}}{x^2}`, v: F(a * a, 2) }),
+    () => ({ t: T`\lim_{x\to0}\frac{\ln(1+${cxT(a, 'x')})}{${cxT(b, 'x')}}`, v: F(a, b) }),
+    () => ({ t: T`\lim_{x\to0}\frac{x-\sin x}{x^3}`, v: F(1, 6) }),
+    () => ({ t: T`\lim_{x\to0}\frac{e^x-1-x}{x^2}`, v: F(1, 2) }),
+    () => ({ t: T`\lim_{x\to+\infty}\frac{x^{${n}}}{e^{x}}`, v: F(0) }),
+    () => ({ t: T`\lim_{x\to0}\frac{\sin ${cxT(a, 'x')}-${cxT(a, 'x')}}{x^3}`, v: F(-(a ** 3), 6) }),
+    () => ({ t: T`\lim_{x\to0}\frac{\operatorname{tg}${cxT(a, 'x')}-${cxT(a, 'x')}}{x^3}`, v: F(a ** 3, 3) }),
+    () => ({ t: T`\lim_{x\to1}\frac{x^{${n}}-1}{x-1}`, v: F(n) }),
+    () => ({ t: T`\lim_{x\to1}\frac{\ln x}{x-1}`, v: F(1) })
+  ])();
+  return numTask(T`Вычислите предел: \[ ${L.t} \]`, L.v.valueOf(), fT(L.v), fS(L.v),
+    T`Неопределённость \(\frac00\) или \(\frac\infty\infty\): по правилу Лопиталя \(\lim\frac fg=\lim\frac{f'}{g'}\). Если снова неопределённость — применяйте ещё раз.`);
+});
+
+/* =========================== INTEGRALS =========================== */
+function antiTask(f, Fs, dom, hint, sol) {
+  return {
+    q: 'Найдите неопределённый интеграл' + T`\[ \int ${tex(f)}\,dx \]`, label: T`\(F(x)\)`, ph: 'например x^3/3 + ln(x)   (+C можно не писать)',
+    check: chkAnti(f, dom || [0.3, 1.8]), ans: T`\[ \int ${tex(f)}\,dx=${tex(Fs)}+C \]`, ansStr: Fs, hint: hint || '', sol: sol || ''
+  };
+}
+add('integ', 'i_table', 'Табличные интегралы', 1, () => {
+  const pool = [
+    c => { const n = ri(1, 5); return [[c, n === 1 ? 'x' : `x^${n}`], [F(c, n + 1), `x^${n + 1}`]]; },
+    c => [[c, '1/x'], [c, 'log(x)']],
+    c => [[c, 'sqrt(x)'], [F(2 * c, 3), 'x^(3/2)']],
+    c => [[c, 'e^x'], [c, 'e^x']],
+    c => [[c, 'sin(x)'], [-c, 'cos(x)']],
+    c => [[c, 'cos(x)'], [c, 'sin(x)']],
+    c => [[c, '1/(1 + x^2)'], [c, 'atan(x)']],
+    c => [[c, '1/cos(x)^2'], [c, 'tan(x)']],
+    c => [[c, ''], [c, 'x']],
+    c => [[c, '1/x^2'], [-c, '1/x']]
+  ];
+  const idx = []; const cnt = ri(2, 3); while (idx.length < cnt) { const i = ri(0, pool.length - 1); if (!idx.includes(i)) idx.push(i); }
+  const parts = idx.map(i => pool[i](rnz(-5, 5)));
+  return antiTask(S(parts.map(p => p[0])), S(parts.map(p => p[1])), [0.3, 1.3],
+    T`Интеграл суммы — сумма интегралов, константы выносятся. Таблица: \(\int x^a dx=\frac{x^{a+1}}{a+1}\), \(\int\frac{dx}{x}=\ln|x|\), \(\int e^x dx=e^x\), \(\int\sin x\,dx=-\cos x\), \(\int\frac{dx}{1+x^2}=\operatorname{arctg}x\).`);
+});
+add('integ', 'i_sub', 'Замена переменной', 2, () => {
+  const a = pick([1, 2, 3, -1, -2]), n = ri(2, 5), b = ri(1, 5), c = ri(1, 6), m = ri(2, 5), A = ri(2, 5);
+  const t = pick([
+    () => [`x*e^(${cx(a, 'x^2')})`, S([[F(1, 2 * a), `e^(${cx(a, 'x^2')})`]]), T`Подстановка \(t=${cxT(a, 'x^2')}\), \(dt=${2 * a}x\,dx\).`],
+    () => [`sin(x)^${n}*cos(x)`, S([[F(1, n + 1), `sin(x)^${n + 1}`]]), T`\(\cos x\,dx=d(\sin x)\): подстановка \(t=\sin x\).`],
+    () => [`cos(x)^${n}*sin(x)`, S([[F(-1, n + 1), `cos(x)^${n + 1}`]]), T`\(\sin x\,dx=-d(\cos x)\): подстановка \(t=\cos x\).`],
+    () => [`(2*x + ${b})/(x^2 + ${b}*x + ${c})`, `log(x^2 + ${b}*x + ${c})`, T`Числитель — производная знаменателя: \(\int\frac{u'}{u}dx=\ln|u|\).`],
+    () => [`x/(x^2 + ${c})`, S([[F(1, 2), `log(x^2 + ${c})`]]), T`\(x\,dx=\tfrac12 d(x^2+${c})\).`],
+    () => [`(${A}*x + ${b})^${m}`, S([[F(1, A * (m + 1)), `(${A}*x + ${b})^${m + 1}`]]), T`Линейная замена: \(\int f(kx+b)\,dx=\frac1k F(kx+b)+C\).`],
+    () => [n === 2 ? 'log(x)/x' : `log(x)^${n - 1}/x`, S([[F(1, n), `log(x)^${n}`]]), T`\(\frac{dx}{x}=d(\ln x)\): подстановка \(t=\ln x\).`],
+    () => [`e^x/(e^x + ${c})`, `log(e^x + ${c})`, T`Подстановка \(t=e^x+${c}\), \(dt=e^x dx\).`],
+    () => [`x^2*sqrt(x^3 + ${c})`, S([[F(2, 9), `(x^3 + ${c})^(3/2)`]]), T`Подстановка \(t=x^3+${c}\), \(dt=3x^2dx\).`],
+    () => [`cos(${A}*x + ${b})`, S([[F(1, A), `sin(${A}*x + ${b})`]]), T`Линейная замена \(t=${A}x+${b}\), \(dx=\frac{dt}{${A}}\).`],
+    () => ['e^(sqrt(x))/sqrt(x)', '2*e^(sqrt(x))', T`\(\frac{dx}{\sqrt x}=2\,d(\sqrt x)\).`],
+    () => ['1/(x*log(x))', 'log(log(x))', T`\(\frac{dx}{x}=d(\ln x)\), получится \(\int\frac{dt}{t}\).`, [1.3, 3]]
+  ])();
+  return antiTask(t[0], t[1], t[3] || [0.3, 1.8], t[2]);
+});
+add('integ', 'i_parts', 'По частям', 2, () => {
+  const a = pick([1, 2, 3, -1, -2]), n = ri(1, 4); const ax = cx(a, 'x');
+  const t = pick([
+    () => [`x*e^(${ax})`, `e^(${ax})*(${S([[F(1, a), 'x'], [F(-1, a * a), '']])})`, T`\(u=x\), \(dv=e^{${cxT(a, 'x')}}dx\).`],
+    () => [`x*sin(${ax})`, S([[F(-1, a), `x*cos(${ax})`], [F(1, a * a), `sin(${ax})`]]), T`\(u=x\), \(dv=\sin(${cxT(a, 'x')})\,dx\).`],
+    () => [`x*cos(${ax})`, S([[F(1, a), `x*sin(${ax})`], [F(1, a * a), `cos(${ax})`]]), T`\(u=x\), \(dv=\cos(${cxT(a, 'x')})\,dx\).`],
+    () => [n === 1 ? 'x*log(x)' : `x^${n}*log(x)`, S([[F(1, n + 1), `x^${n + 1}*log(x)`], [F(-1, (n + 1) ** 2), `x^${n + 1}`]]), T`\(u=\ln x\) (логарифм всегда берут за \(u\)), \(dv=x^{${n}}dx\).`],
+    () => ['log(x)', 'x*log(x) - x', T`\(u=\ln x\), \(dv=dx\).`],
+    () => ['atan(x)', S([[1, 'x*atan(x)'], [F(-1, 2), 'log(1 + x^2)']]), T`\(u=\operatorname{arctg}x\), \(dv=dx\); оставшийся интеграл — заменой.`],
+    () => ['x^2*e^x', 'e^x*(x^2 - 2*x + 2)', T`По частям дважды: \(u=x^2\), затем \(u=x\).`],
+    () => ['e^x*sin(x)', S([[F(1, 2), 'e^x*(sin(x) - cos(x))']]), T`Циклический интеграл: дважды по частям, получится уравнение относительно \(I\).`],
+    () => ['e^x*cos(x)', S([[F(1, 2), 'e^x*(sin(x) + cos(x))']]), T`Циклический интеграл: дважды по частям, получится уравнение относительно \(I\).`],
+    () => ['x/cos(x)^2', 'x*tan(x) + log(cos(x))', T`\(u=x\), \(dv=\frac{dx}{\cos^2x}\), \(v=\operatorname{tg}x\).`, [0.2, 1.3]]
+  ])();
+  return antiTask(t[0], t[1], t[3] || [0.3, 1.8], T`\(\int u\,dv=uv-\int v\,du\). ` + t[2]);
+});
+const xp = p => p === 0 ? 'x' : `x + ${p}`;
+const xpT = p => p === 0 ? 'x' : `x+${p}`;
+add('integ', 'i_rat', 'Рациональные дроби', 3, () => {
+  let p = ri(0, 5), q; do { q = ri(0, 5); } while (q === p);
+  const t = pick([
+    () => [`1/((${xp(p)})*(${xp(q)}))`, S([[F(1, q - p), `log(${xp(p)})`], [F(-1, q - p), `log(${xp(q)})`]]), T`Разложите: \(\dfrac{1}{(${xpT(p)})(${xpT(q)})}=\dfrac{A}{${xpT(p)}}+\dfrac{B}{${xpT(q)}}\).`],
+    () => {
+      const m = rnz(-3, 4), nn = rnz(-6, 6); const A = F(nn - m * p, q - p), B = F(nn - m * q, p - q);
+      return [`(${S([[m, 'x'], [nn, '']])})/((${xp(p)})*(${xp(q)}))`, S([[A, `log(${xp(p)})`], [B, `log(${xp(q)})`]]), T`Простейшие дроби: \(\dfrac{A}{${xpT(p)}}+\dfrac{B}{${xpT(q)}}\); \(A\) и \(B\) найдите, подставляя \(x=${-p}\) и \(x=${-q}\).`];
+    },
+    () => { const a = ri(2, 5); return [`1/(x^2 + ${a * a})`, S([[F(1, a), `atan(x/${a})`]]), T`\(\int\frac{dx}{x^2+a^2}=\frac1a\operatorname{arctg}\frac xa\).`]; },
+    () => { const b = ri(1, 3), k = ri(1, 3); return [`1/(x^2 + ${2 * b}*x + ${b * b + k * k})`, S([[F(1, k), k === 1 ? `atan(x + ${b})` : `atan((x + ${b})/${k})`]]), T`Выделите полный квадрат: \(x^2+${2 * b}x+${b * b + k * k}=(x+${b})^2+${k * k}\).`]; },
+    () => { const m = rnz(-3, 4), nn = rnz(-5, 5), a = ri(1, 4); return [`(${S([[m, 'x'], [nn, '']])})/(x^2 + ${a * a})`, S([[F(m, 2), `log(x^2 + ${a * a})`], [F(nn, a), a === 1 ? 'atan(x)' : `atan(x/${a})`]]), T`Разбейте на два: \(\int\frac{x\,dx}{x^2+a^2}=\frac12\ln(x^2+a^2)\) и \(\int\frac{dx}{x^2+a^2}=\frac1a\operatorname{arctg}\frac xa\).`]; },
+    () => { const pp = ri(1, 4); return [`x^2/(x + ${pp})`, S([[F(1, 2), 'x^2'], [-pp, 'x'], [pp * pp, `log(x + ${pp})`]]), T`Дробь неправильная: разделите числитель на знаменатель: \(\dfrac{x^2}{x+${pp}}=x-${pp}+\dfrac{${pp * pp}}{x+${pp}}\).`]; }
+  ])();
+  return antiTask(t[0], t[1], [0.3, 1.8], t[2]);
+});
+add('integ', 'i_trig', 'Тригонометрические', 3, () => {
+  const a = ri(1, 3); const ax = cx(a, 'x'), axT = cxT(a, 'x');
+  const t = pick([
+    () => [`sin(${ax})^2`, S([[F(1, 2), 'x'], [F(-1, 4 * a), `sin(${cx(2 * a, 'x')})`]]), T`Понижение степени: \(\sin^2\alpha=\frac{1-\cos2\alpha}{2}\).`],
+    () => [`cos(${ax})^2`, S([[F(1, 2), 'x'], [F(1, 4 * a), `sin(${cx(2 * a, 'x')})`]]), T`Понижение степени: \(\cos^2\alpha=\frac{1+\cos2\alpha}{2}\).`],
+    () => ['sin(x)^3', S([[-1, 'cos(x)'], [F(1, 3), 'cos(x)^3']]), T`Нечётная степень: \(\sin^3x\,dx=-(1-\cos^2x)\,d(\cos x)\).`],
+    () => ['cos(x)^3', S([[1, 'sin(x)'], [F(-1, 3), 'sin(x)^3']]), T`Нечётная степень: \(\cos^3x\,dx=(1-\sin^2x)\,d(\sin x)\).`],
+    () => ['tan(x)', '-log(cos(x))', T`\(\operatorname{tg}x=\frac{\sin x}{\cos x}\), а \(\sin x\,dx=-d(\cos x)\).`, [0.2, 1.3]],
+    () => { let b; do { b = ri(1, 4); } while (b === a); return [`sin(${ax})*cos(${cx(b, 'x')})`, S([[F(-1, 2 * (a + b)), `cos(${a + b}*x)`], [F(-1, 2 * (a - b)), `cos(${cx(a - b, 'x')})`]]), T`Произведение в сумму: \(\sin\alpha\cos\beta=\frac12[\sin(\alpha+\beta)+\sin(\alpha-\beta)]\).`]; },
+    () => ['sin(x)^2*cos(x)^2', S([[F(1, 8), 'x'], [F(-1, 32), 'sin(4*x)']]), T`\(\sin x\cos x=\frac12\sin2x\), затем понижение степени для \(\sin^2 2x\).`]
+  ])();
+  return antiTask(t[0], t[1], t[3] || [0.3, 1.8], t[2]);
+});
+add('integ', 'i_def', 'Определённый интеграл', 2, () => {
+  const t = pick([
+    () => { const c = ri(1, 3), a = rnz(-3, 3), b = rnz(-4, 4), d = ri(-3, 3); const f = S([[a, 'x^2'], [b, 'x'], [d, '']]); const v = math.add(math.add(F(a * c ** 3, 3), F(b * c * c, 2)), F(d * c)); return { I: T`\int_0^{${c}}\left(${tex(f)}\right)dx`, v: v.valueOf(), vT: fT(v), vS: fS(v) }; },
+    () => { const a = rnz(-4, 4), b = rnz(-4, 4); return { I: T`\int_0^{\pi/2}\left(${tex(S([[a, 'sin(x)'], [b, 'cos(x)']]))}\right)dx`, v: a + b, vT: String(a + b), vS: String(a + b) }; },
+    () => { const k = pick([1, 3, 5]); return { I: T`\int_0^{\pi}\sin ${cxT(k, 'x')}\,dx`, v: 2 / k, vT: fT(F(2, k)), vS: fS(F(2, k)) }; },
+    () => { const k = ri(1, 3); return { I: T`\int_0^{1}e^{${cxT(k, 'x')}}\,dx`, v: (Math.exp(k) - 1) / k, vT: k === 1 ? 'e-1' : T`\frac{e^{${k}}-1}{${k}}`, vS: `(e^${k} - 1)/${k}` }; },
+    () => { const n = ri(1, 3); return { I: T`\int_1^{e}\frac{${n === 1 ? '\\ln x' : `\\ln^{${n}}x`}}{x}\,dx`, v: 1 / (n + 1), vT: fT(F(1, n + 1)), vS: fS(F(1, n + 1)) }; },
+    () => ({ I: T`\int_0^{1}x\,e^{x}\,dx`, v: 1, vT: '1', vS: '1' }),
+    () => ({ I: T`\int_0^{\pi}x\sin x\,dx`, v: Math.PI, vT: T`\pi`, vS: 'pi' }),
+    () => { const a = ri(1, 4); return { I: T`\int_0^{${a}}\frac{dx}{x^2+${a * a}}`, v: Math.PI / (4 * a), vT: T`\frac{\pi}{${4 * a}}`, vS: `pi/${4 * a}` }; },
+    () => ({ I: T`\int_0^{\pi}\sin^2x\,dx`, v: Math.PI / 2, vT: T`\frac{\pi}{2}`, vS: 'pi/2' }),
+    () => ({ I: T`\int_0^{1}\frac{x\,dx}{x^2+1}`, v: Math.log(2) / 2, vT: T`\frac{\ln 2}{2}`, vS: 'log(2)/2' }),
+    () => ({ I: T`\int_1^{e}\ln x\,dx`, v: 1, vT: '1', vS: '1' }),
+    () => ({ I: T`\int_0^{\pi/2}x\cos x\,dx`, v: Math.PI / 2 - 1, vT: T`\frac{\pi}{2}-1`, vS: 'pi/2 - 1' })
+  ])();
+  return numTask('Вычислите определённый интеграл:' + T`\[ ${t.I} \]`, t.v, t.vT, t.vS,
+    T`Формула Ньютона–Лейбница: \(\int_a^b f(x)\,dx=F(b)-F(a)\). Найдите первообразную обычными приёмами, затем подставьте пределы.`);
+});
+add('integ', 'i_area', 'Площадь фигуры', 2, () => {
+  const t = pick([
+    () => { const k = ri(1, 4); return { d: T`\(y=x^2\) и \(y=${cxT(k, 'x')}\)`, v: F(k ** 3, 6), h: T`Точки пересечения: \(x=0\) и \(x=${k}\). \(S=\int_0^{${k}}(${cxT(k, 'x')}-x^2)\,dx\).` }; },
+    () => { const a = ri(1, 3); return { d: T`\(y=${a * a}-x^2\) и осью \(Ox\)`, v: F(4 * a ** 3, 3), h: T`Корни: \(x=\pm${a}\). \(S=\int_{-${a}}^{${a}}(${a * a}-x^2)\,dx\).` }; },
+    () => { const k = ri(1, 3); return { d: T`\(y=\sqrt{x}\), \(y=0\) и \(x=${k * k}\)`, v: F(2 * k ** 3, 3), h: T`\(S=\int_0^{${k * k}}\sqrt x\,dx\).` }; },
+    () => ({ d: T`\(y=\sin x\) и осью \(Ox\) при \(0\le x\le\pi\)`, v: F(2), h: T`\(S=\int_0^{\pi}\sin x\,dx\).` })
+  ])();
+  return numTask('Найдите площадь фигуры, ограниченной линиями ' + t.d + '.', t.v.valueOf(), T`S=${fT(t.v)}`, fS(t.v), T`Площадь между кривыми: \(S=\int_a^b\bigl(f_{\text{верх}}(x)-f_{\text{низ}}(x)\bigr)dx\). ` + t.h);
+});
+add('integ', 'i_improper', 'Несобственные интегралы', 3, () => {
+  const t = pick([
+    () => { const [pn, pd] = pick([[2, 1], [3, 1], [3, 2], [1, 1], [1, 2]]); const p = pn / pd; const it = pd === 1 ? (pn === 1 ? T`\frac{dx}{x}` : T`\frac{dx}{x^{${pn}}}`) : pn === 1 ? T`\frac{dx}{\sqrt x}` : T`\frac{dx}{x\sqrt x}`; const v = p > 1 ? F(pd, pn - pd) : null; return { I: T`\int_1^{+\infty}${it}`, v: v ? v.valueOf() : Infinity, vT: v ? fT(v) : T`\infty\ (\text{расходится})`, vS: v ? fS(v) : 'inf' }; },
+    () => { const a = ri(1, 4); return { I: T`\int_0^{+\infty}e^{-${a === 1 ? '' : a}x}\,dx`, v: 1 / a, vT: fT(F(1, a)), vS: fS(F(1, a)) }; },
+    () => { const a = ri(1, 3); return { I: T`\int_0^{+\infty}x\,e^{-${a === 1 ? '' : a}x}\,dx`, v: 1 / (a * a), vT: fT(F(1, a * a)), vS: fS(F(1, a * a)) }; },
+    () => { const a = ri(1, 4); return { I: T`\int_0^{+\infty}\frac{dx}{x^2+${a * a}}`, v: Math.PI / (2 * a), vT: T`\frac{\pi}{${2 * a}}`, vS: `pi/${2 * a}` }; },
+    () => { const [pn, pd] = pick([[1, 2], [1, 3], [2, 3], [1, 1], [2, 1]]); const p = pn / pd; const it = pd === 1 ? (pn === 1 ? T`\frac{dx}{x}` : T`\frac{dx}{x^{2}}`) : pn === 1 && pd === 2 ? T`\frac{dx}{\sqrt x}` : T`\frac{dx}{x^{${pn}/${pd}}}`; const v = p < 1 ? F(pd, pd - pn) : null; return { I: T`\int_0^{1}${it}`, v: v ? v.valueOf() : Infinity, vT: v ? fT(v) : T`\infty\ (\text{расходится})`, vS: v ? fS(v) : 'inf' }; },
+    () => ({ I: T`\int_{-\infty}^{+\infty}\frac{dx}{1+x^2}`, v: Math.PI, vT: T`\pi`, vS: 'pi' }),
+    () => ({ I: T`\int_0^{1}\ln x\,dx`, v: -1, vT: '-1', vS: '-1' })
+  ])();
+  return numTask('Вычислите несобственный интеграл. Если он расходится, введите <code>inf</code>.' + T`\[ ${t.I} \]`, t.v, t.vT, t.vS,
+    T`\(\int_a^{+\infty}f\,dx=\lim_{b\to+\infty}\int_a^b f\,dx\). Эталоны: \(\int_1^\infty\frac{dx}{x^p}\) сходится при \(p\gt1\), \(\int_0^1\frac{dx}{x^p}\) — при \(p\lt1\).`);
+});
+
+/* =========================== ODE =========================== */
+const YN = ["y", "y'", "y''", "y'''"];
+function polyMul(a, b) { const r = Array(a.length + b.length - 1).fill(0); a.forEach((x, i) => b.forEach((y, j) => r[i + j] += x * y)); return r; }
+function charPoly(sp) { let p = [1]; sp.real.forEach(([r, m]) => { for (let i = 0; i < m; i++) p = polyMul(p, [1, -r]); }); sp.cplx.forEach(([a, b]) => p = polyMul(p, [1, -2 * a, a * a + b * b])); return p.map(v => v + 0); }
+function pEval(p, k) { return p.reduce((a, c) => a * k + c, 0); }
+function pDer(p) { const n = p.length - 1; return p.slice(0, -1).map((c, i) => c * (n - i)); }
+function pEvalI(p, w) { let re = 0, im = 0; for (const c of p) { const nr = -im * w + c, ni = re * w; re = nr; im = ni; } return [re, im]; }
+function odeLHS(p) { const n = p.length - 1; return lin(p.map((c, i) => [c, YN[n - i]])); }
+function charT(p) { const n = p.length - 1; return lin(p.map((c, i) => [c, n - i === 0 ? '' : n - i === 1 ? 'r' : `r^{${n - i}}`])) + '=0'; }
+const expT = r => r === 0 ? '' : r === 1 ? 'e^{x}' : r === -1 ? 'e^{-x}' : `e^{${r}x}`;
+const expS = r => r === 0 ? '' : `e^(${cx(r, 'x')})`;
+const bxT = b => b === 1 ? 'x' : `${b}x`;
+function rootsHTML(sp) {
+  const out = [];
+  sp.real.forEach(([r, m]) => out.push(T`\(r=${r}\)` + (m > 1 ? ` (кратность ${m})` : '')));
+  sp.cplx.forEach(([a, b]) => out.push(T`\(r=${a === 0 ? '' : a}\pm ${b === 1 ? '' : b}i\)`));
+  return out.join('; ');
+}
+function cpow(a, b, k) { let re = 1, im = 0; for (let i = 0; i < k; i++) { const nr = re * a - im * b, ni = re * b + im * a; re = nr; im = ni; } return [re, im]; }
+function basis(sp) {
+  const B = [];
+  sp.real.forEach(([r, m]) => {
+    for (let j = 0; j < m; j++) {
+      const xT = j === 0 ? '' : j === 1 ? 'x' : `x^{${j}}`, xS = j === 0 ? '' : j === 1 ? 'x' : `x^${j}`;
+      const eT = expT(r);
+      B.push({ t: xT + (xT && eT ? ' ' : '') + eT, s: [xS, expS(r)].filter(Boolean).join('*'), d: k => k < j ? 0 : fact(k) / fact(k - j) * Math.pow(r, k - j) });
+    }
+  });
+  sp.cplx.forEach(([a, b]) => {
+    const eT = expT(a), eS = a === 0 ? '' : expS(a) + '*';
+    B.push({ t: eT + T`\cos ${bxT(b)}`, s: eS + `cos(${cx(b, 'x')})`, d: k => cpow(a, b, k)[0] });
+    B.push({ t: eT + T`\sin ${bxT(b)}`, s: eS + `sin(${cx(b, 'x')})`, d: k => cpow(a, b, k)[1] });
+  });
+  return B;
+}
+function genT(sp) {
+  let k = 1; const parts = [];
+  sp.real.forEach(([r, m]) => {
+    const cs = []; for (let j = 0; j < m; j++) cs.push(`C_{${k++}}` + (j === 0 ? '' : j === 1 ? 'x' : `x^{${j}}`));
+    const eT = expT(r);
+    if (m === 1) parts.push(cs[0] + (eT ? ' ' + eT : '')); else parts.push(eT ? T`\left(${cs.join(' + ')}\right)${eT}` : cs.join(' + '));
+  });
+  sp.cplx.forEach(([a, b]) => { const inner = T`C_{${k}}\cos ${bxT(b)} + C_{${k + 1}}\sin ${bxT(b)}`; k += 2; parts.push(a === 0 ? inner : T`${expT(a)}\left(${inner}\right)`); });
+  return parts.join(' + ');
+}
+function genS(sp) { return basis(sp).map((b, i) => `C${i + 1}` + (b.s ? '*' + b.s : '')).join(' + '); }
+function spec2(kind) {
+  if (kind === 'dist') { const r1 = ri(-4, 4); let r2; do { r2 = ri(-4, 4); } while (r2 === r1); return { real: [[Math.max(r1, r2), 1], [Math.min(r1, r2), 1]], cplx: [] }; }
+  if (kind === 'rep') return { real: [[rnz(-3, 3), 2]], cplx: [] };
+  return { real: [], cplx: [[ri(-2, 2), ri(1, 3)]] };
+}
+function spec3(kind) {
+  if (kind === 'dist3') { const s = new Set(); while (s.size < 3) s.add(ri(-3, 3)); return { real: [...s].sort((a, b) => b - a).map(r => [r, 1]), cplx: [] }; }
+  if (kind === 'dbl') { const r1 = ri(-2, 2); let r2; do { r2 = ri(-3, 3); } while (r2 === r1); return { real: [[r1, 2], [r2, 1]], cplx: [] }; }
+  if (kind === 'tri') return { real: [[rnz(-2, 2), 3]], cplx: [] };
+  return { real: [[ri(-2, 2), 1]], cplx: [[ri(-1, 1), ri(1, 2)]] };
+}
+function rhsMake(p, kind, o) {
+  o = o || {}; const n = p.length - 1; const A = o.A !== undefined ? o.A : rnz(-6, 6);
+  if (kind === 'const') {
+    const c = F(A, p[n]);
+    return { T: String(A), g: () => A, ypT: fT(c), ypS: fS(c), form: T`Правая часть — константа, а \(0\) не корень характеристического уравнения, поэтому ищем \(\tilde y=a\).` };
+  }
+  if (kind === 'exp') {
+    const k = o.k; let q = p, s = 0; while (Math.abs(pEval(q, k)) < 1e-12) { q = pDer(q); s++; }
+    const c = F(A, pEval(q, k)); const xT = s === 0 ? '' : s === 1 ? 'x' : `x^{${s}}`, xS = s === 0 ? '' : s === 1 ? 'x*' : `x^${s}*`;
+    const form = s === 0 ? T`Число \(${k}\) не корень характеристического уравнения, ищем \(\tilde y=a\,${expT(k)}\); подстановка даёт \(a=\frac{${A}}{P(${k})}\).`
+      : T`Число \(${k}\) — корень кратности \(${s}\) (резонанс), поэтому ищем \(\tilde y=a\,${xT}${expT(k)}\).`;
+    return { T: lin([[A, expT(k)]]), g: x => A * Math.exp(k * x), ypT: lin([[c, xT + (xT ? ' ' : '') + expT(k)]]), ypS: S([[c, xS + expS(k)]]), form };
+  }
+  if (kind === 'poly') {
+    const B = ri(-6, 6); const al = F(A, p[n]); const be = math.divide(math.subtract(F(B), math.multiply(F(p[n - 1]), al)), F(p[n]));
+    return { T: lin([[A, 'x'], [B, '']]), g: x => A * x + B, ypT: lin([[al, 'x'], [be, '']]), ypS: S([[al, 'x'], [be, '']]), form: T`Правая часть — многочлен первой степени, \(0\) не корень, ищем \(\tilde y=ax+b\).` };
+  }
+  // trig
+  const w = o.w, fn = o.fn || pick(['sin', 'cos']); const [R, I] = pEvalI(p, w); const wx = bxT(w), wS = cx(w, 'x'); const wi = (w === 1 ? '' : w) + 'i';
+  const Tr = lin([[A, T`\${fn} ${wx}`]]); const g = x => A * Math[fn](w * x);
+  if (R === 0 && I === 0) {
+    const c = F(A, 2 * w);
+    const terms = fn === 'sin' ? [[math.unaryMinus(c), T`x\cos ${wx}`]] : [[c, T`x\sin ${wx}`]];
+    const termsS = fn === 'sin' ? [[math.unaryMinus(c), `x*cos(${wS})`]] : [[c, `x*sin(${wS})`]];
+    return { T: Tr, g, ypT: lin(terms), ypS: S(termsS), form: T`Числа \(\pm ${wi}\) — корни характеристического уравнения (резонанс), ищем \(\tilde y=x\,(a\cos ${wx}+b\sin ${wx})\).` };
+  }
+  const D = R * R + I * I;
+  const tl = fn === 'sin' ? [[F(A * R, D), T`\sin ${wx}`], [F(-A * I, D), T`\cos ${wx}`]] : [[F(A * R, D), T`\cos ${wx}`], [F(A * I, D), T`\sin ${wx}`]];
+  const ts = fn === 'sin' ? [[F(A * R, D), `sin(${wS})`], [F(-A * I, D), `cos(${wS})`]] : [[F(A * R, D), `cos(${wS})`], [F(A * I, D), `sin(${wS})`]];
+  return { T: Tr, g, ypT: lin(tl), ypS: S(ts), form: T`Числа \(\pm ${wi}\) не корни, ищем \(\tilde y=a\cos ${wx}+b\sin ${wx}\) и подставляем в уравнение.` };
+}
+function odeGenTask(sp, p, rhs) {
+  const n = p.length - 1; const eq = odeLHS(p) + '=' + (rhs ? rhs.T : '0'); const y0 = genT(sp);
+  const full = rhs ? join(y0, rhs.ypT) : y0; const fullS = rhs ? `${genS(sp)} + (${rhs.ypS})` : genS(sp);
+  const resid = (x, ys) => { let s = 0; p.forEach((c, i) => s += c * ys[n - i]); return s - (rhs ? rhs.g(x) : 0); };
+  let sol = T`<p>Характеристическое уравнение: \(${charT(p)}\). Корни: ` + rootsHTML(sp) + '.</p>' + T`<p>Общее решение однородного уравнения: \(y_0=${y0}\).</p>`;
+  if (rhs) sol += `<p>${rhs.form}</p>` + T`<p>Частное решение: \(\tilde y=${rhs.ypT}\). Ответ: \(y=y_0+\tilde y\).</p>`;
+  const hint = rhs ? T`Решение неоднородного: \(y=y_0+\tilde y\). Сначала корни характеристического уравнения, затем частное решение по виду правой части (метод неопределённых коэффициентов).`
+    : T`Подставьте \(y=e^{rx}\): получится характеристическое уравнение. Каждый корень даёт слагаемое общего решения; кратный корень — домножение на \(x\), пара \(\alpha\pm\beta i\) — \(e^{\alpha x}(C_1\cos\beta x+C_2\sin\beta x)\).`;
+  return { q: 'Найдите общее решение уравнения' + T`\[ ${eq} \]`, label: T`\(y\)`, ph: 'например C1*e^(2x) + C2*x*e^(2x)', check: chkODE(n, resid, [0.1, 1.1]), ans: T`\[ y=${full} \]`, ansStr: fullS, hint, sol };
+}
+function solveFrac(M, b) {
+  const n = M.length; const A = M.map((r, i) => [...r.map(v => F(Math.round(v))), F(b[i])]);
+  for (let c = 0; c < n; c++) {
+    let piv = c; while (piv < n && A[piv][c].n === 0) piv++;
+    [A[c], A[piv]] = [A[piv], A[c]];
+    for (let r = 0; r < n; r++) { if (r === c) continue; const f = math.divide(A[r][c], A[c][c]); if (f.n === 0) continue; for (let k = c; k <= n; k++) A[r][k] = math.subtract(A[r][k], math.multiply(f, A[c][k])); }
+  }
+  return A.map((r, i) => math.divide(r[n], r[i]));
+}
+function cauchyTask(sp) {
+  const p = charPoly(sp), n = p.length - 1, B = basis(sp);
+  const ic = []; for (let i = 0; i < n; i++) ic.push(ri(-3, 3)); if (ic.every(v => v === 0)) ic[0] = 1;
+  const M = []; for (let k = 0; k < n; k++) M.push(B.map(b => b.d(k)));
+  const C = solveFrac(M, ic);
+  const yT = lin(B.map((b, i) => [C[i], b.t])); const yS = S(B.map((b, i) => [C[i], b.s]));
+  const icT = ic.map((v, k) => `${YN[k]}(0)=${v}`).join(T`,\quad `);
+  const sol = T`<p>Характеристическое уравнение \(${charT(p)}\), корни: ` + rootsHTML(sp) + '.</p>' + T`<p>Общее решение: \(y=${genT(sp)}\).</p><p>Подставляем \(x=0\) в \(y\)` + (n > 1 ? T`, \(y'\)` : '') + (n > 2 ? T`, \(y''\)` : '') + T` и решаем систему: \(${C.map((c, i) => `C_{${i + 1}}=${fT(c)}`).join(T`,\ `)}\).</p>`;
+  return { q: T`Решите задачу Коши: \[ ${odeLHS(p)}=0,\qquad ${icT}. \]`, label: T`\(y\)`, ph: 'без постоянных: например 2*e^(3x) - cos(x)', check: chkFunc(yS, [0, 1.2]), ans: T`\[ y=${yT} \]`, ansStr: yS,
+    hint: T`Найдите общее решение, продифференцируйте его ${n - 1 === 1 ? 'один раз' : 'дважды'}, подставьте \(x=0\) и решите линейную систему относительно \(C_i\).`, sol };
+}
+function generalTask(eqT, ansT, ansS, n, resid, dom, hint, sol) {
+  return { q: 'Найдите общее решение уравнения' + T`\[ ${eqT} \]`, label: T`\(y\)`, ph: 'с постоянной: например C*e^(2x)', check: chkODE(n, resid, dom || [0.2, 1.2]), ans: T`\[ ${ansT} \]`, ansStr: ansS, hint: hint || '', sol: sol || '' };
+}
+add('ode', 'e_check', 'Проверка решения', 1, () => {
+  const sp = spec2(pick(['dist', 'dist', 'rep'])); const p = charPoly(sp); const roots = sp.real.map(r => r[0]);
+  let r = Math.random() < 0.5 ? pick(roots) : ri(-4, 4); const val = pEval(p, r); const ok = val === 0;
+  return choiceTask(T`Является ли функция \(y=${expT(r) || '1'}\) решением уравнения \[ ${odeLHS(p)}=0\,? \]`, ['Да, является', 'Нет'], ok ? 0 : 1,
+    T`<p>Подставим \(y=e^{${r}x}\): \(y'=${r}e^{${r}x}\), \(y''=${r * r}e^{${r}x}\). Получаем \((${r * r}${p[1] >= 0 ? '+' : ''}${p[1] * r}${p[2] >= 0 ? '+' : ''}${p[2]})\,e^{${r}x}=${val}\cdot e^{${r}x}\)${ok ? ' — тождественно ноль, значит, является.' : T` \(\ne 0\), значит, не является.`}</p>`,
+    T`Найдите \(y'\), \(y''\) и подставьте в уравнение. Решение превращает уравнение в тождество.`);
+});
+add('ode', 'e1_sep', '1-й порядок: разделяющиеся переменные', 1, () => {
+  const k = rnz(-3, 3), a = rnz(-3, 3), m = ri(1, 2), kk = ri(1, 3);
+  const t = pick([
+    () => generalTask(T`y'=${cxT(k, 'y')}`, T`y=C\,e^{${cxT(k, 'x')}}`, `C*e^(${cx(k, 'x')})`, 1, (x, y) => y[1] - k * y[0], null, T`\(\frac{dy}{y}=${k}\,dx\Rightarrow\ln|y|=${cxT(k, 'x')}+C\).`),
+    () => { const c = F(a, m + 1); return generalTask(T`y'=${cxT(a, `x${m === 1 ? '' : '^{' + m + '}'}y`)}`, T`y=C\,e^{${lin([[c, `x^{${m + 1}}`]])}}`, `C*e^(${S([[c, `x^${m + 1}`]])})`, 1, (x, y) => y[1] - a * x ** m * y[0], null, T`Разделите переменные: \(\frac{dy}{y}=${cxT(a, m === 1 ? 'x' : 'x^{' + m + '}')}\,dx\), проинтегрируйте обе части.`); },
+    () => generalTask(T`y'=e^{x-y}`, T`y=\ln\left(e^x+C\right)`, 'log(e^x + C)', 1, (x, y) => y[1] - Math.exp(x - y[0]), null, T`\(e^{x-y}=e^x e^{-y}\), отсюда \(e^y\,dy=e^x\,dx\).`),
+    () => generalTask(T`y'=\frac{x}{y},\quad y\gt0`, T`y=\sqrt{x^2+C}`, 'sqrt(x^2 + C)', 1, (x, y) => y[1] - x / y[0], null, T`\(y\,dy=x\,dx\Rightarrow y^2=x^2+C\).`),
+    () => generalTask(T`y'=${cxT(kk, 'y^2')}`, T`y=-\frac{1}{${cxT(kk, 'x')}+C}`, `-1/(${cx(kk, 'x')} + C)`, 1, (x, y) => y[1] - kk * y[0] ** 2, null, T`\(\frac{dy}{y^2}=${kk}\,dx\Rightarrow-\frac1y=${cxT(kk, 'x')}+C\).`),
+    () => generalTask(T`y'=y\cos x`, T`y=C\,e^{\sin x}`, 'C*e^(sin(x))', 1, (x, y) => y[1] - y[0] * Math.cos(x), null, T`\(\frac{dy}{y}=\cos x\,dx\).`)
+  ])();
+  return t;
+});
+add('ode', 'e1_cauchy', '1-й порядок: задача Коши', 1, () => {
+  const k = rnz(-3, 3), y0 = rnz(-4, 5), a = rnz(-2, 3), b = rnz(-6, 6);
+  const t = pick([
+    () => ({ eq: T`y'=${cxT(k, 'y')},\quad y(0)=${y0}`, s: `${y0}*e^(${cx(k, 'x')})`, T: lin([[y0, T`e^{${cxT(k, 'x')}}`]]), h: T`Общее решение \(y=Ce^{${cxT(k, 'x')}}\); из \(y(0)=C\) получаем \(C=${y0}\).` }),
+    () => { const c = F(a, 2); return { eq: T`y'=${cxT(a, 'xy')},\quad y(0)=${y0}`, s: `${y0}*e^(${S([[c, 'x^2']])})`, T: lin([[y0, T`e^{${lin([[c, 'x^2']])}}`]]), h: T`Общее решение \(y=Ce^{${lin([[c, 'x^2']])}}\), а \(C=y(0)\).` }; },
+    () => { const q = F(-b, k); const C = math.subtract(F(y0), q); return { eq: T`y'=${lin([[k, 'y'], [b, '']])},\quad y(0)=${y0}`, s: S([[q, ''], [C, `e^(${cx(k, 'x')})`]]), T: lin([[q, ''], [C, T`e^{${cxT(k, 'x')}}`]]), h: T`Общее решение \(y=${fT(q)}+Ce^{${cxT(k, 'x')}}\) (стационарное решение плюс экспонента), \(C\) — из \(y(0)=${y0}\).` }; }
+  ])();
+  return { q: T`Решите задачу Коши: \[ ${t.eq} \]`, label: T`\(y\)`, ph: 'без постоянной', check: chkFunc(t.s, [0, 1.2]), ans: T`\[ y=${t.T} \]`, ansStr: t.s, hint: 'Сначала общее решение (разделение переменных), затем подставьте начальное условие.', sol: `<p>${t.h}</p>` };
+});
+add('ode', 'e1_lin', '1-й порядок: линейные', 2, () => {
+  const a = rnz(-3, 3), b = rnz(-6, 6), A = rnz(-4, 4), m = ri(0, 3), nn = ri(1, 3);
+  let k; do { k = rnz(-3, 3); } while (k === -a);
+  const t = pick([
+    () => { const c = F(b, a); return generalTask(T`y'${a > 0 ? '+' : '-'}${Math.abs(a) === 1 ? '' : Math.abs(a)}y=${b}`, T`y=${join(fT(c), T`C\,e^{${cxT(-a, 'x')}}`)}`, `${fS(c)} + C*e^(${cx(-a, 'x')})`, 1, (x, y) => y[1] + a * y[0] - b); },
+    () => { const c = F(A, k + a); return generalTask(T`y'${a > 0 ? '+' : '-'}${Math.abs(a) === 1 ? '' : Math.abs(a)}y=${lin([[A, expT(k)]])}`, T`y=${lin([[c, expT(k)]])}+C\,e^{${cxT(-a, 'x')}}`, `${S([[c, expS(k)]])} + C*e^(${cx(-a, 'x')})`, 1, (x, y) => y[1] + a * y[0] - A * Math.exp(k * x)); },
+    () => { const c = F(A, m + 2); const xm = m === 0 ? '' : m === 1 ? 'x' : `x^{${m}}`; return generalTask(T`y'+\frac{y}{x}=${lin([[A, xm]])}`, T`y=${lin([[c, `x^{${m + 1}}`]])}+\frac{C}{x}`, `${S([[c, `x^${m + 1}`]])} + C/x`, 1, (x, y) => y[1] + y[0] / x - A * x ** m, [0.3, 1.5]); },
+    () => generalTask(T`y'-\frac{${nn === 1 ? '' : nn}y}{x}=${lin([[A, nn === 1 ? 'x' : `x^{${nn}}`]])}`, T`y=${lin([[A, `x^{${nn + 1}}`]])}+C${nn === 1 ? 'x' : `x^{${nn}}`}`, `${S([[A, `x^${nn + 1}`]])} + C*x^${nn}`, 1, (x, y) => y[1] - nn * y[0] / x - A * x ** nn, [0.3, 1.5]),
+    () => generalTask(T`y'+y\operatorname{tg}x=\cos x`, T`y=(x+C)\cos x`, '(x + C)*cos(x)', 1, (x, y) => y[1] + y[0] * Math.tan(x) - Math.cos(x), [0.2, 1.2]),
+    () => { const c = F(A, 2); return generalTask(T`y'+2xy=${lin([[A, 'x e^{-x^2}']])}`, T`y=\left(${lin([[c, 'x^2']])}+C\right)e^{-x^2}`, `(${S([[c, 'x^2']])} + C)*e^(-x^2)`, 1, (x, y) => y[1] + 2 * x * y[0] - A * x * Math.exp(-x * x)); }
+  ])();
+  t.hint = T`Линейное уравнение \(y'+P(x)y=Q(x)\): замена \(y=uv\) (Бернулли) или интегрирующий множитель \(\mu=e^{\int P\,dx}\): \((\mu y)'=\mu Q\).`;
+  return t;
+});
+add('ode', 'e1_other', '1-й порядок: однородные и Бернулли', 3, () => {
+  const a = rnz(-2, 2);
+  const t = pick([
+    () => generalTask(T`y'=\frac{y}{x}+1`, T`y=x(\ln x+C)`, 'x*(log(x) + C)', 1, (x, y) => y[1] - y[0] / x - 1, [0.4, 1.8], T`Однородное: \(y=ux\), \(y'=u+xu'\). Получится \(xu'=1\).`),
+    () => generalTask(T`y'=\frac{y}{x}+\frac{x}{y},\quad x\gt0,\ y\gt0`, T`y=x\sqrt{2\ln x+C}`, 'x*sqrt(2*log(x) + C)', 1, (x, y) => y[1] - y[0] / x - x / y[0], [1, 2.5], T`Однородное: \(y=ux\). Получится \(xu'=\frac1u\), то есть \(u\,du=\frac{dx}{x}\).`),
+    () => generalTask(T`y'=\frac{y^2}{x^2}+\frac{y}{x}`, T`y=-\frac{x}{\ln x+C}`, '-x/(log(x) + C)', 1, (x, y) => y[1] - (y[0] / x) ** 2 - y[0] / x, [1, 2], T`Однородное: \(y=ux\Rightarrow xu'=u^2\).`),
+    () => generalTask(T`y'${a > 0 ? '+' : '-'}${Math.abs(a) === 1 ? '' : Math.abs(a)}y=${cxT(a, 'y^2')}`, T`y=\frac{1}{1+C\,e^{${cxT(a, 'x')}}}`, `1/(1 + C*e^(${cx(a, 'x')}))`, 1, (x, y) => y[1] + a * y[0] - a * y[0] ** 2, null, T`Уравнение Бернулли: замена \(z=\frac1y\) даёт линейное \(z'-${a}z=-${a}\).`),
+    () => generalTask(T`y'-\frac{y}{x}=-y^2`, T`y=\frac{2x}{x^2+C}`, '2*x/(x^2 + C)', 1, (x, y) => y[1] - y[0] / x + y[0] ** 2, [0.3, 1.5], T`Бернулли с \(\alpha=2\): \(z=\frac1y\) даёт \(z'+\frac zx=1\).`)
+  ])();
+  return t;
+});
+add('ode', 'e_red', 'Понижение порядка: y⁽ⁿ⁾ = f(x)', 2, () => {
+  const k = rnz(-3, 3), A = rnz(-4, 4), nn = ri(0, 3), w = ri(1, 3);
+  const two = Math.random() < 0.5;
+  const tail2 = 'C_1x+C_2', tail2S = 'C1*x + C2', tail3 = 'C_1x^2+C_2x+C_3', tail3S = 'C1*x^2 + C2*x + C3';
+  const t = pick(two ? [
+    () => ({ f: lin([[A, expT(k)]]), g: x => A * Math.exp(k * x), yT: lin([[F(A, k * k), expT(k)]]), yS: S([[F(A, k * k), expS(k)]]) }),
+    () => ({ f: lin([[A, nn === 0 ? '' : nn === 1 ? 'x' : `x^{${nn}}`]]), g: x => A * x ** nn, yT: lin([[F(A, (nn + 1) * (nn + 2)), `x^{${nn + 2}}`]]), yS: S([[F(A, (nn + 1) * (nn + 2)), `x^${nn + 2}`]]) }),
+    () => ({ f: lin([[A, T`\sin ${bxT(w)}`]]), g: x => A * Math.sin(w * x), yT: lin([[F(-A, w * w), T`\sin ${bxT(w)}`]]), yS: S([[F(-A, w * w), `sin(${cx(w, 'x')})`]]) })
+  ] : [
+    () => ({ f: lin([[A, expT(k)]]), g: x => A * Math.exp(k * x), yT: lin([[F(A, k ** 3), expT(k)]]), yS: S([[F(A, k ** 3), expS(k)]]) }),
+    () => ({ f: lin([[A, nn === 0 ? '' : nn === 1 ? 'x' : `x^{${nn}}`]]), g: x => A * x ** nn, yT: lin([[F(A, (nn + 1) * (nn + 2) * (nn + 3)), `x^{${nn + 3}}`]]), yS: S([[F(A, (nn + 1) * (nn + 2) * (nn + 3)), `x^${nn + 3}`]]) }),
+    () => ({ f: lin([[A, T`\cos x`]]), g: x => A * Math.cos(x), yT: lin([[-A, T`\sin x`]]), yS: S([[-A, 'sin(x)']]) })
+  ])();
+  const n = two ? 2 : 3;
+  return generalTask(T`${YN[n]}=${t.f}`, T`y=${join(t.yT, n === 2 ? tail2 : tail3)}`, `${t.yS} + ${n === 2 ? tail2S : tail3S}`, n, (x, y) => y[n] - t.g(x), null,
+    T`Интегрируйте \(${n}\) раза подряд; после каждого интегрирования добавляйте новую постоянную.`);
+});
+add('ode', 'e_red2', 'Понижение порядка: нет y или нет x', 3, () => pick([
+  () => generalTask(T`x\,y''=y'`, T`y=C_1x^2+C_2`, 'C1*x^2 + C2', 2, (x, y) => x * y[2] - y[1], [0.3, 1.5], T`Нет \(y\): \(y'=p(x)\), тогда \(xp'=p\).`),
+  () => generalTask(T`x\,y''+y'=0`, T`y=C_1\ln x+C_2`, 'C1*log(x) + C2', 2, (x, y) => x * y[2] + y[1], [0.3, 1.5], T`Нет \(y\): \(y'=p(x)\), тогда \((xp)'=0\).`),
+  () => generalTask(T`y\,y''=(y')^2`, T`y=C_2\,e^{C_1x}`, 'C2*e^(C1*x)', 2, (x, y) => y[0] * y[2] - y[1] ** 2, [0.2, 1.2], T`Нет \(x\): \(y'=p(y)\), \(y''=p\frac{dp}{dy}\). Или заметьте, что \(\left(\frac{y'}{y}\right)'=0\).`),
+  () => generalTask(T`y''+(y')^2=0`, T`y=\ln(x+C_1)+C_2`, 'log(x + C1) + C2', 2, (x, y) => y[2] + y[1] ** 2, [0.2, 1.2], T`Нет \(x\) и \(y\): \(p=y'\), \(p'=-p^2\Rightarrow\frac1p=x+C_1\).`),
+  () => generalTask(T`x\,y'''=y''`, T`y=C_1x^3+C_2x+C_3`, 'C1*x^3 + C2*x + C3', 3, (x, y) => x * y[3] - y[2], [0.3, 1.5], T`Замена \(z=y''\): \(xz'=z\Rightarrow z=Cx\), затем интегрируйте дважды.`)
+])());
+add('ode', 'e2_hom', '2-й порядок: однородные', 2, () => { const sp = spec2(pick(['dist', 'dist', 'rep', 'cplx'])); return odeGenTask(sp, charPoly(sp), null); });
+add('ode', 'e2_cauchy', '2-й порядок: задача Коши', 2, () => cauchyTask(spec2(pick(['dist', 'rep', 'cplx']))));
+add('ode', 'e2_nonhom', '2-й порядок: неоднородные', 3, () => {
+  let sp, kind, o = {};
+  if (Math.random() < 0.15) { const w = ri(1, 3); sp = { real: [], cplx: [[0, w]] }; kind = 'trig'; o.w = w; }
+  else { sp = spec2(pick(['dist', 'dist', 'rep', 'cplx'])); kind = pick(['const', 'exp', 'exp', 'poly', 'trig']); }
+  const p = charPoly(sp);
+  if ((kind === 'const' || kind === 'poly') && p[2] === 0) kind = 'exp';
+  if (kind === 'exp') { const roots = sp.real.map(x => x[0]).filter(x => x !== 0); if (roots.length && Math.random() < 0.4) o.k = pick(roots); else { do { o.k = rnz(-3, 3); } while (pEval(p, o.k) === 0); } }
+  if (kind === 'trig' && !o.w) { do { o.w = ri(1, 3); } while (pEvalI(p, o.w).every(v => v === 0)); }
+  return odeGenTask(sp, p, rhsMake(p, kind, o));
+});
+add('ode', 'e3_hom', '3-й порядок: однородные', 3, () => { const sp = spec3(pick(['dist3', 'dist3', 'dbl', 'tri', 'rc'])); return odeGenTask(sp, charPoly(sp), null); });
+add('ode', 'e3_nonhom', '3-й порядок: неоднородные', 3, () => {
+  const sp = spec3(pick(['dist3', 'dbl', 'rc'])); const p = charPoly(sp);
+  let kind = pick(['const', 'exp', 'exp', 'poly', 'trig']); const o = {};
+  if ((kind === 'const' || kind === 'poly') && p[3] === 0) kind = 'exp';
+  if (kind === 'exp') { const roots = sp.real.map(x => x[0]).filter(x => x !== 0); if (roots.length && Math.random() < 0.3) o.k = pick(roots); else { do { o.k = rnz(-3, 3); } while (pEval(p, o.k) === 0); } }
+  if (kind === 'trig') { let tries = 0; do { o.w = ri(1, 3); tries++; } while (pEvalI(p, o.w).every(v => v === 0) && tries < 10); if (pEvalI(p, o.w).every(v => v === 0)) { kind = 'exp'; do { o.k = rnz(-3, 3); } while (pEval(p, o.k) === 0); } }
+  return odeGenTask(sp, p, rhsMake(p, kind, o));
+});
+add('ode', 'e3_cauchy', '3-й порядок: задача Коши', 3, () => cauchyTask(spec3(pick(['dist3', 'dbl', 'rc']))));
+
+/* =========================== SERIES =========================== */
+const SUM = (n0, t) => T`\sum_{n=${n0}}^{\infty}${t}`;
+function qT(q) { q = F(q); if (q.s > 0 && q.n === 1) return null; return T`\left(${fT(q)}\right)^{n}`; }
+add('series', 's_geom', 'Геометрический ряд', 1, () => {
+  const qs = [F(1, 2), F(1, 3), F(2, 3), F(1, 4), F(3, 4), F(-1, 2), F(-1, 3), F(2, 5), F(1, 5)];
+  if (Math.random() < 0.25) {
+    const k1 = ri(2, 3), k2 = k1 + ri(1, 3), d = ri(k2 + 1, 7);
+    const v = math.add(math.divide(F(1), math.subtract(F(1), F(k1, d))), math.divide(F(1), math.subtract(F(1), F(k2, d))));
+    return numTask('Найдите сумму ряда:' + T`\[ ${SUM(0, T`\frac{${k1}^n+${k2}^n}{${d}^n}`)} \]`, v.valueOf(), fT(v), fS(v), T`Разбейте на два геометрических ряда; \(\sum_{n=0}^\infty q^n=\frac{1}{1-q}\) при \(|q|\lt1\).`);
+  }
+  const q = pick(qs), a = ri(1, 5), n0 = ri(0, 1);
+  const term = qT(q) ? (a === 1 ? '' : a) + qT(q) : T`\frac{${a}}{${q.d}^{n}}`;
+  const v = math.divide(math.multiply(F(a), math.pow(q, n0)), math.subtract(F(1), q));
+  return numTask('Найдите сумму ряда:' + T`\[ ${SUM(n0, term)} \]`, v.valueOf(), fT(v), fS(v),
+    T`Геометрический ряд: \(\sum_{n=0}^\infty b\,q^n=\frac{b}{1-q}\) при \(|q|\lt1\). Сумма равна «первый член / (1 − q)».`, T`<p>Первый член \(${fT(math.multiply(F(a), math.pow(q, n0)))}\), знаменатель \(q=${fT(q)}\).</p>`);
+});
+add('series', 's_tele', 'Телескопические ряды', 2, () => {
+  const t = pick([
+    () => { const k = ri(1, 4), c = ri(1, 3); let h = F(0); for (let i = 1; i <= k; i++) h = math.add(h, F(1, i)); const v = math.multiply(F(c, k), h); return { t: T`\frac{${c}}{n(n+${k})}`, v, h: T`\(\frac{1}{n(n+${k})}=\frac1{${k}}\left(\frac1n-\frac1{n+${k}}\right)\); в частичной сумме выживут только первые ${k} слагаемых.` }; },
+    () => ({ t: T`\frac{1}{(2n-1)(2n+1)}`, v: F(1, 2), h: T`\(\frac{1}{(2n-1)(2n+1)}=\frac12\left(\frac1{2n-1}-\frac1{2n+1}\right)\).` }),
+    () => { const a = ri(0, 3); return { t: T`\frac{1}{n^2+${2 * a + 1 === 1 ? '' : 2 * a + 1}n+${a * (a + 1) === 0 ? '0' : a * (a + 1)}}`.replace('+0}', '}'), v: F(1, a + 1), h: T`\(n^2+${2 * a + 1}n+${a * (a + 1)}=(n+${a})(n+${a + 1})\), и \(\frac{1}{(n+${a})(n+${a + 1})}=\frac{1}{n+${a}}-\frac{1}{n+${a + 1}}\).` }; }
+  ])();
+  return numTask('Найдите сумму ряда:' + T`\[ ${SUM(1, t.t)} \]`, t.v.valueOf(), fT(t.v), fS(t.v), T`Разложите общий член на простейшие дроби и выпишите частичную сумму \(S_N\): большинство слагаемых сократится.`, `<p>${t.h}</p>`);
+});
+add('series', 's_known', 'Суммы через известные разложения', 3, () => {
+  const t = pick([
+    () => { const q = pick([F(1, 2), F(1, 3), F(2, 3), F(1, 4), F(-1, 2)]); const v = math.divide(q, math.pow(math.subtract(F(1), q), 2)); return { t: q.s > 0 && q.n === 1 ? T`\frac{n}{${q.d}^n}` : T`n\left(${fT(q)}\right)^n`, n0: 1, v: v.valueOf(), vT: fT(v), vS: fS(v), h: T`Продифференцируйте \(\sum q^n=\frac1{1-q}\): \(\sum nq^{n}=\frac{q}{(1-q)^2}\).` }; },
+    () => { const a = ri(1, 3); return { t: T`\frac{${a}^n}{n!}`, n0: 0, v: Math.exp(a), vT: T`e^{${a}}`, vS: `e^${a}`, h: T`\(e^x=\sum\frac{x^n}{n!}\).` }; },
+    () => ({ t: T`\frac{(-1)^{n+1}}{n}`, n0: 1, v: Math.log(2), vT: T`\ln 2`, vS: 'log(2)', h: T`\(\ln(1+x)=\sum_{n\ge1}\frac{(-1)^{n+1}x^n}{n}\) при \(x=1\).` }),
+    () => ({ t: T`\frac{(-1)^n}{2n+1}`, n0: 0, v: Math.PI / 4, vT: T`\frac{\pi}{4}`, vS: 'pi/4', h: T`\(\operatorname{arctg}x=\sum\frac{(-1)^nx^{2n+1}}{2n+1}\) при \(x=1\).` }),
+    () => ({ t: T`\frac{1}{n^2}`, n0: 1, v: Math.PI ** 2 / 6, vT: T`\frac{\pi^2}{6}`, vS: 'pi^2/6', h: T`Задача Базеля; выводится, например, из ряда Фурье для \(x^2\).` }),
+    () => { const a = ri(1, 3); return { t: T`\frac{(-1)^n${a === 1 ? '' : a + '^n'}}{n!}`, n0: 0, v: Math.exp(-a), vT: T`e^{-${a}}`, vS: `e^(-${a})`, h: T`\(e^x\) при \(x=-${a}\).` }; }
+  ])();
+  return numTask('Найдите сумму ряда:' + T`\[ ${SUM(t.n0, t.t)} \]`, t.v, t.vT, t.vS, t.h);
+});
+function convPool1() {
+  return [
+    () => { const [pn, pd] = pick([[1, 2], [1, 1], [3, 2], [2, 1], [3, 1], [4, 3], [2, 3]]); const pv = pn / pd; const t = pd === 1 ? (pn === 1 ? T`\frac1n` : T`\frac{1}{n^{${pn}}}`) : (pn === 1 && pd === 2 ? T`\frac{1}{\sqrt n}` : T`\frac{1}{n^{${pn}/${pd}}}`); return { t, c: pv > 1, why: T`Обобщённый гармонический ряд \(\sum\frac1{n^p}\) с \(p=${fT(F(pn, pd))}\): сходится при \(p\gt1\), расходится при \(p\le1\).` }; },
+    () => { const a = ri(1, 5), b = ri(1, 5), c = ri(1, 5), d = ri(1, 5); return { t: T`\frac{${cxT(a, 'n')}+${b}}{${cxT(c, 'n')}+${d}}`, c: false, why: T`Общий член стремится к \(${fT(F(a, c))}\ne0\) — не выполнено необходимое условие сходимости.` }; },
+    () => { const a = ri(1, 9); return { t: T`\frac{1}{n^2+${a}}`, c: true, why: T`\(\frac{1}{n^2+${a}}\lt\frac{1}{n^2}\), а \(\sum\frac1{n^2}\) сходится (признак сравнения).` }; },
+    () => { const k = ri(1, 3), a = ri(2, 5); return { t: T`\frac{${k === 1 ? 'n' : `n^{${k}}`}}{${a}^n}`, c: true, why: T`Признак Даламбера: \(\frac{a_{n+1}}{a_n}=\left(\frac{n+1}{n}\right)^{${k}}\frac1{${a}}\to\frac1{${a}}\lt1\).` }; },
+    () => { const a = ri(2, 6); return { t: T`\frac{${a}^n}{n!}`, c: true, why: T`Даламбер: \(\frac{a_{n+1}}{a_n}=\frac{${a}}{n+1}\to0\lt1\).` }; },
+    () => { const a = ri(2, 5); return { t: T`\frac{n!}{${a}^n}`, c: false, why: T`Даламбер: \(\frac{a_{n+1}}{a_n}=\frac{n+1}{${a}}\to\infty\gt1\).` }; },
+    () => { const a = ri(1, 4); return { t: T`\frac{n}{n^2+${a}}`, c: false, why: T`\(\frac{n}{n^2+${a}}\sim\frac1n\), гармонический ряд расходится (предельный признак сравнения).` }; },
+    () => { const a = ri(1, 4), b = a + ri(1, 3); return Math.random() < 0.5 ? { t: T`\frac{${a}^n}{${b}^n}`, c: true, why: T`Геометрический ряд с \(q=\frac{${a}}{${b}}\lt1\).` } : { t: T`\frac{${b}^n}{${a}^n}`, c: false, why: T`Геометрический ряд с \(q=\frac{${b}}{${a}}\gt1\): члены растут.` }; }
+  ];
+}
+function convPool2() {
+  return [
+    () => ({ t: T`\frac{n!}{n^n}`, c: true, why: T`Даламбер: \(\frac{a_{n+1}}{a_n}=\left(\frac{n}{n+1}\right)^n\to\frac1e\lt1\).`, n0: 1 }),
+    () => { const a = ri(1, 4), b = ri(1, 4); if (a === b) return { t: T`\left(\frac{n}{n+1}\right)^{n}`, c: false, why: T`\(a_n\to\frac1e\ne0\): нарушено необходимое условие.` }; return { t: T`\left(\frac{${cxT(a, 'n')}}{${cxT(b, 'n')}+1}\right)^{n}`, c: a < b, why: T`Радикальный признак Коши: \(\sqrt[n]{a_n}\to\frac{${a}}{${b}}${a < b ? '\\lt' : '\\gt'}1\).` }; },
+    () => ({ t: T`\frac{1}{n\ln n}`, c: false, n0: 2, why: T`Интегральный признак: \(\int_2^\infty\frac{dx}{x\ln x}=\ln\ln x\Big|_2^\infty=\infty\).` }),
+    () => ({ t: T`\frac{1}{n\ln^2 n}`, c: true, n0: 2, why: T`Интегральный признак: \(\int_2^\infty\frac{dx}{x\ln^2x}=\frac{1}{\ln 2}\lt\infty\).` }),
+    () => { const a = ri(1, 9); return { t: T`\frac{1}{\sqrt{n^3+${a}}}`, c: true, why: T`\(\frac{1}{\sqrt{n^3+${a}}}\sim\frac{1}{n^{3/2}}\), а \(p=\frac32\gt1\).` }; },
+    () => { const a = ri(1, 9); return { t: T`\frac{1}{\sqrt{n+${a}}}`, c: false, why: T`\(\frac{1}{\sqrt{n+${a}}}\sim\frac{1}{n^{1/2}}\), \(p=\frac12\le1\).` }; },
+    () => ({ t: T`\sin\frac{1}{n}`, c: false, why: T`\(\sin\frac1n\sim\frac1n\), гармонический ряд расходится.` }),
+    () => ({ t: T`\sin\frac{1}{n^2}`, c: true, why: T`\(\sin\frac1{n^2}\sim\frac1{n^2}\), ряд сходится.` }),
+    () => ({ t: T`\left(1-\cos\frac{1}{n}\right)`, c: true, why: T`\(1-\cos\frac1n\sim\frac{1}{2n^2}\).` }),
+    () => ({ t: T`\ln\left(1+\frac{1}{n}\right)`, c: false, why: T`\(\ln\left(1+\frac1n\right)\sim\frac1n\).` }),
+    () => ({ t: T`\frac{(n!)^2}{(2n)!}`, c: true, why: T`Даламбер: \(\frac{a_{n+1}}{a_n}=\frac{(n+1)^2}{(2n+1)(2n+2)}\to\frac14\lt1\).` }),
+    () => { const a = pick([2, 3]); return { t: T`\frac{n^n}{n!\,${a}^n}`, c: a === 3, why: T`Даламбер: \(\frac{a_{n+1}}{a_n}=\frac{1}{${a}}\left(1+\frac1n\right)^n\to\frac{e}{${a}}${a === 3 ? '\\lt' : '\\gt'}1\).` }; },
+    () => ({ t: T`\left(1+\frac{1}{n}\right)^{n}`, c: false, why: T`\(a_n\to e\ne0\): нарушено необходимое условие.` })
+  ];
+}
+function convTask(pool, lvlNote) {
+  const t = pick(pool)();
+  return choiceTask('Исследуйте ряд на сходимость:' + T`\[ ${SUM(t.n0 || 1, t.t)} \]`, ['Сходится', 'Расходится'], t.c ? 0 : 1, `<p>${t.why}</p>`,
+    T`Сначала проверьте \(a_n\to0\). Факториалы и показательные функции — признак Даламбера; \(n\)-е степени — радикальный Коши; дроби от \(n\) — сравнение с \(\sum\frac1{n^p}\); логарифмы — интегральный признак.`);
+}
+add('series', 's_conv', 'Сходимость: базовые признаки', 1, () => convTask(convPool1()));
+add('series', 's_conv2', 'Сходимость: эквивалентности и Коши', 2, () => convTask(convPool2()));
+add('series', 's_alt', 'Абсолютная и условная сходимость', 2, () => {
+  const t = pick([
+    () => { const [pn, pd] = pick([[1, 2], [1, 1], [2, 1], [3, 2], [1, 3], [3, 1]]); const pv = pn / pd; const den = pd === 1 ? (pn === 1 ? 'n' : `n^{${pn}}`) : pn === 1 && pd === 2 ? T`\sqrt n` : pn === 1 && pd === 3 ? T`\sqrt[3]{n}` : `n^{${pn}/${pd}}`; return { t: T`\frac{(-1)^n}{${den}}`, a: pv > 1 ? 0 : 1, why: pv > 1 ? T`\(\sum\frac1{${den}}\) сходится (\(p\gt1\)), значит, сходимость абсолютная.` : T`Ряд из модулей \(\sum\frac1{${den}}\) расходится (\(p\le1\)), но по Лейбницу \(\frac1{${den}}\) монотонно убывает к нулю: сходимость условная.` }; },
+    () => ({ t: T`(-1)^n\frac{n}{n+1}`, a: 2, why: T`\(|a_n|\to1\ne0\): необходимое условие нарушено, ряд расходится.` }),
+    () => ({ t: T`\frac{(-1)^n}{n\ln n}`, a: 1, n0: 2, why: T`Модули: \(\sum\frac1{n\ln n}\) расходится (интегральный признак). По Лейбницу \(\frac1{n\ln n}\downarrow0\): условная сходимость.` }),
+    () => { const a = ri(2, 4); return { t: T`(-1)^n\frac{n}{${a}^n}`, a: 0, why: T`Ряд из модулей \(\sum\frac{n}{${a}^n}\) сходится по Даламберу (предел \(\frac1{${a}}\)): абсолютная сходимость.` }; },
+    () => { const a = ri(2, 5); return { t: T`\frac{\sin ${a}n}{n^2}`, a: 0, why: T`\(\left|\frac{\sin ${a}n}{n^2}\right|\le\frac1{n^2}\), ряд из модулей сходится: абсолютная сходимость.` }; },
+    () => { const a = ri(1, 5); return { t: T`(-1)^n\frac{n}{n^2+${a}}`, a: 1, why: T`\(\frac{n}{n^2+${a}}\sim\frac1n\): ряд из модулей расходится. Члены убывают к нулю — по Лейбницу ряд сходится условно.` }; },
+    () => { const a = ri(2, 5); return { t: T`\frac{(-1)^n ${a}^n}{n!}`, a: 0, why: T`\(\sum\frac{${a}^n}{n!}\) сходится по Даламберу: абсолютная сходимость.` }; },
+    () => ({ t: T`(-1)^n\ln\left(1+\frac1n\right)`, a: 1, why: T`\(\ln(1+\frac1n)\sim\frac1n\): модули дают расходящийся ряд; члены монотонно убывают к нулю, по Лейбницу — условная сходимость.` }),
+    () => ({ t: T`(-1)^n\frac{n+1}{n^2}`, a: 1, why: T`\(\frac{n+1}{n^2}\sim\frac1n\): по модулю расходится; по Лейбницу сходится условно.` })
+  ])();
+  return choiceTask('Определите характер сходимости ряда:' + T`\[ ${SUM(t.n0 || 1, t.t)} \]`, ['Сходится абсолютно', 'Сходится условно', 'Расходится'], t.a, `<p>${t.why}</p>`,
+    T`Порядок действий: 1) \(a_n\to0\)? Если нет — расходится. 2) Сходится ли ряд из модулей? Если да — абсолютно. 3) Иначе признак Лейбница: модули монотонно убывают к нулю — условно.`);
+});
+add('series', 's_radius', 'Радиус сходимости', 2, () => {
+  const a = ri(2, 5), k = ri(1, 3), c = ri(1, 4), pp = ri(0, 2);
+  const t = pick([
+    () => ({ t: T`\frac{x^n}{${pp === 0 ? '' : pp === 1 ? 'n\\cdot ' : 'n^2\\cdot '}${a}^n}`, v: F(a) }),
+    () => ({ t: T`${k === 1 ? 'n' : `n^{${k}}`}x^n`, v: F(1) }),
+    () => ({ t: T`\frac{x^n}{n!}`, v: Infinity }),
+    () => ({ t: T`n!\,x^n`, v: F(0) }),
+    () => ({ t: T`\frac{${a}^n x^n}{n}`, v: F(1, a) }),
+    () => ({ t: T`\frac{(x-${c})^n}{${a}^n\sqrt{n}}`, v: F(a) }),
+    () => ({ t: T`\frac{(x+${c})^n}{n^2}`, v: F(1) })
+  ])();
+  const inf = t.v === Infinity;
+  return numTask('Найдите радиус сходимости \\(R\\) степенного ряда (если \\(R=\\infty\\), введите <code>inf</code>):' + T`\[ ${SUM(1, t.t)} \]`, inf ? Infinity : t.v.valueOf(), inf ? T`R=\infty` : T`R=${fT(t.v)}`, inf ? 'inf' : fS(t.v),
+    T`\(R=\lim\limits_{n\to\infty}\left|\frac{a_n}{a_{n+1}}\right|\) или \(R=\dfrac{1}{\lim\sqrt[n]{|a_n|}}\), где \(a_n\) — коэффициент при \((x-x_0)^n\).`);
+});
+add('series', 's_radius2', 'Радиус: трудные случаи', 3, () => {
+  const t = pick([
+    () => { const a = pick([2, 3, 4, 5, 9]); const r = Math.sqrt(a); return { t: T`\frac{x^{2n}}{${a}^n}`, v: r, vT: Number.isInteger(r) ? String(r) : T`\sqrt{${a}}`, vS: Number.isInteger(r) ? String(r) : `sqrt(${a})`, h: T`Ряд с пропусками: применяйте Даламбера ко всему члену: \(\frac{x^2}{${a}}\lt1\).` }; },
+    () => ({ t: T`\left(\frac{n}{n+1}\right)^{n^2}x^n`, v: Math.E, vT: 'e', vS: 'e', h: T`Радикальный признак: \(\sqrt[n]{a_n}=\left(\frac{n}{n+1}\right)^n\to\frac1e\).` }),
+    () => ({ t: T`\frac{(n!)^2}{(2n)!}x^n`, v: 4, vT: '4', vS: '4', h: T`\(\frac{a_n}{a_{n+1}}=\frac{(2n+1)(2n+2)}{(n+1)^2}\to4\).` }),
+    () => ({ t: T`\frac{n^n}{n!}x^n`, v: 1 / Math.E, vT: T`\frac1e`, vS: '1/e', h: T`\(\frac{a_{n+1}}{a_n}=\left(1+\frac1n\right)^n\to e\), значит, \(R=\frac1e\).` }),
+    () => ({ t: T`\frac{x^n}{n^n}`, v: Infinity, vT: T`\infty`, vS: 'inf', h: T`\(\sqrt[n]{|a_n|}=\frac1n\to0\).` }),
+    () => { const a = pick([2, 3]), b = a + 1; return { t: T`\frac{${a}^n+${b}^n}{n}x^n`, v: 1 / b, vT: T`\frac1{${b}}`, vS: `1/${b}`, h: T`\(\sqrt[n]{${a}^n+${b}^n}\to${b}\): доминирует большее основание.` }; },
+    () => { const a = pick([8, 27]); const r = Math.cbrt(a); return { t: T`\frac{x^{3n}}{${a}^n}`, v: r, vT: String(r), vS: String(r), h: T`\(\frac{|x|^3}{${a}}\lt1\).` }; }
+  ])();
+  return numTask('Найдите радиус сходимости \\(R\\) (если \\(R=\\infty\\), введите <code>inf</code>):' + T`\[ ${SUM(1, t.t)} \]`, t.v, T`R=${t.vT}`, t.vS, t.h);
+});
+add('series', 's_taylor', 'Коэффициенты ряда Маклорена', 2, () => {
+  const a = pick([1, 2, 3, -1, -2]); const axT = a === 1 ? 'x' : a === -1 ? '-x' : `${a}x`;
+  const t = pick([
+    () => { const k = ri(2, 5); return { f: T`e^{${axT}}`, k, v: F(a ** k, fact(k)), h: T`\(e^u=\sum\frac{u^n}{n!}\), \(u=${axT}\).` }; },
+    () => { const k = pick([3, 5]); return { f: T`\sin ${axT}`, k, v: F((-1) ** ((k - 1) / 2) * a ** k, fact(k)), h: T`\(\sin u=u-\frac{u^3}{3!}+\frac{u^5}{5!}-\dots\)` }; },
+    () => { const k = pick([2, 4]); return { f: T`\cos ${axT}`, k, v: F((-1) ** (k / 2) * a ** k, fact(k)), h: T`\(\cos u=1-\frac{u^2}{2!}+\frac{u^4}{4!}-\dots\)` }; },
+    () => { const k = ri(2, 5); return { f: T`\frac{1}{1-${a === 1 ? '' : a === -1 ? '(-1)' : a}x}`.replace('1-(-1)x', '1+x'), k, v: F(a ** k), h: T`\(\frac1{1-u}=1+u+u^2+\dots\)` }; },
+    () => { const k = ri(2, 4); return { f: T`\ln(1+${axT})`.replace('+-', '-'), k, v: F((-1) ** (k + 1) * a ** k, k), h: T`\(\ln(1+u)=u-\frac{u^2}{2}+\frac{u^3}{3}-\dots\)` }; },
+    () => { const m = pick([F(1, 2), F(-1, 2), F(-1), F(-2), F(1, 3)]); const k = ri(2, 3); let c = F(1); for (let i = 0; i < k; i++) c = math.multiply(c, math.subtract(m, F(i))); c = math.divide(c, F(fact(k))); return { f: T`(1+x)^{${fT(m)}}`, k, v: c, h: T`\((1+x)^m=1+mx+\frac{m(m-1)}{2!}x^2+\frac{m(m-1)(m-2)}{3!}x^3+\dots\)` }; },
+    () => { const k = ri(3, 6); return { f: T`x^2e^{x}`, k, v: F(1, fact(k - 2)), h: T`Умножьте ряд \(e^x\) на \(x^2\): коэффициент при \(x^k\) равен коэффициенту при \(x^{k-2}\) у \(e^x\).` }; },
+    () => { const m = ri(1, 3); return { f: T`e^{-x^2}`, k: 2 * m, v: F((-1) ** m, fact(m)), h: T`Подставьте \(u=-x^2\) в ряд \(e^u\).` }; },
+    () => { const k = pick([3, 5, 7]); return { f: T`\operatorname{arctg}x`, k, v: F((-1) ** ((k - 1) / 2), k), h: T`\(\operatorname{arctg}x=x-\frac{x^3}{3}+\frac{x^5}{5}-\dots\)` }; }
+  ])();
+  return numTask(T`Найдите коэффициент при \(x^{${t.k}}\) в разложении функции в ряд Маклорена: \[ f(x)=${t.f} \]`, t.v.valueOf(), fT(t.v), fS(t.v), t.h + T` Также \(a_k=\frac{f^{(k)}(0)}{k!}\).`);
+});
+add('series', 's_fourier', 'Коэффициенты Фурье', 3, () => {
+  const n = ri(1, 5);
+  const t = pick([
+    () => ({ f: 'x', c: 'b_' + n, v: 2 * (-1) ** (n + 1) / n, vT: fT(F(2 * (-1) ** (n + 1), n)), vS: fS(F(2 * (-1) ** (n + 1), n)), h: T`Нечётная функция: \(a_n=0\), \(b_n=\frac2\pi\int_0^\pi x\sin nx\,dx=\frac{2(-1)^{n+1}}{n}\).` }),
+    () => Math.random() < 0.3 ? { f: 'x^2', c: 'a_0', v: 2 * Math.PI ** 2 / 3, vT: T`\frac{2\pi^2}{3}`, vS: '2*pi^2/3', h: T`\(a_0=\frac1\pi\int_{-\pi}^{\pi}x^2dx=\frac{2\pi^2}{3}\).` } : { f: 'x^2', c: 'a_' + n, v: 4 * (-1) ** n / n ** 2, vT: fT(F(4 * (-1) ** n, n * n)), vS: fS(F(4 * (-1) ** n, n * n)), h: T`Чётная функция: \(a_n=\frac2\pi\int_0^\pi x^2\cos nx\,dx=\frac{4(-1)^n}{n^2}\) (дважды по частям).` },
+    () => Math.random() < 0.3 ? { f: '|x|', c: 'a_0', v: Math.PI, vT: T`\pi`, vS: 'pi', h: T`\(a_0=\frac2\pi\int_0^\pi x\,dx=\pi\).` } : { f: '|x|', c: 'a_' + n, v: n % 2 ? -4 / (Math.PI * n * n) : 0, vT: n % 2 ? T`-\frac{4}{${n * n === 1 ? '' : n * n}\pi}` : '0', vS: n % 2 ? `-4/(${n * n}*pi)` : '0', h: T`\(a_n=\frac2\pi\int_0^\pi x\cos nx\,dx=\frac{2((-1)^n-1)}{\pi n^2}\).` },
+    () => ({ f: T`\operatorname{sign}x`, c: 'b_' + n, v: n % 2 ? 4 / (Math.PI * n) : 0, vT: n % 2 ? T`\frac{4}{${n === 1 ? '' : n}\pi}` : '0', vS: n % 2 ? `4/(${n}*pi)` : '0', h: T`\(b_n=\frac2\pi\int_0^\pi\sin nx\,dx=\frac{2(1-(-1)^n)}{\pi n}\).` })
+  ])();
+  return numTask(T`Функция \(f(x)=${t.f}\) задана на \((-\pi;\pi)\) и продолжена периодически. Разложение: \[ f(x)=\frac{a_0}{2}+\sum_{n=1}^{\infty}\bigl(a_n\cos nx+b_n\sin nx\bigr),\quad a_n=\frac1\pi\int_{-\pi}^{\pi}f(x)\cos nx\,dx,\quad b_n=\frac1\pi\int_{-\pi}^{\pi}f(x)\sin nx\,dx. \] Найдите \(${t.c}\).`, t.v, T`${t.c}=${t.vT}`, t.vS, t.h);
+});
+if (typeof module !== 'undefined') module.exports = { TYPES, makeProblem, tex, prep, parseUser, TOPICS };
+
+</script>
+<script>
+/* ===== UI ===== */
+const MODULES=[
+ {id:'deriv',n:1,title:'Производные',sub:'От определения до Лопиталя',lessons:[
+  ['d1','Определение и смысл производной',['d_poly','d_pow']],
+  ['d2','Таблица производных',['d_elem','d_pow']],
+  ['d3','Правила дифференцирования',['d_prod','d_quot']],
+  ['d4','Сложная функция',['d_chain','d_point']],
+  ['d5','Высшие порядки, неявные и параметрические функции',['d_second','d_impl','d_param','d_logdiff']],
+  ['d6','Приложения: Лопиталь, экстремумы, дифференциал',['d_lhop']]]},
+ {id:'integ',n:2,title:'Интегралы',sub:'Первообразные, приёмы, определённые',lessons:[
+  ['i1','Первообразная и таблица',['i_table']],
+  ['i2','Замена переменной',['i_sub']],
+  ['i3','Интегрирование по частям',['i_parts']],
+  ['i4','Рациональные дроби',['i_rat']],
+  ['i5','Тригонометрия и иррациональности',['i_trig']],
+  ['i6','Определённый и несобственный интеграл',['i_def','i_area','i_improper']]]},
+ {id:'ode',n:3,title:'Дифференциальные уравнения',sub:'Первый порядок и линейные до третьего',lessons:[
+  ['e1','Основные понятия',['e_check']],
+  ['e2','Разделяющиеся переменные и однородные',['e1_sep','e1_cauchy','e1_other']],
+  ['e3','Линейные первого порядка и Бернулли',['e1_lin','e1_other']],
+  ['e4','Понижение порядка',['e_red','e_red2']],
+  ['e5','Линейные однородные с постоянными коэффициентами',['e2_hom','e3_hom']],
+  ['e6','Неоднородные: подбор и вариация постоянных',['e2_nonhom','e3_nonhom']],
+  ['e7','Задача Коши',['e2_cauchy','e3_cauchy','e1_cauchy']]]},
+ {id:'series',n:4,title:'Ряды',sub:'Числовые, степенные, Тейлор, Фурье',lessons:[
+  ['s1','Числовые ряды и их суммы',['s_geom','s_tele']],
+  ['s2','Признаки сходимости положительных рядов',['s_conv','s_conv2']],
+  ['s3','Знакочередующиеся ряды',['s_alt']],
+  ['s4','Степенные ряды',['s_radius','s_radius2']],
+  ['s5','Ряды Тейлора и Маклорена',['s_taylor','s_known']],
+  ['s6','Ряды Фурье',['s_fourier']]]}
+];
+const LESSONS=[];MODULES.forEach(m=>m.lessons.forEach(([id,title,pr],i)=>LESSONS.push({id,title,pr,mod:m,no:`${m.n}.${i+1}`})));
+const LS={get(k,d){try{const v=localStorage.getItem('matan_'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('matan_'+k,JSON.stringify(v))}catch(e){}}};
+let readSet=new Set(LS.get('read',[]));
+let stats=LS.get('stats',{});           // typeId -> {a,s}
+let session={a:0,s:0,streak:0,best:LS.get('best',0),count:0};
+const tr={topic:'all',lvl:0,types:null,typesLabel:'',p:null,attempted:false,solved:false,revealed:false};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* MathJax */
+let mjChain=Promise.resolve();const mjQueue=[];
+function typeset(el){if(!el)return;if(!mjReady||!window.MathJax||!MathJax.typesetPromise){mjQueue.push(el);return}
+  mjChain=mjChain.then(()=>{try{MathJax.typesetClear([el])}catch(e){}return MathJax.typesetPromise([el])}).catch(()=>{});}
+window.__onMJ=()=>{mjQueue.splice(0).forEach(typeset)};
+
+/* nav */
+function topicSolved(t){let a=0,s=0;TYPES.filter(x=>x.topic===t).forEach(x=>{const r=stats[x.id];if(r){a+=r.a;s+=r.s}});return {a,s}}
+function renderRail(active){
+  let h=`<button class="brand" data-go="home">Тетрадь по матанализу<small>производные · интегралы · дифуры · ряды</small></button>
+  <button class="railbtn ${active==='trainer'?'on':''}" data-go="trainer">Тренажёр задач<span class="k">∞</span></button>`;
+  MODULES.forEach(m=>{h+=`<div class="mod"><div class="mod-h"><b>${m.n}</b>${esc(m.title)}</div>`;
+    m.lessons.forEach(([id,title],i)=>{h+=`<button class="lnk ${active===id?'on':''}" data-go="${id}"><span class="no">${m.n}.${i+1}</span><span>${esc(title)}</span>${readSet.has(id)?'<span class="ck" aria-label="изучено">✓</span>':''}</button>`});
+    h+='</div>'});
+  $('#rail').innerHTML=h;
+}
+function closeNav(){$('#rail').classList.remove('open');$('#scrim').hidden=true;$('#navOpen').setAttribute('aria-expanded','false')}
+document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();go(g.dataset.go);closeNav()}});
+$('#navOpen').onclick=()=>{$('#rail').classList.add('open');$('#scrim').hidden=false;$('#navOpen').setAttribute('aria-expanded','true')};
+$('#scrim').onclick=closeNav;
+
+function go(r,opts){
+  if(r==='home')showHome();else if(r==='trainer')showTrainer(opts);else if(LESSONS.find(l=>l.id===r))showLesson(r);else showHome();
+  try{history.replaceState(null,'',r==='home'?location.pathname+location.search:'#'+r)}catch(e){}
+  window.scrollTo(0,0);
+}
+
+/* home */
+const SYNTAX=`<table class="syntax"><tbody>
+<tr><td><code>3x^2</code>, <code>3*x^2</code></td><td>умножение можно не писать</td></tr>
+<tr><td><code>e^(2x)</code>, <code>exp(2x)</code></td><td>показатель — в скобках</td></tr>
+<tr><td><code>sqrt(x)</code>, <code>x^(1/3)</code></td><td>корни</td></tr>
+<tr><td><code>ln(x)</code>, <code>ln|x|</code></td><td>натуральный логарифм</td></tr>
+<tr><td><code>sin(x)^2</code>, <code>tg x</code>, <code>arctg(x)</code></td><td>тригонометрия</td></tr>
+<tr><td><code>pi</code>, <code>e</code>, <code>1/3</code></td><td>константы и дроби</td></tr>
+<tr><td><code>C1</code>, <code>C2</code>, <code>C3</code></td><td>произвольные постоянные</td></tr>
+<tr><td><code>inf</code></td><td>бесконечность, «расходится»</td></tr>
+</tbody></table>`;
+function showHome(){
+  renderRail('home');
+  let mods='';
+  MODULES.forEach(m=>{const rd=m.lessons.filter(([id])=>readSet.has(id)).length;const st=topicSolved(m.id);
+    mods+=`<section class="mcard"><span class="mn">Модуль ${m.n}</span><h3>${esc(m.title)}</h3><div class="ml">${m.lessons.map(([id,t],i)=>`<button class="lnk" data-go="${id}"><span class="no">${m.n}.${i+1}</span><span>${esc(t)}</span>${readSet.has(id)?'<span class="ck">✓</span>':''}</button>`).join('')}</div>
+    <div class="meter" aria-hidden="true"><i style="width:${Math.round(rd/m.lessons.length*100)}%"></i></div>
+    <div class="mstat"><span>изучено ${rd} из ${m.lessons.length}</span><span>решено задач: ${st.s}</span></div>
+    <button class="btn" data-mod="${m.id}">Задачи модуля →</button></section>`});
+  $('#view').innerHTML=`<div class="eyebrow">Курс повторения · ${LESSONS.length} уроков · ${TYPES.length} типов задач</div>
+  <h1>Тетрадь по матанализу</h1>
+  <p class="lead">Производные, интегралы, дифференциальные уравнения до третьего порядка и ряды — от определений до задачи Коши и рядов Фурье. Теория с разобранными примерами и генератор задач, который проверяет ответ сам.</p>
+  <div class="how">
+   <div><b>Читайте по порядку</b>Каждый модуль опирается на предыдущий: интегралы — на производные, дифуры — на оба.</div>
+   <div><b>Закрепляйте сразу</b>В конце урока кнопка открывает задачи именно по его теме. Уровни: 1 — база, 2 — стандарт, 3 — продвинутые.</div>
+   <div><b>Вводите как удобно</b>Ответ проверяется по смыслу: \\(x\\ln x\\) и \\(\\ln x\\cdot x\\) засчитаются одинаково, \\(+C\\) можно не писать.</div>
+  </div>
+  <div class="mods">${mods}</div>
+  <h2>Как вводить ответы</h2>
+  <p>Под полем ввода сразу видно, как прочитана формула, — сверяйтесь с этим превью.</p>
+  <div class="tblwrap">${SYNTAX}</div>`;
+  $('#view').querySelectorAll('[data-mod]').forEach(b=>b.onclick=()=>{tr.topic=b.dataset.mod;tr.types=null;tr.lvl=0;tr.p=null;go('trainer')});
+  typeset($('#view'));
+}
+
+/* lesson */
+function showLesson(id){
+  const L=LESSONS.find(l=>l.id===id);renderRail(id);
+  const idx=LESSONS.indexOf(L),prev=LESSONS[idx-1],next=LESSONS[idx+1];
+  const tpl=document.getElementById('L-'+id);
+  const names=L.pr.map(t=>TYPES.find(x=>x.id===t)).filter(Boolean).map(t=>t.name);
+  $('#view').innerHTML=`<div class="eyebrow">Модуль ${L.mod.n} · ${esc(L.mod.title)} · урок ${L.no}</div><h1>${esc(L.title)}</h1><article class="lesson" id="lbody"></article>
+  <div class="lfoot"><button class="btn primary" id="lpr">Решать задачи по теме →</button><button class="btn ${readSet.has(id)?'done':''}" id="lrd">${readSet.has(id)?'✓ Изучено':'Отметить как изученный'}</button></div>
+  <p style="font-size:14px;color:var(--ink3);margin-top:8px">В тренажёре: ${names.map(esc).join(', ')}.</p>
+  <div class="lfoot" style="border-top:0;margin-top:8px;padding-top:0">${prev?`<button class="btn ghost" data-go="${prev.id}">← ${prev.no} ${esc(prev.title)}</button>`:''}<span class="spacer"></span>${next?`<button class="btn ghost" data-go="${next.id}">${next.no} ${esc(next.title)} →</button>`:''}</div>`;
+  $('#lbody').appendChild(tpl.content.cloneNode(true));
+  $('#lrd').onclick=()=>{if(readSet.has(id))readSet.delete(id);else readSet.add(id);LS.set('read',[...readSet]);showLesson(id)};
+  $('#lpr').onclick=()=>{if(!readSet.has(id)){readSet.add(id);LS.set('read',[...readSet])}tr.topic=L.mod.id;tr.types=L.pr.slice();tr.typesLabel=`Урок ${L.no}`;tr.lvl=0;tr.p=null;go('trainer')};
+  typeset($('#view'));
+}
+
+/* trainer */
+function candidates(){
+  let c=TYPES.filter(t=>(tr.topic==='all'||t.topic===tr.topic)&&(!tr.types||tr.types.includes(t.id)));
+  const withLvl=c.filter(t=>tr.lvl===0||t.lvl===tr.lvl);
+  return withLvl.length?withLvl:c;
+}
+function showTrainer(){
+  renderRail('trainer');
+  const tb=[['all','Все темы'],...Object.entries(TOPICS)];
+  $('#view').innerHTML=`<div class="eyebrow">Генератор задач · проверка ответа по смыслу</div><h1>Тренажёр</h1>
+  <div class="filters">
+   <div class="seg" id="fTopic" role="group" aria-label="Тема">${tb.map(([k,v])=>`<button data-v="${k}" class="${tr.topic===k?'on':''}">${v}</button>`).join('')}</div>
+   <div class="seg" id="fLvl" role="group" aria-label="Уровень">${[[0,'Любой'],[1,'1'],[2,'2'],[3,'3']].map(([k,v])=>`<button data-v="${k}" class="${tr.lvl===k?'on':''}">${k? 'Ур. '+v:v}</button>`).join('')}</div>
+   <select id="fType" aria-label="Тип задач"></select>
+  </div>
+  <div class="tgrid"><article class="task" id="task" aria-live="polite"></article><aside class="side" id="side"></aside></div>`;
+  fillTypeSelect();
+  $('#fTopic').onclick=e=>{const b=e.target.closest('button');if(!b)return;tr.topic=b.dataset.v;tr.types=null;newProblem();showTrainer()};
+  $('#fLvl').onclick=e=>{const b=e.target.closest('button');if(!b)return;tr.lvl=+b.dataset.v;newProblem();showTrainer()};
+  $('#fType').onchange=e=>{const v=e.target.value;if(v==='*')tr.types=null;else if(v==='lesson'){}else tr.types=[v];if(v!=='lesson')tr.typesLabel='';newProblem();showTrainer()};
+  if(!tr.p)newProblem();
+  renderTask();renderSide();
+}
+function fillTypeSelect(){
+  const s=$('#fType');const list=TYPES.filter(t=>tr.topic==='all'||t.topic===tr.topic);
+  let h=`<option value="*">Все типы задач</option>`;
+  if(tr.types&&tr.typesLabel)h+=`<option value="lesson" selected>${esc(tr.typesLabel)}: ${tr.types.length} тип(а)</option>`;
+  let grp='';list.forEach(t=>{if(tr.topic==='all'&&grp!==t.topic){if(grp)h+='</optgroup>';h+=`<optgroup label="${TOPICS[t.topic]}">`;grp=t.topic}
+    h+=`<option value="${t.id}" ${tr.types&&tr.types.length===1&&tr.types[0]===t.id&&!tr.typesLabel?'selected':''}>${esc(t.name)} · ур. ${t.lvl}</option>`});
+  if(grp)h+='</optgroup>';s.innerHTML=h;
+}
+function newProblem(){
+  const c=candidates();let t=pick(c);
+  if(tr.p&&c.length>1&&t.id===tr.p.type.id&&Math.random()<0.5)t=pick(c);
+  try{tr.p=makeProblem(t)}catch(e){tr.p=makeProblem(pick(c))}
+  tr.attempted=false;tr.solved=false;tr.revealed=false;session.count++;
+}
+function renderTask(){
+  const p=tr.p,t=p.type;
+  let inp;
+  if(p.kind==='choice')inp=`<div class="choices" id="choices">${p.choices.map((c,i)=>`<button class="btn" data-i="${i}">${esc(c)}</button>`).join('')}</div>`;
+  else inp=`<div class="tin"><label for="ans">${p.label} =</label><input id="ans" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${esc(p.ph||'')}"><div class="pv" id="pv"><span class="muted">Здесь появится, как прочитан ваш ответ</span></div></div>`;
+  $('#task').innerHTML=`<div class="tmeta"><span>Задача № ${session.count}</span><span>${TOPICS[t.topic]} · ${esc(t.name)}</span><span class="lv">уровень ${t.lvl}</span></div>
+  <div class="tq">${p.q}</div>${inp}
+  <div class="tact">${p.kind==='choice'?'':'<button class="btn primary" id="bCheck">Проверить</button>'}<button class="btn" id="bHint">Подсказка</button><button class="btn" id="bSol">Решение</button><span class="spacer"></span><button class="btn ghost" id="bNext">Следующая →</button></div>
+  <div class="fb" id="fb" role="status"></div><div id="hintBox" class="panel" hidden></div><div id="solBox" class="panel" hidden></div>`;
+  if(p.kind==='choice'){$('#choices').onclick=e=>{const b=e.target.closest('button');if(b)answerChoice(+b.dataset.i)}}
+  else{const a=$('#ans');let tm;a.oninput=()=>{clearTimeout(tm);tm=setTimeout(preview,220)};
+    a.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();if(tr.solved)next();else check()}};
+    $('#bCheck').onclick=check;setTimeout(()=>{if(window.matchMedia('(min-width:861px)').matches)a.focus({preventScroll:true})},50)}
+  $('#bHint').onclick=()=>{const h=$('#hintBox');h.hidden=!h.hidden;if(!h.hidden){h.innerHTML=`<div class="ph">Подсказка</div><p>${p.hint||'Вспомните соответствующий урок.'}</p>`;typeset(h)}};
+  $('#bSol').onclick=reveal;$('#bNext').onclick=next;
+  typeset($('#task'));
+}
+function preview(){
+  const v=$('#ans').value,pv=$('#pv');if(!pv)return;
+  if(!v.trim()){pv.innerHTML='<span class="muted">Здесь появится, как прочитан ваш ответ</span>';return}
+  try{const s=prep(v).trim();if(/^(inf|infinity|расх)/i.test(v.trim())){pv.innerHTML='\\(\\infty\\)'}else{const n=math.parse(s);pv.innerHTML='\\['+tex(n,'keep')+'\\]'}typeset(pv)}
+  catch(e){pv.innerHTML='<span class="muted">Запись пока не читается: проверьте скобки</span>'}
+}
+function record(ok){
+  const id=tr.p.type.id;const r=stats[id]||(stats[id]={a:0,s:0});
+  if(!tr.attempted){tr.attempted=true;r.a++;session.a++;if(ok&&!tr.revealed){r.s++;session.s++;session.streak++;if(session.streak>session.best){session.best=session.streak;LS.set('best',session.best)}}else session.streak=0;LS.set('stats',stats);renderSide()}
+  else if(!ok)session.streak=0;
+}
+function check(){
+  if(tr.solved){next();return}
+  const p=tr.p,fb=$('#fb');let r;
+  try{r=p.check($('#ans').value)}catch(e){r={ok:false,msg:'Не удалось разобрать запись: '+(e.message||'проверьте скобки')+'.',parse:true}}
+  if(r.parse||/^Введите/.test(r.msg||'')){fb.className='fb bad';fb.textContent=r.msg;return}
+  record(r.ok);
+  if(r.ok){tr.solved=true;fb.className='fb good';fb.textContent=tr.revealed?'Верно. Засчитано без очка: решение было открыто.':'Верно! Enter — следующая задача.';$('#bCheck').textContent='Дальше →';showAnswer('Эталонная запись ответа')}
+  else{fb.className='fb bad';fb.textContent=r.msg+' Попробуйте ещё раз или откройте подсказку.'}
+}
+function answerChoice(i){
+  if(tr.solved)return;const p=tr.p,ok=i===p.correct;record(ok);
+  const bs=[...$('#choices').children];bs[i].classList.add(ok?'right':'wrong');
+  const fb=$('#fb');
+  if(ok){tr.solved=true;bs.forEach(b=>b.disabled=true);fb.className='fb good';fb.textContent='Верно!';showAnswer('Почему')}
+  else{fb.className='fb bad';fb.textContent='Неверно. Попробуйте другой вариант или откройте решение.'}
+}
+function showAnswer(title){
+  const p=tr.p,s=$('#solBox');s.hidden=false;
+  s.innerHTML=`<div class="ph">${title}</div>${p.ans||''}${p.sol||(p.hint?`<p>${p.hint}</p>`:'')}`;typeset(s);
+}
+function reveal(){
+  const p=tr.p;tr.revealed=true;
+  if(p.kind==='choice'){const bs=[...$('#choices').children];bs[p.correct].classList.add('right')}
+  showAnswer('Решение');if(!tr.solved){session.streak=0;renderSide()}
+}
+function next(){newProblem();renderTask();renderSide()}
+function renderSide(){
+  const side=$('#side');if(!side)return;
+  const rows=Object.entries(TOPICS).map(([k,v])=>{const s=topicSolved(k);const pct=s.a?Math.round(s.s/s.a*100):0;return `<div class="tbar"><span>${v}</span><div class="meter"><i style="width:${pct}%"></i></div><span>${s.s}/${s.a}</span></div>`}).join('');
+  side.innerHTML=`<div class="box"><h4>Эта сессия</h4><div class="statrow"><div class="big">${session.s}<small>из ${session.a}</small></div><div class="big">${session.streak}<small>подряд</small></div></div><p style="margin:8px 0 0;font-size:13px;color:var(--ink3)">Рекорд серии: ${session.best}</p></div>
+  <div class="box"><h4>Верно с первой попытки</h4>${rows}<button class="reset" id="rst">Сбросить статистику</button></div>
+  <div class="box"><h4>Как вводить</h4>${SYNTAX}</div>`;
+  $('#rst').onclick=()=>{const b=$('#rst');if(b.dataset.c){stats={};LS.set('stats',stats);session={a:0,s:0,streak:0,best:0,count:session.count};LS.set('best',0);renderSide()}else{b.dataset.c='1';b.textContent='Нажмите ещё раз, чтобы сбросить'}};
+}
+
+/* boot */
+(function(){const h=(location.hash||'').slice(1);go(h&&(h==='trainer'||LESSONS.find(l=>l.id===h))?h:'home');if(mjReady)window.__onMJ();})();
+</script>
+
+</body></html>
