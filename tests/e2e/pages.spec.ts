@@ -68,20 +68,23 @@ test.describe('без прогресса', () => {
     await page.goto('/');
     await allHydrated(page);
     const cards = page.locator('.rz-course');
-    await expect(cards).toHaveCount(1);
+    await expect(cards).toHaveCount(2);
     await expect(page.locator('.rz-badge-example')).toHaveCount(0);
     await expect(page.locator('.sg-filters')).toHaveCount(0);
-    await expect(cards.getByRole('link')).toHaveAttribute('href', '/tpn/');
+    await expect(cards.filter({ hasText: 'Теория переноса нейтронов' }).getByRole('link')).toHaveAttribute('href', '/tpn/');
+    await expect(cards.filter({ hasText: 'Математический анализ' }).getByRole('link')).toHaveAttribute('href', '/math/');
     await expect(page.locator('.sg-continue')).toContainText('Начать');
   });
 
   test('главная: цифры посчитаны по контенту, ссылки на курс и GitHub, живая лаборатория', async ({ page }) => {
     await page.goto('/');
+    // Цифры растут с каждым уроком — проверяем, что они не меньше готового на сегодня.
     const numbers = page.locator('.sg-number');
-    await expect(numbers.filter({ hasText: 'уроков' }).locator('dd')).toHaveText('10');
-    await expect(numbers.filter({ hasText: 'лабораторий' }).locator('dd')).toHaveText('25');
-    await expect(numbers.filter({ hasText: 'в контрольной' }).locator('dd')).toHaveText('36');
-    await expect(page.locator('.sg-hero').getByRole('link', { name: 'Открыть курс' })).toHaveAttribute('href', '/tpn/');
+    const value = async (word: RegExp) => Number(await numbers.filter({ hasText: word }).locator('dd').textContent());
+    expect(await value(/урок/)).toBeGreaterThanOrEqual(11);
+    expect(await value(/лаборатор/)).toBeGreaterThanOrEqual(26);
+    expect(await value(/в контрольной/)).toBe(36);
+    await expect(page.locator('.sg-hero').getByRole('link', { name: 'Выбрать курс' })).toHaveAttribute('href', '#courses');
     await expect(page.locator('.sg-hero').getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', 'https://github.com/oxolegit/sigma');
     await expect(page.locator('.sg-foot').getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', 'https://github.com/oxolegit/sigma');
     const demo = await hydrated(page.locator('.rz-lab').filter({ hasText: 'Лаборатория 4.3' }));
