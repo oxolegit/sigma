@@ -24,9 +24,12 @@ export default function CourseCatalog({ courses }: { courses: CourseCardData[] }
     && (subject === 'all' || c.subject === subject)
     && (!q || norm(`${c.title} ${c.subject} ${c.source ?? ''}`).includes(q)));
 
+  // Фильтры нужны, когда курсов больше, чем помещается в один ряд.
+  const filters = courses.length > 3;
+
   return (
     <>
-      <section className="sg-filters" aria-label="Фильтры">
+      {filters && <section className="sg-filters" aria-label="Фильтры">
         <label className="sg-field-wrap sg-field-grow">
           Поиск по курсам
           <input className="sg-field" type="search" placeholder="Название, предмет или учебник" value={query} onChange={(e) => setQuery(e.target.value)} />
@@ -42,7 +45,7 @@ export default function CourseCatalog({ courses }: { courses: CourseCardData[] }
             {subjects.map((s) => <option key={s} value={s}>{s}</option>)}
           </select>
         </label>
-      </section>
+      </section>}
 
       <div className="sg-section-head">
         <h2 id="courses">Курсы</h2>
