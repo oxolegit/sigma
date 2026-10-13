@@ -135,6 +135,49 @@ test.describe('урок 8', () => {
   });
 });
 
+test.describe('урок 9', () => {
+  test('9.2: при kR = 0.2 одна s-волна и σ ≈ 4πR², при kR = 5 — к 2πR²', async ({ page }) => {
+    await page.goto('/tpn/09-quantum/');
+    const l = await lab(page, '9.2');
+    const ro = l.locator('.rz-lab-readout');
+    await l.getByRole('slider').fill('0.2');
+    await expect(ro.locator('.rz-readout').nth(1)).toContainText('1');
+    await expect(ro.locator('.rz-readout').nth(0)).toContainText('= 3.9');
+    await l.getByRole('slider').fill('5');
+    await expect(ro.locator('.rz-readout').nth(0)).toContainText('= 2.');
+  });
+
+  test('9.3: без нагрева пик и площадь не меняются, при нагреве пик падает, площадь та же', async ({ page }) => {
+    await page.goto('/tpn/09-quantum/');
+    const l = await lab(page, '9.3');
+    const area = l.locator('.rz-readout').nth(3);
+    const [a0, a1] = (await area.locator('.rz-readout-v').textContent())!.split(' / ').map(Number);
+    expect(Math.abs(a0! - a1!) / a0!).toBeLessThan(0.02);
+    await l.getByRole('slider', { name: /Температура/ }).fill('0');
+    await expect(l.locator('.rz-readout').nth(4)).toContainText('= 0');
+  });
+
+  test('9.4: по Пуассону близких пар заметно больше, чем по Вигнеру', async ({ page }) => {
+    await page.goto('/tpn/09-quantum/');
+    const l = await lab(page, '9.4');
+    const close = async () => Number((await l.locator('.rz-readout').nth(1).locator('.rz-readout-v').textContent())!.replace(/[^\d.]/g, ''));
+    expect(await close()).toBeLessThan(8);
+    await l.getByRole('radio', { name: 'Пуассон' }).click();
+    await expect.poll(close).toBeGreaterThan(10);
+  });
+
+  test('9.5: ¹⁰B — почти каждый тепловой нейтрон даёт (n, α)', async ({ page }) => {
+    await page.goto('/tpn/09-quantum/');
+    const l = await lab(page, '9.5');
+    await l.getByLabel('Ядро-мишень', { exact: true }).selectOption('b10');
+    await l.getByRole('button', { name: '+1000 без анимации' }).click();
+    // ru-RU группирует разряды неразрывным пробелом: «1 000».
+    await expect(l.locator('.rz-lab-readout')).toContainText(/1\s000/);
+    const alpha = l.locator('.sg-channels li').filter({ hasText: '(n, α)' });
+    await expect(alpha).toContainText(/наблюдение (99\.\d|100\.0) %/);
+  });
+});
+
 test.describe('урок 2', () => {
   test.use({ reducedMotion: 'reduce' });
 
