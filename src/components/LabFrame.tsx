@@ -10,8 +10,8 @@ export interface LegendItem {
   label: ReactNode;
   /** Имя токена без «--»: 'accent', 'signal', 'ink-muted'… */
   color: string;
-  /** Форма знака повторяет форму серии: прямая, пунктир, ломаная, линия с точкой на конце, столбец. */
-  mark?: 'line' | 'dash' | 'zigzag' | 'dot' | 'bar';
+  /** Форма знака повторяет форму серии: прямая, пунктир, ломаная, линия с точкой на конце, столбец, шарик (частица). */
+  mark?: 'line' | 'dash' | 'zigzag' | 'dot' | 'bar' | 'ball';
   value?: ReactNode;
   /** Если задан — пункт становится кнопкой «показать / скрыть серию». */
   onToggle?: () => void;
@@ -36,6 +36,7 @@ function Swatch({ color, mark = 'line' }: Pick<LegendItem, 'color' | 'mark'>) {
       {(mark === 'line' || mark === 'dot') && <line x1="1" y1="6" x2={mark === 'dot' ? 17 : 21} y2="6" style={stroke} />}
       {mark === 'dash' && <line x1="1" y1="6" x2="21" y2="6" strokeDasharray="4 3" style={stroke} />}
       {mark === 'dot' && <circle cx="18" cy="6" r="3" style={{ ...stroke, fill: `var(--${color})` }} />}
+      {mark === 'ball' && <circle cx="11" cy="6" r="4.5" style={{ ...stroke, fill: `var(--${color})` }} />}
     </svg>
   );
 }

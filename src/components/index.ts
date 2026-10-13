@@ -11,6 +11,7 @@ export { Quiz, type QuizProps } from './Quiz';
 export { Rich } from './Rich';
 export { Score, type ScoreProps } from './Score';
 export { Segmented, type SegmentedProps } from './Segmented';
+export { Select, type SelectProps } from './Select';
 export { Slider, type SliderProps } from './Slider';
 export { Steps, type StepsProps } from './Steps';
 export { TeX, type TeXProps } from './TeX';
