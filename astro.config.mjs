@@ -5,6 +5,7 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 
 export default defineConfig({
+  site: 'https://sigma.mslv.space',
   output: 'static',
   integrations: [react(), mdx()],
   vite: {

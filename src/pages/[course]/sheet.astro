@@ -18,7 +18,7 @@ const groups = data.lessons.filter((l) => l.formulas.length);
 const count = groups.reduce((s, g) => s + g.formulas.length, 0);
 const range = groups.length ? `Уроки ${groups[0]!.n}–${groups[groups.length - 1]!.n}` : '';
 ---
-<Base title={`Шпаргалка — ${c.title} — Sigma`}>
+<Base title={`Шпаргалка — ${c.title} — Sigma`} description={`Шпаргалка курса «${c.title}»: ${count} ${plural(count, "формула", "формулы", "формул")} по урокам на одной странице, печатается на А4 в две колонки.`}>
   <div class="sg-page">
     <div class="sg-no-print"><SiteHeader course={{ title: c.title, href: courseHref(data.id) }} /></div>
 
