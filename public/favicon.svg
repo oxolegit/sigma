@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>.bg{fill:#c2410c}.s{stroke:#fff}@media (prefers-color-scheme:dark){.bg{fill:#ff8a3d}.s{stroke:#1f1206}}</style>
+  <rect class="bg" width="32" height="32" rx="6"/>
+  <polyline class="s" points="23,10.5 23,7 9,7 16.5,16 9,25 23,25 23,21.5" fill="none" stroke-width="3" stroke-linejoin="miter" stroke-linecap="square"/>
+</svg>

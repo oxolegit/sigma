@@ -1,0 +1,17 @@
+---
+interface Props { href?: string; showName?: boolean }
+const { href = '/', showName = true } = Astro.props;
+---
+<a class="sg-logo" href={href} aria-label="Sigma — на главную">
+  <svg class="sg-logo-mark" viewBox="0 0 24 24" aria-hidden="true">
+    <polyline points="18.5,7 18.5,4 5.5,4 12.5,12 5.5,20 18.5,20 18.5,17" />
+  </svg>
+  {showName && <span class="sg-logo-name">Sigma</span>}
+</a>
+
+<style>
+  .sg-logo { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 44px; color: var(--ink); font: 600 22px/28px var(--font-sans); letter-spacing: -0.02em; }
+  .sg-logo:hover { color: var(--ink); }
+  .sg-logo-mark { width: 22px; height: 22px; flex: none; }
+  .sg-logo-mark polyline { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: miter; stroke-linecap: square; }
+</style>
