@@ -1,0 +1,105 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import CourseActions from '../../components/live/CourseActions';
+import CourseOutline from '../../components/live/CourseOutline';
+import LiveCourseProgress from '../../components/live/LiveCourseProgress';
+import { examHref, getCourse, lessonStats, sheetHref, type CourseData } from '../../lib/courses';
+import { plural } from '../../lib/plural';
+
+export async function getStaticPaths() {
+  const courses = (await getCollection('courses')).filter((c) => !c.data.example);
+  return Promise.all(courses.map(async (c) => ({ params: { course: c.id }, props: { data: await getCourse(c.id) } })));
+}
+
+const { data } = Astro.props as { data: CourseData };
+const c = data.course.data;
+const examQuestions = data.exam ? lessonStats(data.exam).questions : 0;
+const labWord = (n: number) => plural(n, 'лаборатория', 'лаборатории', 'лабораторий');
+
+const chapters = data.chapters.map((ch) => ({
+  label: ch.label,
+  name: ch.name,
+  lessons: data.lessons.filter((l) => l.chapter === ch.title).map((l) => {
+    const labs = l.entry ? lessonStats(l.entry).labs : 0;
+    // У ненаписанного урока «готовится» уже стоит в статусе справа — в подписи только параграф.
+    const meta = [l.ref, l.entry && (labs ? `${labs} ${labWord(labs)}` : 'без лабораторий')].filter(Boolean).join(' · ');
+    return { n: l.n, title: l.title, meta, href: l.href };
+  }),
+}));
+const written = data.lessons.filter((l) => l.href).map((l) => ({ n: l.n, href: l.href! }));
+const stats = [
+  [data.lessons.length, plural(data.lessons.length, 'урок', 'урока', 'уроков')],
+  [data.labs, labWord(data.labs)],
+  ...(examQuestions ? [[examQuestions, 'в контрольной']] : []),
+] as [number, string][];
+---
+<Base title={`${c.title} — Sigma`} description={c.description}>
+  <div class="sg-page">
+    <SiteHeader current="courses" />
+    <nav class="sg-crumbs" aria-label="Путь"><a href="/">Курсы</a> / {c.title}</nav>
+
+    <section class="sg-course-hero">
+      <div class="sg-course-text">
+        <div class="sg-eyebrow">{[c.subject, c.semester].filter(Boolean).join(' · ')}</div>
+        <h1>{c.title}</h1>
+        {c.source && <p class="sg-course-source">{c.source}</p>}
+        {c.description && <p class="sg-course-desc">{c.description}</p>}
+        <CourseActions client:idle course={data.id} written={written} examHref={data.exam ? examHref(data.id) : undefined} sheetHref={sheetHref(data.id)} />
+      </div>
+      <div class="sg-course-card">
+        <LiveCourseProgress client:idle course={data.id} lessons={data.lessons.map((l) => l.n)} label="Мой прогресс" />
+        <dl class="sg-course-stats">
+          {stats.map(([n, word]) => <div><dt>{word}</dt><dd>{n}</dd></div>)}
+        </dl>
+      </div>
+    </section>
+
+    <CourseOutline client:idle course={data.id} chapters={chapters} />
+  </div>
+</Base>
+
+<style is:global>
+  .sg-course-hero { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-8) var(--space-12); padding: 20px 0 40px; border-bottom: 1px solid var(--rule); }
+  .sg-course-text { flex: 1 1 560px; display: flex; flex-direction: column; gap: 14px; }
+  .sg-course-text h1 { margin: 0; font: 600 40px/44px var(--font-sans); letter-spacing: -0.02em; }
+  .sg-course-source { margin: 0; font: 500 15px/22px var(--font-sans); color: var(--ink-muted); }
+  .sg-course-desc { margin: 0; max-width: var(--measure); font: 400 17px/28px var(--font-serif); color: var(--ink-muted); }
+  .sg-course-actions { display: flex; flex-direction: column; gap: var(--space-3); padding-top: var(--space-2); }
+  .sg-share-status { font: 400 14px/20px var(--font-sans); color: var(--ink-muted); overflow-wrap: anywhere; }
+  .sg-course-card { flex: 0 1 340px; display: flex; flex-direction: column; gap: 20px; padding: 20px 24px; background: var(--surface-1); border: 1px solid var(--rule); border-radius: var(--radius-lg); }
+  .sg-course-stats { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-3) var(--space-4); margin: 0; }
+  .sg-course-stats div { display: flex; flex-direction: column-reverse; }
+  .sg-course-stats dt { font: 400 13px/18px var(--font-sans); color: var(--ink-muted); white-space: nowrap; }
+  .sg-course-stats dd { margin: 0; font: 600 24px/28px var(--font-sans); font-variant-numeric: tabular-nums; }
+
+  .sg-outline { display: flex; flex-direction: column; gap: 40px; padding-top: var(--space-8); }
+  .sg-outline-chapter { display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-12); }
+  .sg-outline-head { flex: 0 0 240px; display: flex; flex-direction: column; gap: 6px; }
+  .sg-outline-head h2 { margin: 0; font: 600 22px/28px var(--font-sans); }
+  .sg-outline-list { flex: 1 1 560px; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--rule); }
+  .sg-outline-list li { border-bottom: 1px solid var(--rule); }
+  .sg-outline-row { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; gap: var(--space-4); align-items: center; min-height: 44px; padding: 14px 12px; border-radius: var(--radius-md); color: var(--ink); }
+  a.sg-outline-row:hover { background: var(--surface-2); color: var(--ink); }
+  .sg-outline-row.is-current { background: var(--accent-soft); }
+  .sg-outline-row.is-current .sg-outline-title { color: var(--accent); }
+  .sg-outline-row.is-soon .sg-outline-title { color: var(--ink-muted); }
+  .sg-outline-mark { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: var(--radius-pill); background: var(--surface-2); color: var(--ink-muted); font: 600 13px/1 var(--font-sans); font-variant-numeric: tabular-nums; }
+  .sg-outline-mark.is-done { background: var(--correct-soft); color: var(--correct); }
+  .sg-outline-mark.is-current { background: var(--accent); color: var(--on-accent); }
+  .sg-outline-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .sg-outline-title { font: 500 16px/22px var(--font-sans); }
+  .sg-outline-meta { font: 400 13px/18px var(--font-sans); color: var(--ink-muted); }
+  .sg-outline-status { font: 500 13px/18px var(--font-sans); color: var(--accent); white-space: nowrap; }
+  .sg-outline-status.is-done { color: var(--correct); }
+  .sg-outline-row.is-soon .sg-outline-status { color: var(--ink-muted); }
+
+  @media (max-width: 899px) {
+    .sg-course-text h1 { font-size: 30px; line-height: 36px; }
+    .sg-course-card { flex-basis: 100%; }
+    .sg-outline-row { grid-template-columns: 28px minmax(0, 1fr); padding: 12px 8px; }
+    .sg-outline-status { grid-column: 2; }
+    .sg-outline-status:empty { display: none; }
+  }
+</style>
