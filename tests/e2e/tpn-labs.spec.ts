@@ -42,6 +42,41 @@ test.describe('урок 3', () => {
   });
 });
 
+test.describe('урок 5', () => {
+  test('5.1: пример из конспекта — числа задачи Б5; встречные пучки — ток ноль', async ({ page }) => {
+    await page.goto('/tpn/05-field/');
+    const l = await lab(page, '5.1');
+    const ro = l.locator('.rz-lab-readout');
+    await expect(ro).toContainText('= 5.00');
+    await expect(ro).toContainText('= 2.121');
+    await expect(ro).toContainText('= 1.586 под 45°');
+    await l.getByRole('slider', { name: 'Нормаль площадки' }).fill('45');
+    await expect(ro.locator('.rz-readout').nth(3)).toContainText('= 1.586');
+    await l.getByRole('radio', { name: 'Встречные' }).click();
+    await expect(ro).toContainText('= 2.00');
+    await expect(ro.locator('.rz-readout').nth(4)).toContainText('= 0');
+  });
+
+  test('5.2: при |b| > 1/3 угловой поток местами отрицателен', async ({ page }) => {
+    await page.goto('/tpn/05-field/');
+    const l = await lab(page, '5.2');
+    await expect(l.locator('.rz-lab-status')).toHaveClass(/is-ok/);
+    await l.getByRole('slider').fill('0.4');
+    await expect(l.locator('.rz-lab-status')).toHaveClass(/is-bad/);
+  });
+
+  test('5.3: нормаль перпендикулярна току — i⁺ = i⁻ = Φ/4', async ({ page }) => {
+    await page.goto('/tpn/05-field/');
+    const l = await lab(page, '5.3');
+    await l.getByRole('slider', { name: 'Ток: полярный угол' }).fill('0');
+    await l.getByRole('slider', { name: 'Нормаль: полярный угол' }).fill('90');
+    const ro = l.locator('.rz-lab-readout');
+    await expect(ro).toContainText('90°');
+    await expect(ro.locator('.rz-readout').nth(0)).toContainText('= 0.250');
+    await expect(ro.locator('.rz-readout').nth(2)).toContainText('= 0.000');
+  });
+});
+
 test.describe('урок 2', () => {
   test.use({ reducedMotion: 'reduce' });
 
