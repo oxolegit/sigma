@@ -94,6 +94,21 @@ test.describe('урок 6', () => {
   });
 });
 
+test.describe('урок 7', () => {
+  test('7.1: графит вдали от границ — Фик применим; крутой градиент даёт отрицательный ток', async ({ page }) => {
+    await page.goto('/tpn/07-fick/');
+    const l = await lab(page, '7.1');
+    await expect(l.locator('.rz-lab-status')).toHaveClass(/is-ok/);
+    await expect(l.locator('.sg-checklist li.is-ok')).toHaveCount(4);
+    await l.getByRole('slider', { name: /Градиент/ }).fill('2');
+    await expect(l.locator('.rz-lab-status')).toHaveClass(/is-bad/);
+    await expect(l.locator('.rz-lab-readout')).toContainText('= -0.083');
+    await l.getByRole('slider', { name: /Градиент/ }).fill('0');
+    await l.getByRole('slider', { name: /Массовое число/ }).fill('1');
+    await expect(l.locator('.sg-checklist li').first()).toHaveClass(/is-bad/);
+  });
+});
+
 test.describe('урок 2', () => {
   test.use({ reducedMotion: 'reduce' });
 
