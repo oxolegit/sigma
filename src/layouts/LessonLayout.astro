@@ -19,12 +19,12 @@ const index = data.lessons.findIndex((l) => l.n === lesson.n);
 const nextLesson = data.lessons.slice(index + 1).find((l) => l.href);
 const next = nextLesson ? { n: nextLesson.n, title: nextLesson.title, href: nextLesson.href } : undefined;
 const chapters = data.chapters.map((ch) => ({ ...ch, lessons: ch.lessons.map((l) => ({ ...l, current: l.n === lesson.n })) }));
-const chapterNo = lesson.chapter.match(/^Глава \d+/)?.[0];
-const eyebrow = [`Урок ${lesson.n}`, lesson.ref, chapterNo].filter(Boolean).join(' · ');
-const { labs, questions } = lessonStats(entry);
+const eyebrow = [`Урок ${lesson.n}`, lesson.ref, lesson.chapterNo].filter(Boolean).join(' · ');
+const { labs, trainers, questions } = lessonStats(entry);
 const meta = [
   entry.data.minutes && `≈ ${entry.data.minutes} ${plural(entry.data.minutes, 'минута', 'минуты', 'минут')}`,
   labs && `${labs} ${plural(labs, 'лаборатория', 'лаборатории', 'лабораторий')}`,
+  trainers && `${trainers} ${plural(trainers, 'тренажёр', 'тренажёра', 'тренажёров')}`,
   questions && `${questions} ${plural(questions, 'вопрос', 'вопроса', 'вопросов')} в конце`,
 ].filter(Boolean).join(' · ');
 ---

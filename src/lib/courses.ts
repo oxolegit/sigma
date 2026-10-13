@@ -29,11 +29,21 @@ export const courseHref = (course: string) => `/${course}/`;
 export const examHref = (course: string) => `/${course}/exam/`;
 export const sheetHref = (course: string) => `/${course}/sheet/`;
 
-/** Число лабораторий и вопросов урока — по исходнику MDX. */
+/** Исходники компонентов из src/labs: по ним видно, что лаборатория (LabFrame), а что трёхмерная (kind="3D"). */
+const LAB_SOURCES = import.meta.glob('../labs/**/*.tsx', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+const labSource = (path: string) => Object.entries(LAB_SOURCES).find(([p]) => p.endsWith(`/labs/${path}.tsx`))?.[1] ?? '';
+/** Лаборатория — компонент в рамке LabFrame; тренажёр и прочие компоненты из @labs ими не считаются. */
+const isLab = (path: string) => labSource(path).includes('<LabFrame');
+const isLab3D = (path: string) => isLab(path) && /kind="3D"/.test(labSource(path));
+
+/** Лаборатории (пути из @labs), тренажёры и вопросы урока — по исходнику MDX. */
 export function lessonStats(entry: { body?: string }) {
   const body = entry.body ?? '';
+  const labPaths = [...body.matchAll(/^import\s+\w+\s+from\s+['"]@labs\/([\w/]+)['"]/gm)].map((m) => m[1]!).filter(isLab);
   return {
-    labs: (body.match(/^import\s+\w+\s+from\s+['"]@labs\//gm) ?? []).length,
+    labs: labPaths.length,
+    labs3d: labPaths.filter(isLab3D).length,
+    trainers: (body.match(/<Trainer\b/g) ?? []).length,
     questions: (body.match(/<(?:Exam)?Quiz\b/g) ?? []).length,
   };
 }
@@ -84,29 +94,26 @@ export async function getCourse(id: string): Promise<CourseData> {
   return { id, course, lessons, chapters, exam, labs };
 }
 
-/** Исходники лабораторий: по ним видно, какие из них трёхмерные (kind="3D" в LabFrame). */
-const LAB_SOURCES = import.meta.glob('../labs/**/*.tsx', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
-const isLab3D = (path: string) => Object.entries(LAB_SOURCES).some(([p, src]) => p.endsWith(`/labs/${path}.tsx`) && /kind="3D"/.test(src));
-
 /** Цифры для главной — считаются по контенту, а не пишутся руками. */
 export async function siteStats() {
   const courses = (await getCollection('courses')).filter((c) => !c.data.example);
-  let lessons = 0, labs = 0, labs3d = 0, formulas = 0, questions = 0, tasks = 0;
+  let lessons = 0, labs = 0, labs3d = 0, trainers = 0, formulas = 0, questions = 0, tasks = 0;
   for (const c of courses) {
     const d = await getCourse(c.id);
     for (const l of d.lessons) {
       formulas += l.formulas.length;
       if (!l.entry) continue;
       lessons++;
-      const paths = [...(l.entry.body ?? '').matchAll(/^import\s+\w+\s+from\s+['"]@labs\/([\w/]+)['"]/gm)].map((m) => m[1]!);
-      labs += paths.length;
-      labs3d += paths.filter(isLab3D).length;
+      const s = lessonStats(l.entry);
+      labs += s.labs;
+      labs3d += s.labs3d;
+      trainers += s.trainers;
     }
     const body = d.exam?.body ?? '';
     questions += (body.match(/<ExamQuiz\b/g) ?? []).length;
     tasks += (body.match(/<Steps\b/g) ?? []).length;
   }
-  return { courses: courses.length, lessons, labs, labs3d, formulas, questions, tasks };
+  return { courses: courses.length, lessons, labs, labs3d, trainers, formulas, questions, tasks };
 }
 
 /** Данные карточки курса в каталоге — только сериализуемые поля, их получает остров. */
