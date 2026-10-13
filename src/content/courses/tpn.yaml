@@ -7,13 +7,7 @@ chapters:
   - n: 1
     title: Нейтрон и среда
     lessons:
-      - n: 1
-        title: Нейтрон как объект теории
-        ref: '§1.2'
-        formulas:
-          - { title: Скорость нейтрона, tex: 'V = 1.383\cdot10^{6}\sqrt{E\,[\text{эВ}]}\ \text{см/с}', note: 'Тепловой нейтрон: $E = 0.0253$ эВ, $V = 2200$ м/с.' }
-          - { title: Приведённая длина волны де Бройля, tex: '\bar\lambda = \frac{\hbar}{\sqrt{2mE}} = \frac{4.55\cdot10^{-10}}{\sqrt{E\,[\text{эВ}]}}\ \text{см}' }
-          - { title: Радиус ядра, tex: 'R \approx 1.4\cdot10^{-13}\,A^{1/3}\ \text{см}' }
+      - { n: 1, title: Нейтрон как объект теории, ref: '§1.2' }
       - n: 2
         title: Источники нейтронов и деление
         ref: '§1.3'
