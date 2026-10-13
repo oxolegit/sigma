@@ -118,7 +118,7 @@
 .rz-steps { padding: var(--space-4) var(--space-6); background: var(--surface-1); border: 1px solid var(--rule); border-radius: var(--radius-lg); }
 .rz-steps-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: var(--space-3); }
 .rz-steps-title { font: 600 15px/20px var(--font-sans); }
-.rz-steps-count { font: 500 12px/16px var(--font-sans); color: var(--ink-muted); }
+.rz-steps-count { flex: none; white-space: nowrap; font: 500 12px/16px var(--font-sans); color: var(--ink-muted); }
 .rz-steps-lead { margin-bottom: var(--space-3); font: 400 16px/26px var(--font-serif); }
 .rz-steps-list { list-style: none; margin: 0; padding: 0; }
 .rz-step { display: grid; grid-template-columns: 24px 1fr; gap: var(--space-3); padding: var(--space-3) 0; border-top: 1px solid var(--rule); animation: rz-in .2s ease-out; }
