@@ -18,20 +18,28 @@ export function LessonNav({ chapters, layout = 'side' }: LessonNavProps) {
         <div key={i} className="rz-nav-chapter">
           {!strip && ch.title && <div className="rz-nav-chapter-title">{ch.title}</div>}
           <ol className="rz-nav-list">
-            {ch.lessons.map((l) => (
-              <li key={l.n}>
-                <a
-                  ref={l.current ? current : undefined}
-                  href={l.href ?? '#'}
-                  className={cx('rz-nav-item', l.current && 'is-current', l.done && 'is-done')}
-                  aria-current={l.current ? 'page' : undefined}
-                >
-                  <span className="rz-nav-n" aria-label={l.done ? 'пройден' : undefined}>{l.done ? '✓' : l.n}</span>
-                  <span className="rz-nav-t">{l.title}</span>
-                  {!strip && l.ref && <span className="rz-nav-ref">{l.ref}</span>}
-                </a>
-              </li>
-            ))}
+            {ch.lessons.map((l) => {
+              const inner = <>
+                <span className="rz-nav-n" aria-label={l.done ? 'пройден' : undefined}>{l.done ? '✓' : l.n}</span>
+                <span className="rz-nav-t">{l.title}</span>
+                {!strip && l.ref && <span className="rz-nav-ref">{l.ref}</span>}
+              </>;
+              return (
+                <li key={l.n}>
+                  {l.href || l.current ? (
+                    <a
+                      ref={l.current ? current : undefined}
+                      href={l.href ?? '#'}
+                      className={cx('rz-nav-item', l.current && 'is-current', l.done && 'is-done')}
+                      aria-current={l.current ? 'page' : undefined}
+                    >{inner}</a>
+                  ) : (
+                    // Урок ещё не написан: виден в оглавлении, но не ссылка.
+                    <span className="rz-nav-item is-soon" title="Урок готовится">{inner}</span>
+                  )}
+                </li>
+              );
+            })}
           </ol>
         </div>
       ))}
