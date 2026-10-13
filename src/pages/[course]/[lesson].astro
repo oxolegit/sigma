@@ -1,0 +1,20 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const lessons = await getCollection('lessons');
+  return lessons.map((lesson) => {
+    const [course, slug] = lesson.id.split('/');
+    return { params: { course, lesson: slug }, props: { lesson } };
+  });
+}
+const { lesson } = Astro.props;
+const { Content } = await render(lesson);
+---
+<Base title={`Урок ${lesson.data.n}. ${lesson.data.title}`}>
+  <article class="rz-prose" style="margin: 0 auto; padding: var(--space-6);">
+    <h1 style="font: 600 34px/40px var(--font-sans);">{lesson.data.title}</h1>
+    <Content />
+  </article>
+</Base>

@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import Logo from '../components/Logo.astro';
+import { getCollection } from 'astro:content';
+const courses = await getCollection('courses');
+const lessons = await getCollection('lessons');
+---
+<Base title="Sigma — интерактивные курсы">
+  <main style="max-width: var(--content-max); margin: 0 auto; padding: 0 var(--space-6) var(--space-16);">
+    <header style="padding: 18px 0; border-bottom: 1px solid var(--rule);">
+      <Logo />
+    </header>
+    <ul>
+      {courses.map((c) => (
+        <li>{c.data.title} — {lessons.filter((l) => l.id.startsWith(c.id + '/')).length} ур.</li>
+      ))}
+    </ul>
+  </main>
+</Base>
