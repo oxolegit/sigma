@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Button, LabFrame, Slider } from '../../components';
+import { Button, LabFrame, Slider, type LegendItem } from '../../components';
 import { useCanvas } from '../../lib/canvas';
 import { drawFrame, markerLine, niceTicks, strokeCurve } from '../../lib/plot';
 import { mulberry32 } from '../../lib/rng';
@@ -7,6 +7,14 @@ import { token } from '../../lib/theme';
 import { densityHistogram, firstCollisionDensity, sampleFreePath, transmission } from './freePath';
 
 const BINS = 25;
+
+/** Серии рисунка: по этой таблице красится график и строится легенда. */
+const SERIES = {
+  hist: { label: 'точки первого столкновения (МК)', color: 'accent', mark: 'bar' },
+  theory: { label: 'теория w(x) = Σe^{−Σx}', color: 'accent-strong', mark: 'line' },
+  layer: { label: 'толщина слоя X', color: 'signal', mark: 'dash' },
+} as const satisfies Record<string, LegendItem>;
+
 const fmt = (d: number) => (v: number) => v.toFixed(d);
 
 /** Лаборатория 4.2: Монте-Карло пробега. Розыгрыш x = −ln ξ / Σ сравнивается с w(x) = Σe^{−Σx}. */
@@ -44,7 +52,7 @@ export default function FreePathMC() {
     const bw = xmax / BINS;
     f.clip(() => {
       g.fillStyle = token('accent-soft');
-      g.strokeStyle = token('accent');
+      g.strokeStyle = token(SERIES.hist.color);
       g.lineWidth = 1;
       hist.forEach((v, b) => {
         if (!v) return;
@@ -57,15 +65,16 @@ export default function FreePathMC() {
         const x = (xmax * k) / 200;
         pts.push([f.X(x), f.Y(firstCollisionDensity(sigma, x))]);
       }
-      strokeCurve(g, pts, token('accent-strong'), 2);
+      strokeCurve(g, pts, token(SERIES.theory.color), 2);
     });
-    markerLine(g, f, X, `слой X = ${X.toFixed(1)} см`);
+    markerLine(g, f, X, `X = ${X.toFixed(1)} см`, token(SERIES.layer.color));
   }, [sigma, X, n]);
 
   return (
     <LabFrame
       n="4.2" kind="2D" title="Монте-Карло пробега"
       actions={<Button variant="ghost" size="sm" onClick={() => { xs.current = []; setN(0); }}>Сбросить</Button>}
+      legend={Object.values(SERIES)}
       readout={[
         { label: 'нейтронов', value: String(N) },
         { label: 'средний пробег', value: N ? mean.toFixed(2) : '–', unit: 'см' },
@@ -80,7 +89,7 @@ export default function FreePathMC() {
           <Button size="sm" onClick={() => add(5000)}>+ 5000</Button>
         </div>
       </>}
-      caption="Рис. 4.2. Каждому нейтрону разыгрывается пробег $x = -\ln\xi/\Sigma_t$, где $\xi$ — случайное число из (0, 1). Столбцы — гистограмма точек первого столкновения, сплошная линия — теория $w(x) = \Sigma_t e^{-\Sigma_t x}$. Чем больше нейтронов, тем точнее средний пробег совпадает с $\lambda$."
+      caption="Рис. 4.2. Каждому нейтрону разыгрывается пробег $x = -\ln\xi/\Sigma_t$, где $\xi$ — случайное число из (0, 1). Гистограмма точек первого столкновения ложится на теоретическую плотность $w(x) = \Sigma_t e^{-\Sigma_t x}$; чем больше нейтронов, тем точнее средний пробег совпадает с $\lambda$."
     >
       <canvas ref={ref} role="img" aria-label={`Гистограмма пробегов: ${N} нейтронов, средний пробег ${N ? mean.toFixed(2) : 'нет'} см, теория λ = ${(1 / sigma).toFixed(2)} см`} style={{ display: 'block', width: '100%', height: '100%' }} />
     </LabFrame>

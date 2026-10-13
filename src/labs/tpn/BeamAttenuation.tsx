@@ -1,11 +1,17 @@
 import { useState } from 'react';
-import { LabFrame, Segmented, Slider } from '../../components';
+import { LabFrame, Segmented, Slider, type LegendItem } from '../../components';
 import { useCanvas } from '../../lib/canvas';
 import { drawFrame, markerLine, niceTicks, pow10Label, strokeCurve } from '../../lib/plot';
 import { token } from '../../lib/theme';
 import { transmission } from './freePath';
 
 const fmt = (d: number) => (v: number) => v.toFixed(d);
+
+/** Серии рисунка: по этой таблице красится график и строится легенда. */
+const SERIES = {
+  curve: { label: 'I(x)/I₀ — доля без взаимодействия', color: 'accent', mark: 'line' },
+  lambda: { label: 'средняя длина пробега λ', color: 'signal', mark: 'dash' },
+} as const satisfies Record<string, LegendItem>;
 
 /** Лаборатория 4.1: ослабление узкого пучка I(x)/I₀ = e^{−Σx} и средняя длина пробега λ = 1/Σ. */
 export default function BeamAttenuation() {
@@ -27,18 +33,19 @@ export default function BeamAttenuation() {
         ? { min: 10 ** lo, max: 1, ticks: yTicks, format: (v) => pow10Label(Math.round(Math.log10(v))), label: 'I/I₀', log: true }
         : { min: 0, max: 1, ticks: yTicks, format: (v) => v.toFixed(2), label: 'I/I₀' },
     );
-    if (lam <= L) markerLine(g, f, lam, `λ = ${lam.toFixed(2)} см`);
+    if (lam <= L) markerLine(g, f, lam, `λ = ${lam.toFixed(2)} см`, token(SERIES.lambda.color));
     const pts: [number, number][] = [];
     for (let k = 0; k <= 200; k++) {
       const x = (L * k) / 200;
       pts.push([f.X(x), f.Y(transmission(sigma, x))]);
     }
-    f.clip(() => strokeCurve(g, pts, token('accent'), 2));
+    f.clip(() => strokeCurve(g, pts, token(SERIES.curve.color), 2));
   }, [sigma, L, scale]);
 
   return (
     <LabFrame
       n="4.1" kind="2D" title="Ослабление узкого пучка в слое"
+      legend={Object.values(SERIES)}
       readout={[
         { tex: '\\lambda', value: `= ${lam.toFixed(2)}`, unit: 'см' },
         { tex: 'I(L)/I_0', value: `= ${tL.toFixed(3)}` },
@@ -52,7 +59,7 @@ export default function BeamAttenuation() {
           options={[{ value: 'lin', label: 'Линейная' }, { value: 'log', label: 'Логарифм' }]}
         />
       </>}
-      caption="Рис. 4.1. Доля нейтронов, не испытавших взаимодействия на глубине $x$. Пунктир — средняя длина свободного пробега $\lambda$. На логарифмической шкале экспонента становится прямой с наклоном $-\Sigma_t$."
+      caption="Рис. 4.1. Доля нейтронов, не испытавших взаимодействия на глубине $x$. На логарифмической шкале экспонента становится прямой с наклоном $-\Sigma_t$."
     >
       <canvas ref={ref} role="img" aria-label={`График I/I₀ = exp(−Σx): Σ = ${sigma.toFixed(2)} см⁻¹, λ = ${lam.toFixed(2)} см`} style={{ display: 'block', width: '100%', height: '100%' }} />
     </LabFrame>
