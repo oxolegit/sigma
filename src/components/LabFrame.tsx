@@ -23,6 +23,8 @@ export interface LabFrameProps {
   readout?: Readout[]; legend?: LegendItem[]; controls?: ReactNode; actions?: ReactNode; caption?: ReactNode; children: ReactNode;
   /** Вывод из чисел словами: «ƛ ≥ R — нейтрон ведёт себя как волна». Тон — знаком и словом, не только цветом. */
   status?: { tone: 'ok' | 'warn' | 'bad'; text: ReactNode };
+  /** figure — рисунок 16:9 (4:3 на телефоне); table — таблица или калькулятор, высота по содержимому. */
+  stage?: 'figure' | 'table';
 }
 
 const STATUS_MARK = { ok: '✓', warn: '!', bad: '✕' } as const;
@@ -42,7 +44,7 @@ function Swatch({ color, mark = 'line' }: Pick<LegendItem, 'color' | 'mark'>) {
 }
 
 /** Рамка лаборатории: метка, заголовок, сцена, легенда, строка чисел (объявляется скринридером), ручки, подпись. */
-export function LabFrame({ n, title, kind, readout, legend, controls, actions, caption, children, status }: LabFrameProps) {
+export function LabFrame({ n, title, kind, readout, legend, controls, actions, caption, children, status, stage = 'figure' }: LabFrameProps) {
   return (
     <figure className={cx('rz-lab', kind === '3D' && 'rz-lab-3d')}>
       <figcaption className="rz-lab-head">
@@ -50,7 +52,7 @@ export function LabFrame({ n, title, kind, readout, legend, controls, actions, c
         <span className="rz-lab-title">{title}</span>
         {actions && <span className="rz-lab-actions">{actions}</span>}
       </figcaption>
-      <div className="rz-lab-stage">{children}</div>
+      <div className={cx('rz-lab-stage', stage === 'table' && 'is-table')}>{children}</div>
       {legend && (
         <ul className="rz-lab-legend" aria-label="Легенда">
           {legend.map((it, i) => {
