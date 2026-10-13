@@ -109,6 +109,32 @@ test.describe('урок 7', () => {
   });
 });
 
+test.describe('урок 8', () => {
+  test('8.1: без экстраполяции ã = a; для толстой пластины выбор d почти не важен', async ({ page }) => {
+    await page.goto('/tpn/08-diffusion/');
+    const l = await lab(page, '8.1');
+    const ro = l.locator('.rz-lab-readout');
+    await expect(ro).toContainText('= 7.42');
+    await l.getByRole('radio', { name: '0', exact: true }).click();
+    await expect(ro).toContainText('= 6.00');
+    await expect(ro).toContainText('= 1.000');
+    await l.getByRole('radio', { name: '0.71 λtr' }).click();
+    await l.getByRole('slider').fill('30');
+    await expect(ro.locator('.rz-readout').nth(1)).toContainText('= 0.9');
+  });
+
+  test('8.2: Монте-Карло даёт ⟨r²⟩ близко к 6L² и Σt/Σa столкновений', async ({ page }) => {
+    await page.goto('/tpn/08-diffusion/');
+    const l = await lab(page, '8.2');
+    const ro = l.locator('.rz-lab-readout');
+    await expect(ro).toContainText('запустите');
+    await l.getByRole('button', { name: 'Запустить 3000 историй' }).click();
+    await expect(ro).toContainText('(теория 21.0)');
+    const pct = Number((await ro.locator('.rz-readout').nth(3).textContent())!.match(/\(([+-]?[\d.]+) %\)/)![1]);
+    expect(Math.abs(pct)).toBeLessThan(8);
+  });
+});
+
 test.describe('урок 2', () => {
   test.use({ reducedMotion: 'reduce' });
 
