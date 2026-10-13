@@ -1,6 +1,7 @@
 import {
-  AmbientLight, Color, DirectionalLight, LineBasicMaterial, MeshStandardMaterial, PerspectiveCamera, Scene, WebGLRenderer,
-  type LineBasicMaterialParameters, type MeshStandardMaterialParameters,
+  AmbientLight, Color, DirectionalLight, LineBasicMaterial, LineDashedMaterial, MeshStandardMaterial, PerspectiveCamera, PointsMaterial, Scene,
+  WebGLRenderer, type LineBasicMaterialParameters, type LineDashedMaterialParameters, type MeshStandardMaterialParameters,
+  type PointsMaterialParameters,
 } from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { onThemeChange, token } from './theme';
@@ -96,6 +97,23 @@ export class LabScene {
   /** Материал линии, цвет которого следует за темой. */
   line(name: string, params: LineBasicMaterialParameters = {}): LineBasicMaterial {
     const m = new LineBasicMaterial(params);
+    const apply = () => m.color.copy(this.color(name));
+    apply();
+    this.recolor.push(apply);
+    return m;
+  }
+
+  /** Пунктирная линия цвета токена (после смены геометрии нужен computeLineDistances()). */
+  dashed(name: string, params: LineDashedMaterialParameters = {}): LineDashedMaterial {
+    return this.themed(new LineDashedMaterial({ dashSize: 0.08, gapSize: 0.06, ...params }), name);
+  }
+
+  /** Точки цвета токена; size — в единицах сцены. */
+  points(name: string, params: PointsMaterialParameters = {}): PointsMaterial {
+    return this.themed(new PointsMaterial({ size: 0.08, ...params }), name);
+  }
+
+  private themed<M extends { color: Color }>(m: M, name: string): M {
     const apply = () => m.color.copy(this.color(name));
     apply();
     this.recolor.push(apply);
