@@ -64,35 +64,49 @@ test.describe('без прогресса', () => {
     await page.evaluate(() => localStorage.clear());
   });
 
-  test('каталог: шесть курсов, заглушки помечены, фильтры и поиск работают', async ({ page }) => {
+  test('главная: только настоящие курсы, без заглушек и лишних фильтров', async ({ page }) => {
     await page.goto('/');
     await allHydrated(page);
     const cards = page.locator('.rz-course');
-    await expect(cards).toHaveCount(6);
-    await expect(page.locator('.rz-badge-example')).toHaveCount(5);
-    await expect(cards.first()).toContainText('Теория переноса нейтронов');
-    await expect(page.locator('.sg-continue')).toContainText('Начать');
-
-    await page.getByRole('radio', { name: '2 семестр' }).click();
-    await expect(cards).toHaveCount(3);
-    await expect(page.locator('.sg-count')).toHaveText('3 курса');
-    await page.getByRole('radio', { name: 'Все' }).click();
-
-    await page.getByLabel('Предмет').selectOption('Вычисления');
-    await expect(cards).toHaveCount(2);
-    await page.getByLabel('Предмет').selectOption('all');
-
-    await page.getByLabel('Поиск по курсам').fill('монте');
     await expect(cards).toHaveCount(1);
-    await page.getByLabel('Поиск по курсам').fill('нет такого');
-    await expect(page.locator('.sg-empty')).toBeVisible();
+    await expect(page.locator('.rz-badge-example')).toHaveCount(0);
+    await expect(page.locator('.sg-filters')).toHaveCount(0);
+    await expect(cards.getByRole('link')).toHaveAttribute('href', '/tpn/');
+    await expect(page.locator('.sg-continue')).toContainText('Начать');
   });
 
-  test('каталог: настоящий курс — ссылка на страницу курса, заглушка — без ссылки', async ({ page }) => {
+  test('главная: цифры посчитаны по контенту, ссылки на курс и GitHub, живая лаборатория', async ({ page }) => {
     await page.goto('/');
-    await allHydrated(page);
-    await expect(page.locator('.rz-course').filter({ hasText: 'Теория переноса нейтронов' }).getByRole('link')).toHaveAttribute('href', '/tpn/');
-    await expect(page.locator('.rz-course').filter({ hasText: 'Теплогидравлика' }).getByRole('link')).toHaveCount(0);
+    const numbers = page.locator('.sg-number');
+    await expect(numbers.filter({ hasText: 'уроков' }).locator('dd')).toHaveText('10');
+    await expect(numbers.filter({ hasText: 'лабораторий' }).locator('dd')).toHaveText('25');
+    await expect(numbers.filter({ hasText: 'в контрольной' }).locator('dd')).toHaveText('36');
+    await expect(page.locator('.sg-hero').getByRole('link', { name: 'Открыть курс' })).toHaveAttribute('href', '/tpn/');
+    await expect(page.locator('.sg-hero').getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', 'https://github.com/oxolegit/sigma');
+    await expect(page.locator('.sg-foot').getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', 'https://github.com/oxolegit/sigma');
+    const demo = await hydrated(page.locator('.rz-lab').filter({ hasText: 'Лаборатория 4.3' }));
+    await expect(demo.locator('.rz-lab-readout')).toBeVisible();
+  });
+
+  test('мета-теги: canonical, Open Graph с абсолютной картинкой, карта сайта и robots', async ({ page, request }) => {
+    for (const [path, type] of [['/', 'website'], ['/tpn/04-mfp/', 'article']] as const) {
+      await page.goto(path);
+      const meta = (sel: string) => page.locator(sel).getAttribute('content');
+      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `https://sigma.mslv.space${path}`);
+      expect(await meta('meta[property="og:type"]')).toBe(type);
+      expect(await meta('meta[property="og:image"]')).toBe('https://sigma.mslv.space/og.png');
+      expect(await meta('meta[property="og:title"]')).toBe(await page.title());
+      expect((await meta('meta[name="description"]'))!.length).toBeGreaterThan(50);
+      expect(await meta('meta[name="twitter:card"]')).toBe('summary_large_image');
+    }
+    const og = await request.get('/og.png');
+    expect(og.headers()['content-type']).toBe('image/png');
+    const sitemap = await (await request.get('/sitemap.xml')).text();
+    expect(sitemap).toContain('<loc>https://sigma.mslv.space/tpn/10-ensemble/</loc>');
+    expect(sitemap).not.toContain('/dev/');
+    expect(await (await request.get('/robots.txt')).text()).toContain('Sitemap: https://sigma.mslv.space/sitemap.xml');
+    await page.goto('/dev/components/');
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
   });
 
   test('страница курса: оглавление из 10 уроков, ссылка только у написанных', async ({ page }) => {
