@@ -27,7 +27,6 @@ a:hover { color: var(--accent); }
 
 /* Лаборатории: ряд кнопок в блоке ручек, сцена three.js */
 .sg-lab-buttons { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); grid-column: 1 / -1; }
-.sg-lab-count { font: 500 13px/18px var(--font-sans); color: var(--ink-muted); font-variant-numeric: tabular-nums; }
 .sg-scene { position: relative; width: 100%; height: 100%; touch-action: none; cursor: grab; }
 .sg-scene:active { cursor: grabbing; }
 .sg-no3d { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; padding: var(--space-6); text-align: center; color: var(--ink-muted); font: 400 14px/20px var(--font-sans); }
@@ -37,3 +36,16 @@ a:hover { color: var(--accent); }
 .sg-toast[data-open] { opacity: 1; transform: translate(-50%, 0); }
 .sg-toast:empty { display: none; }
 @media print { .sg-toast { display: none; } }
+
+/* Легенда лаборатории: знак того же цвета и формы, что серия на рисунке */
+.rz-lab-legend { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-2); margin: 0; padding: var(--space-2) var(--space-3); list-style: none; border-top: 1px solid var(--rule); }
+.rz-legend-item { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 32px; padding: 0 var(--space-2); border: 0; border-radius: var(--radius-md); background: none; color: var(--ink); font: 500 13px/18px var(--font-sans); text-align: left; }
+button.rz-legend-item { min-height: 44px; cursor: pointer; }
+button.rz-legend-item:hover { background: var(--surface-2); }
+button.rz-legend-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rz-legend-item.is-hidden { color: var(--ink-muted); }
+.rz-legend-item.is-hidden .rz-legend-label { text-decoration: line-through; }
+.rz-legend-item.is-hidden .rz-legend-mark { opacity: .35; }
+.rz-legend-value { color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+.rz-legend-mark { flex: none; width: 22px; height: 12px; overflow: visible; }
+.rz-legend-mark * { fill: none; stroke-width: 2; stroke-linejoin: round; }

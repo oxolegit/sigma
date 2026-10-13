@@ -3,7 +3,7 @@ export { Badge, type BadgeProps } from './Badge';
 export { Button, type ButtonProps } from './Button';
 export { CourseCard, type CourseCardProps } from './CourseCard';
 export { FormulaCard, type FormulaCardProps } from './FormulaCard';
-export { LabFrame, type LabFrameProps, type Readout } from './LabFrame';
+export { LabFrame, type LabFrameProps, type LegendItem, type Readout } from './LabFrame';
 export { LessonFooter, type LessonFooterProps } from './LessonFooter';
 export { LessonNav, type LessonNavProps, type NavLesson } from './LessonNav';
 export { Progress, type ProgressProps } from './Progress';
