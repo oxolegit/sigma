@@ -111,3 +111,12 @@ button.rz-legend-item:focus-visible { outline: 2px solid var(--accent); outline-
 .rz-lab-table th { font-weight: 600; font-size: 12px; color: var(--ink-muted); }
 .rz-lab-stage.is-tall { aspect-ratio: 4 / 3; }
 @media (max-width: 600px) { .rz-lab-stage.is-tall { aspect-ratio: 3 / 4; } }
+
+/* Чек-лист условий в лаборатории: знак и слово, цвет — подкрепление */
+.sg-checklist { margin: 0; padding: 0; list-style: none; font: 400 14px/20px var(--font-sans); }
+.sg-checklist li { display: grid; grid-template-columns: 22px 1fr; gap: var(--space-2); padding: 6px 0; border-bottom: 1px solid var(--rule); }
+.sg-checklist li:last-child { border-bottom: 0; }
+.sg-checklist-mark { display: grid; place-items: center; width: 20px; height: 20px; border-radius: var(--radius-pill); font: 700 12px/1 var(--font-sans); }
+.sg-checklist .is-ok .sg-checklist-mark { background: var(--correct-soft); color: var(--correct); }
+.sg-checklist .is-warn .sg-checklist-mark { background: var(--signal-soft); color: var(--signal); }
+.sg-checklist .is-bad .sg-checklist-mark { background: var(--wrong-soft); color: var(--wrong); }
