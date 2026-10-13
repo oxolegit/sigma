@@ -73,6 +73,31 @@ export async function getCourse(id: string): Promise<CourseData> {
   return { id, course, lessons, chapters, exam, labs };
 }
 
+/** Исходники лабораторий: по ним видно, какие из них трёхмерные (kind="3D" в LabFrame). */
+const LAB_SOURCES = import.meta.glob('../labs/**/*.tsx', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+const isLab3D = (path: string) => Object.entries(LAB_SOURCES).some(([p, src]) => p.endsWith(`/labs/${path}.tsx`) && /kind="3D"/.test(src));
+
+/** Цифры для главной — считаются по контенту, а не пишутся руками. */
+export async function siteStats() {
+  const courses = (await getCollection('courses')).filter((c) => !c.data.example);
+  let lessons = 0, labs = 0, labs3d = 0, formulas = 0, questions = 0, tasks = 0;
+  for (const c of courses) {
+    const d = await getCourse(c.id);
+    for (const l of d.lessons) {
+      formulas += l.formulas.length;
+      if (!l.entry) continue;
+      lessons++;
+      const paths = [...(l.entry.body ?? '').matchAll(/^import\s+\w+\s+from\s+['"]@labs\/([\w/]+)['"]/gm)].map((m) => m[1]!);
+      labs += paths.length;
+      labs3d += paths.filter(isLab3D).length;
+    }
+    const body = d.exam?.body ?? '';
+    questions += (body.match(/<ExamQuiz\b/g) ?? []).length;
+    tasks += (body.match(/<Steps\b/g) ?? []).length;
+  }
+  return { courses: courses.length, lessons, labs, labs3d, formulas, questions, tasks };
+}
+
 /** Данные карточки курса в каталоге — только сериализуемые поля, их получает остров. */
 export interface CourseCardData {
   id: string; title: string; source?: string; subject: string; semester?: string; example: boolean;
