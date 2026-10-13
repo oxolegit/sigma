@@ -236,8 +236,12 @@ test.describe('урок 2', () => {
     await page.goto('/tpn/02-fission/');
     const l = await lab(page, '2.1');
     await expect(l.locator('.rz-lab-status')).toContainText('Не делится');
+    // Столбцы баланса энергий: сумма E* и нехватка до барьера.
+    const bars = l.locator('canvas');
+    await expect(bars).toHaveAttribute('aria-label', /4\.76 \+ 0\.30 = 5\.06 МэВ.*не хватает 0\.74/);
     await l.getByRole('slider', { name: /Кинетическая энергия/ }).fill('1.5');
     await expect(l.locator('.rz-lab-status')).toContainText('Деление пороговое');
+    await expect(bars).toHaveAttribute('aria-label', /запас 0\.46/);
     await l.getByLabel('Ядро-мишень', { exact: true }).selectOption('pu239');
     await expect(l.locator('.rz-lab-status')).toContainText('любых энергий');
   });
@@ -248,10 +252,16 @@ test.describe('урок 2', () => {
     await l.getByRole('button', { name: 'Запустить нейтрон' }).click();
     await expect(l.locator('.rz-lab-status')).toContainText('Радиационный захват');
     await expect(l.locator('.rz-lab-readout')).toContainText('радиационный захват');
+    // Точка на V(ε) остановилась до барьера (ε = 0.72).
+    const pot = l.locator('canvas[aria-label^="Энергия деформации"]');
+    const at = async () => Number((await pot.getAttribute('aria-label'))!.match(/деформация ([\d.]+)/)![1]);
+    expect(await at()).toBeGreaterThan(0.3);
+    expect(await at()).toBeLessThan(0.72);
     await l.getByLabel('Ядро-мишень', { exact: true }).selectOption('u235');
     await l.getByRole('button', { name: 'Запустить нейтрон' }).click();
     await expect(l.locator('.rz-lab-status')).toContainText('Деление');
     await expect(l.locator('.rz-lab-readout')).toContainText(/деление, ν = [2-4]/);
+    await expect(pot).toHaveAttribute('aria-label', /деформация 1\.00/);
   });
 
   test('2.3: выше 1 МэВ около 70 %, выше 12 МэВ — сотые доли процента', async ({ page }) => {
