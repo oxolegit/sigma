@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { $answers, resetAnswers, score } from '../../lib/exam';
 import { FIXED_VARIANTS, makeVariant } from '../../labs/stats/variants';
 import { Button } from '../Button';
-import { Progress } from '../Progress';
 import { Score } from '../Score';
 import SrTask from './SrTask';
 
@@ -25,16 +24,18 @@ export default function SrVariant({ work }: { work: number }) {
     <div className="sg-variant">
       <div className="sg-exam-sticky">
         <div className="sg-exam-score sg-variant-bar">
-          <div className="sg-variant-pick" role="radiogroup" aria-label="Вариант">
-            {Array.from({ length: FIXED_VARIANTS }, (_, i) => i + 1).map((v) => (
-              <button key={v} type="button" role="radio" aria-checked={v === variant} className={v === variant ? 'is-active' : undefined} onClick={() => setVariant(v)}>
-                Вариант {v}
-              </button>
-            ))}
-            <Button variant="ghost" size="sm" onClick={random}>Случайный</Button>
+          <div className="sg-variant-pick">
+            <span className="sg-variant-label" aria-hidden="true">Вариант</span>
+            <div className="sg-variant-seg" role="radiogroup" aria-label="Вариант">
+              {Array.from({ length: FIXED_VARIANTS }, (_, i) => i + 1).map((v) => (
+                <button key={v} type="button" role="radio" aria-label={`Вариант ${v}`} aria-checked={v === variant} className={v === variant ? 'is-active' : undefined} onClick={() => setVariant(v)}>
+                  {v}
+                </button>
+              ))}
+            </div>
+            <Button variant={variant > FIXED_VARIANTS ? 'primary' : 'ghost'} size="sm" onClick={random}>Случайный</Button>
           </div>
-          <div className="sg-exam-score-main"><Score correct={correct} answered={answered} total={tasks.length} /></div>
-          <div className="sg-exam-score-bar"><Progress value={answered} total={tasks.length} label="Отвечено" compact /></div>
+          <Score correct={correct} answered={answered} total={tasks.length} />
         </div>
       </div>
       <h2 className="sg-variant-title" aria-live="polite">{label}</h2>
