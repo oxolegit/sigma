@@ -139,14 +139,14 @@ const features: { mark: string; title: string; text: string; wide?: boolean; ton
 </Base>
 
 <style is:global>
-  .sg-hero { position: relative; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: center; gap: var(--space-8) var(--space-12); padding: 72px 0 48px; }
+  .sg-hero { position: relative; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; gap: var(--space-8) var(--space-12); padding: 72px 0 48px; }
   .sg-hero-text { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4); min-width: 0; }
   .sg-pill { display: inline-flex; align-items: center; min-height: 32px; padding: 0 14px; border: 1px solid var(--rule); border-radius: var(--radius-pill); background: var(--surface-1); font: 650 13px/18px var(--font-sans); color: var(--ink-muted); }
   .sg-hero h1 { margin: 0; font: 800 clamp(36px, 5.6vw, 68px)/1.02 var(--font-sans); letter-spacing: -0.04em; text-wrap: balance; }
-  .sg-grad { color: var(--accent-text); text-decoration: underline wavy var(--signal); text-decoration-thickness: 3px; text-underline-offset: 10px; text-decoration-skip-ink: none; }
+  .sg-grad { color: var(--accent-text); }
   .sg-hero p { margin: 0; max-width: 34em; font: 400 19px/31px var(--font-serif); color: var(--ink-muted); }
   .sg-hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-2); }
-  .sg-hero-art { min-width: 0; }
+  .sg-hero-art { min-width: 0; padding-top: 96px; }
   .sg-continue { display: flex; flex-direction: column; gap: 8px; width: min(100%, 420px); margin-top: var(--space-4); padding: 18px 22px; background: var(--surface-1); border: 1px solid var(--rule); border-radius: var(--radius-xl); color: var(--ink); box-shadow: var(--shadow-lift); transition: transform .2s, border-color .2s; }
   .sg-continue:hover { color: var(--ink); border-color: var(--accent); transform: translateY(-2px); }
   .sg-continue:hover .sg-continue-title { color: var(--accent-text); }
@@ -204,6 +204,7 @@ const features: { mark: string; title: string; text: string; wide?: boolean; ton
 
   @media (max-width: 1000px) {
     .sg-hero { grid-template-columns: 1fr; padding: 40px 0 32px; }
+    .sg-hero-art { padding-top: 0; }
     .sg-bento { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 899px) {

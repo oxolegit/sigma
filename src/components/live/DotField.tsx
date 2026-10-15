@@ -3,7 +3,7 @@ import { token } from '../../lib/theme';
 
 /** Шаг сетки — тот же, что у точечного фона body в global.css: живые точки ложатся ровно поверх. */
 const STEP = 24;
-const RADIUS = 150;
+const RADIUS = 120;
 
 /**
  * Живой точечный фон главной: точки рядом с курсором подсвечиваются акцентом и тянутся к нему,
@@ -48,19 +48,19 @@ export default function DotField() {
         for (let x = ox; x < w + STEP; x += STEP) {
           let k = 0;
           const d = Math.hypot(x - px, y - py);
-          if (d < RADIUS) k = (1 - d / RADIUS) ** 2 * (idle ? 0.55 : 1);
+          if (d < RADIUS) k = (1 - d / RADIUS) ** 2 * (idle ? 0.3 : 0.75);
           for (const wv of waves) {
             const r = (now - wv.t) * 0.55, dw = Math.abs(Math.hypot(x - wv.x, y - wv.y) - r);
-            if (dw < 26) k = Math.max(k, (1 - dw / 26) * Math.max(0, 1 - r / 700));
+            if (dw < 22) k = Math.max(k, 0.6 * (1 - dw / 22) * Math.max(0, 1 - r / 600));
           }
           if (k < 0.02) continue;
           // Точка тянется к курсору и растёт.
-          const pull = d > 0 ? (k * 6) / d : 0;
+          const pull = d > 0 ? (k * 4) / d : 0;
           const dx = (px - x) * pull, dy = (py - y) * pull;
-          g.globalAlpha = 0.15 + 0.85 * k;
+          g.globalAlpha = 0.1 + 0.45 * k;
           g.fillStyle = k > 0.35 ? accent : ink;
           g.beginPath();
-          g.arc(x + dx, y + dy, 1.2 + 2.2 * k, 0, Math.PI * 2);
+          g.arc(x + dx, y + dy, 1.1 + 1.4 * k, 0, Math.PI * 2);
           g.fill();
         }
       }

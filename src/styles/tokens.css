@@ -10,7 +10,9 @@
   --correct: #23784a; --correct-soft: #e2f3e9; --wrong: #c0283f; --wrong-soft: #fbe5e8;
   --plot-grid: #dfe6ec;
   --glass: rgba(244, 247, 250, 0.78);
-  --dot: rgba(15, 27, 38, 0.13);
+  --dot: rgba(15, 27, 38, 0.09);
+  --cursor-arrow: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2726%27%20height%3D%2726%27%20viewBox%3D%270%200%2026%2026%27%3E%3Cpath%20d%3D%27M5%203.5%20L20.5%2013%20Q21.6%2013.7%2020.3%2014.1%20L13.6%2015.6%20L10.4%2021.6%20Q9.8%2022.7%209.4%2021.5%20Z%27%20fill%3D%27%230f1b26%27%20stroke%3D%27%23ffffff%27%20stroke-width%3D%271.6%27%20stroke-linejoin%3D%27round%27%2F%3E%3C%2Fsvg%3E") 5 3;
+  --cursor-hand: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2728%27%20height%3D%2728%27%20viewBox%3D%270%200%2028%2028%27%3E%3Ccircle%20cx%3D%2714%27%20cy%3D%2714%27%20r%3D%2710%27%20fill%3D%27%231481ba%27%20fill-opacity%3D%270.16%27%20stroke%3D%27%231481ba%27%20stroke-width%3D%272%27%2F%3E%3Ccircle%20cx%3D%2714%27%20cy%3D%2714%27%20r%3D%273%27%20fill%3D%27%231481ba%27%20stroke%3D%27%23ffffff%27%20stroke-width%3D%271%27%2F%3E%3C%2Fsvg%3E") 14 14;
   --shadow-lift: 0 1px 2px rgba(15, 27, 38, 0.05), 0 6px 20px rgba(15, 27, 38, 0.07);
   --shadow-pop: 0 12px 40px rgba(15, 27, 38, 0.18);
 }
@@ -23,7 +25,9 @@
   --correct: #6fcf97; --correct-soft: #13291d; --wrong: #ff8597; --wrong-soft: #3a1820;
   --plot-grid: #233040;
   --glass: rgba(13, 18, 24, 0.78);
-  --dot: rgba(232, 238, 243, 0.09);
+  --dot: rgba(232, 238, 243, 0.06);
+  --cursor-arrow: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2726%27%20height%3D%2726%27%20viewBox%3D%270%200%2026%2026%27%3E%3Cpath%20d%3D%27M5%203.5%20L20.5%2013%20Q21.6%2013.7%2020.3%2014.1%20L13.6%2015.6%20L10.4%2021.6%20Q9.8%2022.7%209.4%2021.5%20Z%27%20fill%3D%27%23e8eef3%27%20stroke%3D%27%230d1218%27%20stroke-width%3D%271.6%27%20stroke-linejoin%3D%27round%27%2F%3E%3C%2Fsvg%3E") 5 3;
+  --cursor-hand: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2728%27%20height%3D%2728%27%20viewBox%3D%270%200%2028%2028%27%3E%3Ccircle%20cx%3D%2714%27%20cy%3D%2714%27%20r%3D%2710%27%20fill%3D%27%234fb3e6%27%20fill-opacity%3D%270.16%27%20stroke%3D%27%234fb3e6%27%20stroke-width%3D%272%27%2F%3E%3Ccircle%20cx%3D%2714%27%20cy%3D%2714%27%20r%3D%273%27%20fill%3D%27%234fb3e6%27%20stroke%3D%27%230d1218%27%20stroke-width%3D%271%27%2F%3E%3C%2Fsvg%3E") 14 14;
   --shadow-lift: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 20px rgba(0, 0, 0, 0.35);
   --shadow-pop: 0 16px 48px rgba(0, 0, 0, 0.6);
 }
