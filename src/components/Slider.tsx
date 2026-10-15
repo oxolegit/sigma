@@ -13,7 +13,9 @@ export interface SliderProps {
  */
 export function Slider({ label, tex, min, max, step, value, unit, format = String, onChange }: SliderProps) {
   const text = (v: number) => format(v) + (unit ? ` ${unit}` : '');
-  const width = Math.max(...[min, max, (min + max) / 2, min + (max - min) * 0.37].map((v) => text(v).length));
+  // Пробные значения — по шагу ползунка, иначе середина вроде 18.563 раздувает запас ширины.
+  const snap = (v: number) => (step ? min + Math.round((v - min) / step) * step : v);
+  const width = Math.max(...[min, max, snap((min + max) / 2), snap(min + (max - min) * 0.37)].map((v) => text(Number(v.toPrecision(12))).length));
   const pct = max > min ? ((value - min) / (max - min)) * 100 : 0;
   return (
     <label className="rz-slider">

@@ -51,7 +51,8 @@ export default function ElectronLossLab() {
       n="10.1" kind="2D" title="Электрон: ионизация против излучения"
       legend={Object.values(SERIES)}
       readout={[
-        { tex: 'l_{\\text{рад}}', value: `${f2(l)} г/см² = ${f2(l / m.rho)} см` },
+        { tex: 'l_{\\text{рад}}', value: f2(l), unit: 'г/см²' },
+        { tex: 'l_{\\text{рад}}/\\rho', value: f2(l / m.rho), unit: 'см' },
         { tex: 'T_{\\text{крит}} = 800/Z', value: f2(Tc), unit: 'МэВ' },
         { tex: '\\text{рад}/\\text{ион} = TZ/800', value: f2(radToIon(T0, m.Z)) },
         { label: `после ${mm} мм`, value: f2(Tout), unit: 'МэВ' },
