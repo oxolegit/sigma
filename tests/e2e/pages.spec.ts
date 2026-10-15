@@ -68,11 +68,12 @@ test.describe('без прогресса', () => {
     await page.goto('/');
     await allHydrated(page);
     const cards = page.locator('.rz-course');
-    await expect(cards).toHaveCount(2);
+    await expect(cards).toHaveCount(3);
     await expect(page.locator('.rz-badge-example')).toHaveCount(0);
     await expect(page.locator('.sg-filters')).toHaveCount(0);
     await expect(cards.filter({ hasText: 'Теория переноса нейтронов' }).getByRole('link')).toHaveAttribute('href', '/tpn/');
     await expect(cards.filter({ hasText: 'Математический анализ' }).getByRole('link')).toHaveAttribute('href', '/math/');
+    await expect(cards.filter({ hasText: 'Математическая статистика' }).getByRole('link')).toHaveAttribute('href', '/stats/');
     await expect(page.locator('.sg-continue')).toContainText('Начать');
   });
 
@@ -83,7 +84,7 @@ test.describe('без прогресса', () => {
     const value = async (word: RegExp) => Number(await numbers.filter({ hasText: word }).locator('dd').textContent());
     expect(await value(/урок/)).toBeGreaterThanOrEqual(11);
     expect(await value(/лаборатор/)).toBeGreaterThanOrEqual(26);
-    expect(await value(/в контрольной/)).toBe(36);
+    expect(await value(/самопроверк/)).toBeGreaterThanOrEqual(85);
     await expect(page.locator('.sg-hero').getByRole('link', { name: 'Выбрать курс' })).toHaveAttribute('href', '#courses');
     await expect(page.locator('.sg-hero').getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', 'https://github.com/oxolegit/sigma');
     await expect(page.locator('.sg-foot').getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', 'https://github.com/oxolegit/sigma');
