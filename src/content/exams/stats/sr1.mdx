@@ -2,13 +2,20 @@
 n: 1
 title: Случайные величины
 scope: лекции 1–3
-lead: Тренировка перед первой самостоятельной. В каждом разделе — короткая шпаргалка, задача с пошаговым разбором и три задачи на самостоятельное решение. Решайте на бумаге, вводите числа — ответ проверится с точностью до 2 %. Таймера нет, попыток сколько угодно.
+lead: Вариант — шесть задач, по одной на тему первых трёх лекций. Варианты 1–4 одинаковы у всех, «Случайный» даёт новые числа. Решайте на бумаге, вводите числа — ответ проверится с точностью до 2 %. Под вариантом — шпаргалка и разборы из листка подготовки.
 lessons: [1, 2, 3, 4]
 ---
-import { Steps } from '@components/index';
-import SrTask from '@components/live/SrTask';
 
-## 1. Среднее и σ дискретной величины
+import { Steps } from '@components/index';
+import SrVariant from '@components/live/SrVariant';
+
+<SrVariant client:load work={1} />
+
+<details class="sg-ref">
+<summary>Шпаргалка и разборы из листка подготовки</summary>
+<div class="sg-ref-body">
+
+### 1. Среднее и σ дискретной величины
 
 <div class="sg-sr-sheet">
 
@@ -25,26 +32,7 @@ import SrTask from '@components/live/SrTask';
     { note: '**Дисперсия и σ:** $\\sigma^2 = 5 - 4 = 1$. **Ответ.** $C = 0.1$, $\\bar n = 2$, $\\sigma = 1$.' },
   ]} />
 
-<SrTask client:visible n="1.1"
-  q="Игральная кость: $n = 1, \ldots, 6$ равновероятно. Найти $\bar n$ и $\sigma$."
-  answers={[{ label: '$\\bar n$', value: 3.5 }, { label: '$\\sigma$', value: 1.7078 }]}
-  hint="$P(n) = 1/6$. Средний квадрат: $(1 + 4 + 9 + 16 + 25 + 36)/6 = 91/6$."
-  answer="$\bar n = 3.5$, $\sigma^2 = 35/12$, $\sigma \approx 1.71$." />
-
-<SrTask client:visible n="1.2"
-  q="$x = -1,\ 0,\ 2$ с вероятностями $0.3,\ 0.2,\ 0.5$. Найти $\bar x$ и $\sigma$."
-  answers={[{ label: '$\\bar x$', value: 0.7 }, { label: '$\\sigma$', value: 1.3454 }]}
-  hint="$\overline{x^2} = 1\cdot0.3 + 0 + 4\cdot0.5 = 2.3$."
-  answer="$\bar x = 0.7$, $\sigma^2 = 2.3 - 0.49 = 1.81$, $\sigma \approx 1.35$." />
-
-<SrTask client:visible n="1.3"
-  q="$P(n) = C/2^n$, $n = 0, 1, 2, \ldots$ (до бесконечности). Найти $C$, $\bar n$, $\sigma$."
-  answers={[{ label: '$C$', value: 0.5 }, { label: '$\\bar n$', value: 1 }, { label: '$\\sigma$', value: 1.4142 }]}
-  hint="При $q = 1/2$: $\sum_{n\ge0} q^n = \frac{1}{1-q}$, $\sum n q^n = \frac{q}{(1-q)^2}$, $\sum n^2 q^n = \frac{q(1+q)}{(1-q)^3}$."
-  answer="$C = 1/2$, $\bar n = 1$, $\sigma^2 = 2$, $\sigma \approx 1.41$."
-  solution="$\sum 2^{-n} = 2 \Rightarrow C = 1/2$. $\bar n = \frac12\cdot\frac{1/2}{1/4} = 1$, $\overline{n^2} = \frac12\cdot\frac{3/4}{1/8} = 3$, $\sigma^2 = 3 - 1 = 2$." />
-
-## 2. Непрерывная величина: y(x) → f(x) → x̄, σ
+### 2. Непрерывная величина: y(x) → f(x) → x̄, σ
 
 <div class="sg-sr-sheet">
 
@@ -61,24 +49,7 @@ $C = 1\big/\!\int y\,dx$, $f = C\,y$. Затем $\bar x = \int x f\,dx$, $\over
     { note: '**Дисперсия:** $\\sigma^2 = 6/5 - 1 = 1/5$. **Ответ.** $f = \\frac34 x(2 - x)$, $\\bar x = 1$, $\\sigma = 1/\\sqrt5 \\approx 0.45$.' },
   ]} />
 
-<SrTask client:visible n="2.1"
-  q="$y(x) = e^{-x/3}$, $x \ge 0$. Найти константу $C$, $\bar x$, $\sigma$."
-  answers={[{ label: '$C$', value: 0.33333 }, { label: '$\\bar x$', value: 3 }, { label: '$\\sigma$', value: 3 }]}
-  hint="Замена $t = x/3$ сводит всё к $\int_0^\infty t^n e^{-t}dt = n!$."
-  answer="$f = \tfrac13 e^{-x/3}$, $\bar x = 3$, $\sigma = 3$." />
-
-<SrTask client:visible n="2.2"
-  q="$y(x) = x$ на $[0; 2]$. Найти $C$, $\bar x$, $\sigma$."
-  answers={[{ label: '$C$', value: 0.5 }, { label: '$\\bar x$', value: 1.33333 }, { label: '$\\sigma$', value: 0.4714 }]}
-  answer="$f = x/2$, $\bar x = 4/3$, $\sigma^2 = 2 - 16/9 = 2/9$, $\sigma \approx 0.47$." />
-
-<SrTask client:visible n="2.3"
-  q="$y(x) = x^2e^{-x}$, $x \ge 0$. Найти $C$, $\bar x$, $\sigma$."
-  answers={[{ label: '$C$', value: 0.5 }, { label: '$\\bar x$', value: 3 }, { label: '$\\sigma$', value: 1.7321 }]}
-  hint="$\int x^2e^{-x} = 2! = 2$, $\int x^3e^{-x} = 3! = 6$, $\int x^4 e^{-x} = 4! = 24$."
-  answer="$f = \tfrac12 x^2e^{-x}$, $\bar x = 3$, $\overline{x^2} = 12$, $\sigma = \sqrt3 \approx 1.73$." />
-
-## 3. FWHM
+### 3. FWHM
 
 <div class="sg-sr-sheet">
 
@@ -95,24 +66,7 @@ $C = 1\big/\!\int y\,dx$, $f = C\,y$. Затем $\bar x = \int x f\,dx$, $\over
     { note: '**Проверка.** Это гауссиана с $2\\sigma^2 = 8$, $\\sigma = 2$: $2.355\\cdot2 = 4.71$ — совпадает.' },
   ]} />
 
-<SrTask client:visible n="3.1"
-  q="$f(x) = \dfrac{1}{1 + (x-2)^2/9}$. Найти FWHM."
-  answers={[{ label: 'FWHM', value: 6 }]}
-  hint="Максимум 1 при $x = 2$. Половина: $(x-2)^2/9 = 1$."
-  answer="$x = 2 \pm 3$, $\text{FWHM} = 6$." />
-
-<SrTask client:visible n="3.2"
-  q="$f(x) = e^{-|x|/2}$. Найти FWHM."
-  answers={[{ label: 'FWHM', value: 2.7726 }]}
-  answer="$|x| = 2\ln2$, $\text{FWHM} = 4\ln2 \approx 2.77$." />
-
-<SrTask client:visible n="3.3"
-  q="$f(x) = x^2e^{-x}$, $x \ge 0$. Найти положение максимума и FWHM (корни уравнения найти подбором)."
-  answers={[{ label: '$x_{\\max}$', value: 2 }, { label: 'FWHM', value: 3.395, tol: 0.03 }]}
-  hint="$f' = x(2 - x)e^{-x}$. Половина высоты: $x^2e^{-x} = 2e^{-2}$ — подставляйте $x$ около 0.8 и около 4.2."
-  answer="$x_{\max} = 2$; $x_1 \approx 0.76$, $x_2 \approx 4.16$, $\text{FWHM} \approx 3.39$." />
-
-## 4. Геометрическая вероятность
+### 4. Геометрическая вероятность
 
 <div class="sg-sr-sheet">
 
@@ -128,23 +82,7 @@ $C = 1\big/\!\int y\,dx$, $f = C\,y$. Затем $\bar x = \int x f\,dx$, $\over
     { note: '**Ответ.** а) ≈ 0.87; б) 0.36.' },
   ]} />
 
-<SrTask client:visible n="4.1"
-  q="Две частицы приходят в случайные моменты внутри окна $T = 1$ мкс. Схема совпадений срабатывает, если интервал между ними меньше $\tau = 50$ нс. Найти вероятность срабатывания."
-  answers={[{ label: '$P$', value: 0.0975 }]}
-  hint="Пара моментов $(t_1, t_2)$ — точка в квадрате $T \times T$. Не срабатывает в двух треугольниках с катетом $T - \tau$."
-  answer="$P = 1 - (1 - \tau/T)^2 = 1 - 0.95^2 = 0.0975$." />
-
-<SrTask client:visible n="4.2"
-  q="Стержень длины $L$ ломают в случайной точке. Найти вероятность, что меньший кусок короче $L/3$."
-  answers={[{ label: '$P$', value: 0.66667 }]}
-  answer="Точка разлома должна попасть в первую или последнюю треть: $P = 2/3$." />
-
-<SrTask client:visible n="4.3"
-  q="Числа $x$ и $y$ выбираются равномерно на $[0; 1]$. Найти вероятность того, что $y < x^2$."
-  answers={[{ label: '$P$', value: 0.33333 }]}
-  answer="Площадь под параболой: $\int_0^1 x^2dx = 1/3$." />
-
-## 5. Комбинации событий
+### 5. Комбинации событий
 
 <div class="sg-sr-sheet">
 
@@ -161,23 +99,7 @@ $C = 1\big/\!\int y\,dx$, $f = C\,y$. Затем $\bar x = \int x f\,dx$, $\over
     { note: 'в) Ровно один: $0.9\\cdot0.2 + 0.8\\cdot0.1 = 0.26$. Проверка: $0.72 + 0.26 + 0.02 = 1$.' },
   ]} />
 
-<SrTask client:visible n="5.1"
-  q="Три детектора с эффективностью 0.95 каждый. Найти вероятность тройного совпадения и вероятность срабатывания хотя бы двух из трёх."
-  answers={[{ label: 'тройное', value: 0.857375 }, { label: 'хотя бы два', value: 0.99275 }]}
-  hint="«Хотя бы два» = «ровно два» + «все три». Ровно два: $3\cdot0.95^2\cdot0.05$."
-  answer="$0.95^3 \approx 0.857$; $0.857 + 3\cdot0.95^2\cdot0.05 \approx 0.993$." />
-
-<SrTask client:visible n="5.2"
-  q="Число отсчётов распределено по Пуассону с $\lambda = 2$. Найти $P_0$, $P_1$ и $P(n \ge 2)$."
-  answers={[{ label: '$P_0$', value: 0.135335 }, { label: '$P_1$', value: 0.270671 }, { label: '$P(n \\ge 2)$', value: 0.593994 }]}
-  answer="$P_0 = e^{-2} \approx 0.135$, $P_1 = 2e^{-2} \approx 0.271$, $P(n \ge 2) = 1 - 3e^{-2} \approx 0.594$." />
-
-<SrTask client:visible n="5.3"
-  q="Два канала со скоростями $\nu_1 = 1000$ с⁻¹ и $\nu_2 = 500$ с⁻¹, окно совпадений $\tau = 100$ нс. Найти скорость случайных совпадений."
-  answers={[{ label: '$\\nu_{\\text{сл}}$', value: 0.1, unit: 'с⁻¹' }]}
-  answer="$2\tau\nu_1\nu_2 = 2\cdot10^{-7}\cdot1000\cdot500 = 0.1$ с⁻¹." />
-
-## 6. Бонус: мёртвое время
+### 6. Бонус: мёртвое время
 
 <div class="sg-sr-sheet">
 
@@ -194,17 +116,5 @@ $C = 1\big/\!\int y\,dx$, $f = C\,y$. Затем $\bar x = \int x f\,dx$, $\over
     { note: '**Ответ.** $n = 5556 \\pm 11$ с⁻¹; потери $1 - m/n = 10\\ \\%$.' },
   ]} />
 
-<SrTask client:visible n="6.1"
-  q="$\tau = 10$ мкс, $\nu = 10^4$ с⁻¹. Какая доля событий попадает в мёртвое время?"
-  answers={[{ label: 'доля', value: 0.095163 }]}
-  answer="$1 - e^{-0.1} \approx 0.095$." />
-
-<SrTask client:visible n="6.2"
-  q="Истинная скорость $n = 2000$ с⁻¹, $\tau = 100$ мкс (непродлевающийся тип). Какую скорость покажет счётчик?"
-  answers={[{ label: '$m$', value: 1666.67, unit: 'с⁻¹' }]}
-  answer="$m = n/(1 + n\tau) = 2000/1.2 \approx 1667$ с⁻¹." />
-
-<SrTask client:visible n="6.3"
-  q="$\nu = 1000$ с⁻¹, $\tau = 100$ мкс, есть дополнительный канал. Какая доля событий теряется?"
-  answers={[{ label: 'доля', value: 0.0046788 }]}
-  answer="$1 - e^{-0.1}\cdot1.1 \approx 0.0047$." />
+</div>
+</details>
