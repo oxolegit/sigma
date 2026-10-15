@@ -40,8 +40,11 @@ export default function ElectronLossLab() {
       strokeCurve(g, line((T) => rad(T) + ion(T)), token(SERIES.sum.color), 1.6, [6, 5]);
       markerLine(g, f, Tc, `T_крит = ${f2(Tc)} МэВ`, token('ink-muted'));
       dot(g, f.X(T0), f.Y(rad(T0) + ion(T0)), 6, token('ink'));
+      // Энергия на выходе из пластины: точка сдвигается влево, когда толщину увеличивают.
+      markerLine(g, f, Tout, `после ${mm} мм: ${f2(Tout)} МэВ`, token('signal'), 1);
+      dot(g, f.X(Tout), f.Y(rad(Tout) + ion(Tout)), 6, token('signal'));
     });
-  }, [mk, T0]);
+  }, [mk, T0, Tout, mm]);
 
   return (
     <LabFrame
