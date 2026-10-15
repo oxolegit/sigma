@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, LabFrame, Slider, type LegendItem } from '../../components';
 import { useCanvas } from '../../lib/canvas';
-import { drawFrame, markerLine, niceTicks, strokeCurve } from '../../lib/plot';
+import { drawFrame, markerLine, niceTicks, strokeCurve, stepCeil } from '../../lib/plot';
 import { mulberry32 } from '../../lib/rng';
 import { token } from '../../lib/theme';
 import { densityHistogram, firstCollisionDensity, sampleFreePath, transmission } from './freePath';
@@ -41,7 +41,7 @@ export default function FreePathMC() {
   const passed = N ? xs.current.filter((x) => x > X).length / N : NaN;
 
   const ref = useCanvas((g, w, h) => {
-    const xmax = Math.max(5 / sigma, X * 1.15);
+    const xmax = stepCeil(Math.max(5 / sigma, X * 1.15));
     const ymax = sigma * 1.15;
     const f = drawFrame(
       g, w, h,

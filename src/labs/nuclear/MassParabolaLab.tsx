@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { LabFrame, Slider, type LegendItem } from '../../components';
 import { useCanvas } from '../../lib/canvas';
-import { arrow, drawFrame, niceTicks, strokeCurve, tickFormat } from '../../lib/plot';
+import { arrow, drawFrame, niceTicks, strokeCurve, tickFormat, stepCeil } from '../../lib/plot';
 import { token } from '../../lib/theme';
 import { dot, text } from '../stats/draw';
 import { ELEMENTS } from './nuclides';
@@ -26,7 +26,7 @@ export default function MassParabolaLab() {
   const stable = pts.filter((p, i) => (i === 0 || pts[i - 1]!.m > p.m) && (i === pts.length - 1 || pts[i + 1]!.m > p.m));
 
   const ref = useCanvas((g, w, h) => {
-    const yMax = Math.max(...pts.map((p) => p.m)) * 1.08 + 1;
+    const yMax = stepCeil(Math.max(...pts.map((p) => p.m)) * 1.08 + 1);
     const xt = Zs.filter((_, i) => i % 2 === 0), yt = niceTicks(0, yMax, 5);
     const f = drawFrame(g, w, h, { min: Zs[0]! - 0.6, max: Zs[10]! + 0.6, ticks: xt, format: String, label: 'Z' }, { min: -1, max: yMax, ticks: yt, format: tickFormat(yt), label: 'M c² − min, МэВ' });
     f.clip(() => {

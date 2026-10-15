@@ -166,3 +166,14 @@ export function markerLine(g: CanvasRenderingContext2D, f: Frame, x: number, lab
   g.fillText(label, right ? px + 8 : px - 8, f.top + 22 + row * 18);
   g.restore();
 }
+
+/**
+ * Верх шкалы «ступенями» 1–2–5: ось меняется, только когда данные перешагнули ступень,
+ * а не на каждом шаге ползунка — рисунок не дёргается.
+ */
+export function stepCeil(v: number): number {
+  if (!(v > 0) || !Number.isFinite(v)) return 1;
+  const p = 10 ** Math.floor(Math.log10(v));
+  for (const k of [1, 1.5, 2, 3, 5, 7.5, 10]) if (k * p >= v - 1e-12) return k * p;
+  return 10 * p;
+}

@@ -76,7 +76,7 @@ test.describe('без прогресса', () => {
     await expect(cards.filter({ hasText: 'Математическая статистика' }).getByRole('link')).toHaveAttribute('href', '/stats/');
     await expect(cards.filter({ hasText: 'Ядерная физика' }).getByRole('link')).toHaveAttribute('href', '/nuclear/');
     await expect(page.locator('.sg-continue')).toContainText('Начать');
-    await page.locator('.sg-filters select').selectOption('Физика');
+    await page.locator('.sg-filters').getByRole('button', { name: /^Физика\s*\d+$/ }).click();
     await expect(cards).toHaveCount(1);
     await expect(cards).toContainText('Ядерная физика');
   });
@@ -90,7 +90,7 @@ test.describe('без прогресса', () => {
     expect(await value(/лаборатор/)).toBeGreaterThanOrEqual(26);
     expect(await value(/самопроверк/)).toBeGreaterThanOrEqual(60);
     await expect(page.locator('.sg-hero').getByRole('link', { name: 'Выбрать курс' })).toHaveAttribute('href', '#courses');
-    await expect(page.locator('.sg-hero').getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', 'https://github.com/oxolegit/sigma');
+    await expect(page.locator('#about').getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', 'https://github.com/oxolegit/sigma');
     await expect(page.locator('.sg-foot').getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', 'https://github.com/oxolegit/sigma');
     const demo = await hydrated(page.locator('.rz-lab').filter({ hasText: 'Лаборатория 4.3' }));
     await expect(demo.locator('.rz-lab-readout')).toBeVisible();

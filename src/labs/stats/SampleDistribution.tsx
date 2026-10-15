@@ -1,7 +1,7 @@
 import { useId, useMemo, useState } from 'react';
 import { LabFrame, Select, type LegendItem } from '../../components';
 import { useCanvas } from '../../lib/canvas';
-import { drawFrame, markerLine, niceTicks, tickFormat } from '../../lib/plot';
+import { drawFrame, markerLine, niceTicks, tickFormat, stepCeil } from '../../lib/plot';
 import { token } from '../../lib/theme';
 import { distribution, parseSample, sampleMoments } from './core';
 import { bars, vband } from './draw';
@@ -41,7 +41,7 @@ export default function SampleDistribution() {
     const gap = d.x.length > 1 ? Math.min(...d.x.slice(1).map((v, i) => v - d.x[i]!)) : 1;
     const bw = Math.min(gap, 1) * 0.7;
     const xmin = Math.min(lo - 1, m.mean - m.sigma - 0.5), xmax = Math.max(hi + 1, m.mean + m.sigma + 0.5);
-    const ymax = Math.max(...d.p) * 1.25;
+    const ymax = stepCeil(Math.max(...d.p) * 1.25);
     const xt = niceTicks(xmin, xmax, w < 480 ? 6 : 10), yt = niceTicks(0, ymax, 4);
     const f = drawFrame(g, w, h, { min: xmin, max: xmax, ticks: xt, format: tickFormat(xt), label: 'xᵢ' }, { min: 0, max: ymax, ticks: yt, format: tickFormat(yt), label: 'P(xᵢ)' });
     f.clip(() => {

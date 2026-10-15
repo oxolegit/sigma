@@ -20,7 +20,8 @@ export default function FermiGasLab() {
   const U = fg.T + eps;
 
   const ref = useCanvas((g, w, h) => {
-    const yMin = -Math.ceil((U + 6) / 10) * 10, yMax = 6;
+    // Шкала на самую глубокую яму ползунков (r₀ = 1 фм, ε = 10 МэВ) — при движении ничего не уезжает.
+    const yMin = -70, yMax = 6;
     const yt = niceTicks(yMin, yMax, 6), xt = [0, 0.5, 1];
     const f = drawFrame(g, w, h, { min: 0, max: 1.15, ticks: xt, format: tickFormat(xt), label: 'dN/dT, отн.' }, { min: yMin, max: yMax, ticks: yt, format: tickFormat(yt), label: 'E, МэВ' });
     f.clip(() => {

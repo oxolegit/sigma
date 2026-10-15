@@ -1,6 +1,7 @@
 ---
-/** Шапка сайта: логотип, необязательная ссылка на курс, справа — слот (прогресс) или разделы сайта. */
+/** Шапка сайта: прилипает и просвечивает. Логотип, курс (на страницах курса), разделы или слот (прогресс), поиск и тема. */
 import Logo from './Logo.astro';
+import HeaderTools from './live/HeaderTools';
 import { SITE } from '../lib/site';
 interface Props { course?: { title: string; href: string }; current?: 'courses' | 'about' }
 const { course, current } = Astro.props;
@@ -12,9 +13,10 @@ const { course, current } = Astro.props;
     ? <div class="sg-top-right"><slot /></div>
     : (
       <nav class="sg-top-nav" aria-label="Разделы">
-        <a href="/" aria-current={current === 'courses' ? 'page' : undefined}>Курсы</a>
+        <a href="/#courses" aria-current={current === 'courses' ? 'page' : undefined}>Курсы</a>
         <a href="/#about">О проекте</a>
         <a href={SITE.repo}>GitHub</a>
       </nav>
     )}
+  <HeaderTools client:idle />
 </header>

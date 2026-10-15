@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Button, LabFrame, Slider, type LegendItem } from '../../components';
 import { useCanvas } from '../../lib/canvas';
-import { drawFrame, markerLine, niceTicks, strokeCurve, tickFormat } from '../../lib/plot';
+import { drawFrame, markerLine, niceTicks, strokeCurve, tickFormat, stepCeil } from '../../lib/plot';
 import { mulberry32 } from '../../lib/rng';
 import { token } from '../../lib/theme';
 import { histogram, median, sampleMoments } from './core';
@@ -36,7 +36,7 @@ export default function TriangleArea() {
 
   const ref = useCanvas((g, w, h) => {
     const dens = counts.map((c) => c / (n * bw));
-    const ymax = Math.max(dens[0] ?? 0, T.pdf(bw / 2)) * 1.1;
+    const ymax = stepCeil(Math.max(dens[0] ?? 0, T.pdf(bw / 2)) * 1.1);
     const xt = niceTicks(0, T.smax, w < 480 ? 5 : 10), yt = niceTicks(0, ymax, 4);
     const f = drawFrame(g, w, h, { min: 0, max: T.smax, ticks: xt, format: tickFormat(xt), label: 'площадь S' }, { min: 0, max: ymax, ticks: yt, format: (v) => (v * 1e4).toFixed(0), label: 'f(S), ×10⁻⁴' });
     f.clip(() => {

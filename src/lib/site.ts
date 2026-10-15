@@ -9,5 +9,5 @@ export const SITE = {
   /** Картинка для превью ссылок, 1200×630 (scripts/og.mjs). */
   image: { src: '/og.png', width: 1200, height: 630, alt: 'Sigma — интерактивные курсы: формулы, лаборатории, 3D-сцены' },
   /** Цвет адресной строки — фон страницы (paper) в каждой теме. */
-  themeColor: { light: '#f6f4ee', dark: '#14161a' },
+  themeColor: { light: '#f4f7fa', dark: '#0d1218' },
 } as const;

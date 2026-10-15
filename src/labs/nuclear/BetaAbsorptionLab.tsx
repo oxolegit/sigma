@@ -20,7 +20,8 @@ export default function BetaAbsorptionLab() {
   const J = d < R ? Math.exp(-muRho * d) : 0;
 
   const ref = useCanvas((g, w, h) => {
-    const xMax = Math.max(0.3, R * 1.25);
+    // Шкала одна на все энергии: 2 г/см² — пробег при самой большой граничной энергии.
+    const xMax = 2;
     const xt = niceTicks(0, xMax, 5);
     const f = drawFrame(g, w, h, { min: 0, max: xMax, ticks: xt, format: tickFormat(xt), label: 'd, г/см²' }, { min: 1e-4, max: 1.3, ticks: [1e-4, 1e-3, 1e-2, 0.1, 1], format: decadeLabel, label: 'J/J₀', log: true });
     f.clip(() => {

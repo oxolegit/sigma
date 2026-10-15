@@ -27,7 +27,7 @@ const chapters = data.chapters.map((ch) => ({
     const labs = l.entry ? lessonStats(l.entry).labs : 0;
     // У ненаписанного урока «готовится» уже стоит в статусе справа — в подписи только параграф.
     const meta = [l.ref, l.entry && (labs ? `${labs} ${labWord(labs)}` : 'без лабораторий')].filter(Boolean).join(' · ');
-    return { n: l.n, title: l.title, meta, href: l.href };
+    return { n: l.n, title: l.title, meta, href: l.href, labs };
   }),
 }));
 const written = data.lessons.filter((l) => l.href).map((l) => ({ n: l.n, href: l.href! }));
@@ -100,46 +100,51 @@ const stats = [
 </Base>
 
 <style is:global>
-  .sg-course-hero { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-8) var(--space-12); padding: 20px 0 40px; border-bottom: 1px solid var(--rule); }
-  .sg-course-text { flex: 1 1 560px; display: flex; flex-direction: column; gap: 14px; }
-  .sg-course-text h1 { margin: 0; font: 600 40px/44px var(--font-sans); letter-spacing: -0.02em; }
-  .sg-course-source { margin: 0; font: 500 15px/22px var(--font-sans); color: var(--ink-muted); }
+  .sg-course-hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 340px; align-items: end; gap: var(--space-8) var(--space-12); padding: 24px 0 40px; }
+  .sg-course-hero::before { content: ""; position: absolute; inset: -60px 0 0; z-index: -1; background: var(--hero-glow); pointer-events: none; }
+  .sg-course-text { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .sg-course-text h1 { margin: 0; font: 800 clamp(34px, 4.6vw, 56px)/1.04 var(--font-sans); letter-spacing: -0.035em; }
+  .sg-course-source { margin: 0; font: 600 15px/22px var(--font-sans); color: var(--ink-muted); }
   .sg-course-desc { margin: 0; max-width: var(--measure); font: 400 17px/28px var(--font-serif); color: var(--ink-muted); }
   .sg-course-actions { display: flex; flex-direction: column; gap: var(--space-3); padding-top: var(--space-2); }
-  .sg-share-status { font: 400 14px/20px var(--font-sans); color: var(--ink-muted); overflow-wrap: anywhere; }
-  .sg-course-card { flex: 0 1 340px; display: flex; flex-direction: column; gap: 20px; padding: 20px 24px; background: var(--surface-1); border: 1px solid var(--rule); border-radius: var(--radius-lg); }
-  .sg-course-stats { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-3) var(--space-4); margin: 0; }
-  .sg-course-stats div { display: flex; flex-direction: column-reverse; }
-  .sg-course-stats dt { font: 400 13px/18px var(--font-sans); color: var(--ink-muted); white-space: nowrap; }
-  .sg-course-stats dd { margin: 0; font: 600 24px/28px var(--font-sans); font-variant-numeric: tabular-nums; }
+  .sg-share-status { font: 500 14px/20px var(--font-sans); color: var(--ink-muted); overflow-wrap: anywhere; }
+  .sg-course-card { display: flex; flex-direction: column; gap: 20px; padding: 24px; background: var(--surface-1); border: 1px solid var(--rule); border-radius: var(--radius-xl); box-shadow: var(--shadow-lift); }
+  .sg-course-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); margin: 0; }
+  .sg-course-stats div { display: flex; flex-direction: column-reverse; padding: 10px 12px; border-radius: var(--radius-md); background: var(--surface-2); }
+  .sg-course-stats dt { font: 600 12px/16px var(--font-sans); color: var(--ink-muted); }
+  .sg-course-stats dd { margin: 0; font: 800 26px/30px var(--font-sans); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 
   .sg-course-lit { margin-top: var(--space-12); }
-  .sg-works { display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-12); margin-top: 40px; }
-  .sg-outline { display: flex; flex-direction: column; gap: 40px; padding-top: var(--space-8); }
-  .sg-outline-chapter { display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-12); }
-  .sg-outline-head { flex: 0 0 240px; display: flex; flex-direction: column; gap: 6px; }
-  .sg-outline-head h2 { margin: 0; font: 600 22px/28px var(--font-sans); }
-  .sg-outline-list { flex: 1 1 560px; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--rule); }
-  .sg-outline-list li { border-bottom: 1px solid var(--rule); }
-  .sg-outline-row { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; gap: var(--space-4); align-items: center; min-height: 44px; padding: 14px 12px; border-radius: var(--radius-md); color: var(--ink); }
+  .sg-outline { display: flex; flex-direction: column; gap: var(--space-4); padding-top: var(--space-4); }
+  .sg-outline > .sg-chips { margin-bottom: var(--space-2); }
+  .sg-works { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: var(--space-3) var(--space-8); margin-top: var(--space-4); padding: var(--space-6); border: 1px solid color-mix(in srgb, var(--signal) 30%, var(--rule)); border-radius: var(--radius-xl); background: var(--signal-soft); }
+  .sg-outline-chapter { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: var(--space-3) var(--space-8); padding: var(--space-6); background: var(--surface-1); border: 1px solid var(--rule); border-radius: var(--radius-xl); }
+  .sg-outline-head { display: flex; flex-direction: column; gap: 6px; }
+  .sg-outline-head h2 { margin: 0; font: 800 22px/28px var(--font-sans); letter-spacing: -0.02em; }
+  .sg-outline-list { margin: 0; padding: 0; list-style: none; }
+  .sg-outline-list li + li { margin-top: 4px; }
+  .sg-outline-row { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; gap: var(--space-4); align-items: center; min-height: 52px; padding: 10px 12px; border-radius: var(--radius-md); color: var(--ink); transition: background .15s; }
   a.sg-outline-row:hover { background: var(--surface-2); color: var(--ink); }
+  .sg-works a.sg-outline-row { background: var(--surface-1); }
+  .sg-works a.sg-outline-row:hover { background: var(--surface-1); box-shadow: var(--shadow-lift); }
   .sg-outline-row.is-current { background: var(--accent-soft); }
-  .sg-outline-row.is-current .sg-outline-title { color: var(--accent); }
+  .sg-outline-row.is-current .sg-outline-title { color: var(--accent-text); }
   .sg-outline-row.is-soon .sg-outline-title { color: var(--ink-muted); }
-  .sg-outline-mark { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: var(--radius-pill); background: var(--surface-2); color: var(--ink-muted); font: 600 13px/1 var(--font-sans); font-variant-numeric: tabular-nums; }
+  .sg-outline-mark { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: var(--radius-pill); background: var(--surface-2); color: var(--ink-muted); font: 750 13px/1 var(--font-sans); font-variant-numeric: tabular-nums; }
+  .sg-works .sg-outline-mark { background: var(--signal); color: #ffffff; }
   .sg-outline-mark.is-done { background: var(--correct-soft); color: var(--correct); }
   .sg-outline-mark.is-current { background: var(--accent); color: var(--on-accent); }
   .sg-outline-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-  .sg-outline-title { font: 500 16px/22px var(--font-sans); }
-  .sg-outline-meta { font: 400 13px/18px var(--font-sans); color: var(--ink-muted); }
-  .sg-outline-status { font: 500 13px/18px var(--font-sans); color: var(--accent); white-space: nowrap; }
+  .sg-outline-title { font: 650 16px/22px var(--font-sans); }
+  .sg-outline-meta { font: 500 13px/18px var(--font-sans); color: var(--ink-muted); }
+  .sg-outline-status { font: 700 13px/18px var(--font-sans); color: var(--accent-text); white-space: nowrap; }
   .sg-outline-status.is-done { color: var(--correct); }
-  .sg-outline-row.is-soon .sg-outline-status { color: var(--ink-muted); }
+  .sg-outline-row.is-soon .sg-outline-status { color: var(--ink-muted); font-weight: 500; }
 
   @media (max-width: 899px) {
-    .sg-course-text h1 { font-size: 30px; line-height: 36px; }
-    .sg-course-card { flex-basis: 100%; }
-    .sg-outline-row { grid-template-columns: 28px minmax(0, 1fr); padding: 12px 8px; }
+    .sg-course-hero { grid-template-columns: 1fr; padding-bottom: 28px; }
+    .sg-outline-chapter, .sg-works { grid-template-columns: 1fr; padding: var(--space-4); }
+    .sg-outline-row { grid-template-columns: 32px minmax(0, 1fr); padding: 10px 8px; }
     .sg-outline-status { grid-column: 2; }
     .sg-outline-status:empty { display: none; }
   }

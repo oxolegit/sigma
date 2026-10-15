@@ -5,7 +5,7 @@
 .sg-lead { margin: 0; max-width: var(--measure); font: 400 18px/30px var(--font-serif); color: var(--ink-muted); }
 
 /* Счёт прилипает к верху, пока решаешь */
-.sg-exam-sticky { position: sticky; top: 0; z-index: 2; margin: 0 calc(-1 * var(--space-2)); padding: var(--space-2); background: var(--paper); }
+.sg-exam-sticky { position: sticky; top: var(--header-h); z-index: 2; margin: 0 calc(-1 * var(--space-2)); padding: var(--space-2); background: var(--paper); }
 .sg-exam-score { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-6); padding: 16px 20px; background: var(--surface-1); border: 1px solid var(--rule); border-radius: var(--radius-lg); }
 .sg-exam-score-main { flex: 1 1 260px; }
 .sg-exam-score-bar { flex: 0 1 220px; }

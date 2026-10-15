@@ -84,4 +84,28 @@ const exams = defineCollection({
   }),
 });
 
-export const collections = { courses, lessons, exams };
+/**
+ * Всё о формуле — для попапа по клику: src/content/formulas/<курс>.yaml со списком items.
+ * Формула на странице узнаётся по TeX: если нормализованный TeX выносной формулы содержит одну из строк match.
+ * display — та же формула с метками символов \htmlData{s=ключ}{…}: наведение на символ подсвечивает строку в таблице.
+ */
+const formulas = defineCollection({
+  loader: glob({ pattern: '*.yaml', base: './src/content/formulas' }),
+  schema: z.object({
+    items: z.array(z.object({
+      id: z.string(),
+      title: z.string(),
+      match: z.array(z.string()).min(1),
+      display: z.string().optional(),
+      /** Смысл одной-двумя фразами. */
+      meaning: z.string(),
+      symbols: z.array(z.object({ s: z.string(), tex: z.string(), text: z.string(), unit: z.string().optional() })).default([]),
+      /** Когда применять и где перестаёт работать. */
+      when: z.string().optional(),
+      derivation: z.array(z.object({ note: z.string().optional(), tex: z.string().optional() })).default([]),
+      example: z.string().optional(),
+    })),
+  }),
+});
+
+export const collections = { courses, lessons, exams, formulas };

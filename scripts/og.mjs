@@ -32,16 +32,14 @@ const plural = (n, one, few, many) => {
 // --- шрифты встраиваются, чтобы рендер не зависел от системы ---
 const font = (pkg, file) => `data:font/woff2;base64,${readFileSync(at('node_modules/@fontsource', pkg, 'files', file)).toString('base64')}`;
 const faces = [
-  ['IBM Plex Sans', 400, 'ibm-plex-sans', 'ibm-plex-sans-cyrillic-400-normal.woff2'],
-  ['IBM Plex Sans', 400, 'ibm-plex-sans', 'ibm-plex-sans-latin-400-normal.woff2'],
-  ['IBM Plex Sans', 600, 'ibm-plex-sans', 'ibm-plex-sans-cyrillic-600-normal.woff2'],
-  ['IBM Plex Sans', 600, 'ibm-plex-sans', 'ibm-plex-sans-latin-600-normal.woff2'],
-  ['Source Serif 4', 400, 'source-serif-4', 'source-serif-4-cyrillic-400-normal.woff2'],
-  ['Source Serif 4', 400, 'source-serif-4', 'source-serif-4-latin-400-normal.woff2'],
+  ['Manrope', '200 800', '../@fontsource-variable/manrope', 'manrope-cyrillic-wght-normal.woff2'],
+  ['Manrope', '200 800', '../@fontsource-variable/manrope', 'manrope-latin-wght-normal.woff2'],
+  ['IBM Plex Serif', 400, 'ibm-plex-serif', 'ibm-plex-serif-cyrillic-400-normal.woff2'],
+  ['IBM Plex Serif', 400, 'ibm-plex-serif', 'ibm-plex-serif-latin-400-normal.woff2'],
 ].map(([family, weight, pkg, file]) => `@font-face{font-family:"${family}";font-weight:${weight};src:url(${font(pkg, file)}) format("woff2")}`).join('\n');
 
 // Цвета — светлая тема из src/styles/tokens.css.
-const C = { paper: '#f6f4ee', surface: '#fffdf8', surface2: '#eceae2', rule: '#d9d5c9', ink: '#1b1d21', muted: '#5d6068', accent: '#c2410c', accentSoft: '#feefe3', signal: '#6d3fd0', grid: '#d6d2c6' };
+const C = { paper: '#f4f7fa', surface: '#ffffff', surface2: '#eaf0f5', rule: '#dbe3ea', ink: '#0f1b26', muted: '#556575', accent: '#1481ba', accentSoft: '#e2f1fa', signal: '#e8664a', grid: '#dfe6ec' };
 const sigma = (stroke, w) => `<polyline points="18.5,7 18.5,4 5.5,4 12.5,12 5.5,20 18.5,20 18.5,17" fill="none" stroke="${stroke}" stroke-width="${w}" stroke-linejoin="miter" stroke-linecap="square"/>`;
 
 // Декоративный рисунок справа: гистограмма пробегов, закон ослабления и маркер толщины — как в лаборатории 4.2.
@@ -58,7 +56,7 @@ function plot() {
   for (let j = 0; j <= 4; j++) grid += `<line x1="${l}" y1="${ys(j / 4)}" x2="${xs(5)}" y2="${ys(j / 4)}" stroke="${C.grid}"/>`;
   return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${grid}${bars}<path d="${curve}" fill="none" stroke="${C.accent}" stroke-width="3.5"/>
     <line x1="${xs(2)}" y1="20" x2="${xs(2)}" y2="${b}" stroke="${C.signal}" stroke-width="2.5" stroke-dasharray="7 6"/>
-    <text x="${xs(2) + 10}" y="44" fill="${C.signal}" font-family="IBM Plex Sans" font-weight="600" font-size="18">X = 2 см</text></svg>`;
+    <text x="${xs(2) + 10}" y="44" fill="${C.signal}" font-family="Manrope" font-weight="600" font-size="18">X = 2 см</text></svg>`;
 }
 
 const chips = [
@@ -70,12 +68,12 @@ const chips = [
 
 const og = `<!doctype html><html><head><meta charset="utf-8"><style>${faces}
 *{box-sizing:border-box;margin:0}
-body{width:1200px;height:630px;background:${C.paper};font-family:"IBM Plex Sans";color:${C.ink};position:relative;overflow:hidden}
+body{width:1200px;height:630px;background:${C.paper};font-family:"Manrope";color:${C.ink};position:relative;overflow:hidden}
 .bar{position:absolute;left:0;top:0;width:1200px;height:10px;background:${C.accent}}
 .logo{position:absolute;left:72px;top:64px;display:flex;align-items:center;gap:14px;font-weight:600;font-size:40px;letter-spacing:-0.02em}
 .logo svg{width:44px;height:44px}
-h1{position:absolute;left:72px;top:160px;width:640px;font-weight:600;font-size:60px;line-height:66px;letter-spacing:-0.03em}
-p{position:absolute;left:72px;top:372px;width:600px;font-family:"Source Serif 4";font-size:27px;line-height:38px;color:${C.muted}}
+h1{position:absolute;left:72px;top:160px;width:580px;font-weight:800;font-size:52px;line-height:58px;letter-spacing:-0.03em}
+p{position:absolute;left:72px;top:372px;width:600px;font-family:"IBM Plex Serif";font-size:27px;line-height:38px;color:${C.muted}}
 .chips{position:absolute;left:72px;bottom:72px;display:flex;gap:12px}
 .chips span{padding:9px 18px;border:2px solid ${C.rule};border-radius:999px;background:${C.surface};font-weight:600;font-size:22px}
 .chips span:first-child{border-color:${C.accent};color:${C.accent}}
@@ -86,7 +84,7 @@ p{position:absolute;left:72px;top:372px;width:600px;font-family:"Source Serif 4"
 <div class="bar"></div>
 <div class="logo"><svg viewBox="0 0 24 24">${sigma(C.accent, 2.6)}</svg>Sigma</div>
 <h1>Физика и математика, которые можно покрутить руками</h1>
-<p>Интерактивные курсы для магистратуры МИФИ: перенос нейтронов, матанализ, матстатистика</p>
+<p>Интерактивные курсы для магистратуры МИФИ: ядерная физика, перенос нейтронов, матанализ, матстатистика</p>
 <div class="card"><div class="tag">Лаборатория · пробег нейтрона</div>${plot()}</div>
 <div class="chips">${chips.map((c) => `<span>${c}</span>`).join('')}</div>
 <div class="url">sigma.mslv.space</div>

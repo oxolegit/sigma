@@ -1,0 +1,96 @@
+/* Выносные формулы: карточка, видно, что по ней можно нажать. Попап «всё о формуле». Диалог поиска. */
+
+/* Формула в тексте урока — крупнее, в мягкой карточке; длинная прокручивается внутри, а не страница */
+.sg-lesson-body > .katex-display,
+.sg-exam-body .katex-display,
+.sg-sr-sheet .katex-display { position: relative; margin: var(--space-2) 0 var(--space-6); padding: var(--space-4) var(--space-6); overflow-x: auto; overflow-y: hidden; background: var(--surface-1); border: 1px solid var(--rule); border-radius: var(--radius-lg); font-size: 1.12em; }
+.sg-lesson-body > .katex-display > .katex { font-size: 1.18em; }
+.katex-display[data-formula] { cursor: pointer; transition: border-color .15s, box-shadow .15s, background .15s; }
+.katex-display[data-formula]:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--rule)); box-shadow: var(--shadow-lift); }
+.katex-display[data-formula]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Значок «подробнее» — только у карточек, где формула кликабельна */
+.sg-lesson-body > .katex-display[data-formula]::after,
+.sg-exam-body .katex-display[data-formula]::after { content: "i"; position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--accent-soft); color: var(--accent-text); font: italic 700 12px/1 var(--font-serif); opacity: .55; transition: opacity .15s; }
+.katex-display[data-formula]:hover::after { opacity: 1; }
+.rz-steps .katex-display[data-formula], .rz-fcard .katex-display[data-formula] { border-radius: var(--radius-md); }
+.rz-steps .katex-display[data-formula]:hover, .rz-fcard .katex-display[data-formula]:hover { background: var(--accent-soft); }
+@media (max-width: 599px) {
+  .sg-lesson-body > .katex-display, .sg-exam-body .katex-display, .sg-sr-sheet .katex-display { padding: var(--space-3) var(--space-4); font-size: 1em; }
+  .sg-lesson-body > .katex-display > .katex { font-size: 1.08em; }
+}
+@media print { .katex-display::after { display: none !important; } .sg-lesson-body > .katex-display { border: 0; padding: 0; } }
+
+/* Общие правила диалогов: на телефоне — шторка снизу, на ноутбуке — по центру */
+.sg-formula-pop, .sg-search { width: min(720px, calc(100vw - 2 * var(--space-4))); max-height: min(88vh, 900px); margin: auto; padding: 0; border: 1px solid var(--rule); border-radius: var(--radius-xl); background: var(--surface-1); color: var(--ink); box-shadow: var(--shadow-pop); overflow: auto; overscroll-behavior: contain; }
+.sg-formula-pop::backdrop, .sg-search::backdrop { background: color-mix(in srgb, #050a10 55%, transparent); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+.sg-formula-pop[open], .sg-search[open] { animation: sg-pop .18s ease-out; }
+@keyframes sg-pop { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: none; } }
+@media (max-width: 599px) {
+  .sg-formula-pop { width: 100vw; max-width: 100vw; max-height: 90vh; margin: auto 0 0; border-radius: var(--radius-xl) var(--radius-xl) 0 0; border-bottom: 0; }
+  .sg-search { width: 100vw; max-width: 100vw; max-height: 100dvh; height: 100dvh; margin: 0; border-radius: 0; border: 0; }
+}
+
+/* Попап формулы */
+.sg-fp { display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-6); }
+.sg-fp-head { position: sticky; top: calc(-1 * var(--space-6)); z-index: 1; display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-4); margin: calc(-1 * var(--space-6)) calc(-1 * var(--space-6)) 0; padding: var(--space-6) var(--space-6) var(--space-3); background: var(--surface-1); }
+.sg-fp-title { margin: 4px 0 0; font: 800 24px/30px var(--font-sans); letter-spacing: -.02em; }
+.sg-fp-formula { padding: var(--space-6) var(--space-4); overflow-x: auto; border-radius: var(--radius-lg); background: linear-gradient(135deg, var(--accent-soft), color-mix(in srgb, var(--signal-soft) 60%, var(--surface-1))); text-align: center; }
+.sg-fp-formula .katex-display { margin: 0; }
+.sg-fp-formula .katex { font-size: 1.7em; }
+.sg-fp-formula [data-s], .sg-bigf-tex [data-s] { border-radius: 4px; cursor: help; transition: background .15s, color .15s, box-shadow .15s; }
+.sg-fp-formula [data-s].is-on, .sg-bigf-tex [data-s].is-on { background: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--accent-text); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+.sg-fp-hint { min-height: 44px; margin: 0; padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); background: var(--surface-2); font: 500 14px/20px var(--font-sans); color: var(--ink); }
+.sg-fp-meaning { margin: 0; font: 400 17px/28px var(--font-serif); }
+.sg-fp-meaning.is-muted { color: var(--ink-muted); }
+.sg-fp section { display: flex; flex-direction: column; gap: var(--space-2); }
+.sg-fp h3 { margin: 0; font: 750 13px/18px var(--font-sans); letter-spacing: .05em; text-transform: uppercase; color: var(--ink-muted); }
+.sg-fp p { margin: 0; font: 400 16px/26px var(--font-serif); }
+.sg-fp-symbols { width: 100%; border-collapse: separate; border-spacing: 0 4px; font: 500 14px/20px var(--font-sans); }
+.sg-fp-symbols tr { cursor: help; }
+.sg-fp-symbols :is(th, td) { padding: 8px 10px; background: var(--surface-2); vertical-align: top; transition: background .15s; }
+.sg-fp-symbols th { width: 1%; white-space: nowrap; border-radius: var(--radius-md) 0 0 var(--radius-md); text-align: center; font-size: 16px; }
+.sg-fp-symbols td:last-child { border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+.sg-fp-symbols tr.is-on :is(th, td), .sg-fp-symbols tr:focus-visible :is(th, td) { background: var(--accent-soft); }
+.sg-fp-symbols tr:focus-visible { outline: none; }
+.sg-fp-unit { width: 1%; white-space: nowrap; color: var(--ink-muted); }
+.sg-fp-example { padding: var(--space-3) var(--space-4); border-left: 3px solid var(--signal); background: var(--signal-soft); border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+.sg-fp-places { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; list-style: none; font: 600 14px/20px var(--font-sans); }
+.sg-fp-places a { display: flex; align-items: center; min-height: 40px; padding: 0 var(--space-3); border-radius: var(--radius-md); background: var(--surface-2); color: var(--accent-text); }
+.sg-fp-places a:hover { background: var(--accent-soft); }
+.sg-fp-foot { display: flex; gap: var(--space-2); padding-top: var(--space-2); border-top: 1px solid var(--rule); }
+.sg-fp .rz-steps { padding: var(--space-3) var(--space-4); border-radius: var(--radius-lg); }
+@media (max-width: 599px) { .sg-fp { padding: var(--space-4); } .sg-fp-head { top: calc(-1 * var(--space-4)); margin: calc(-1 * var(--space-4)) calc(-1 * var(--space-4)) 0; padding: var(--space-4) var(--space-4) var(--space-2); } .sg-fp-formula .katex { font-size: 1.3em; } }
+
+/* Большая формула на главной */
+.sg-bigf { display: flex; flex-direction: column; gap: var(--space-3); margin: 0; }
+.sg-bigf-btn { display: block; width: 100%; padding: var(--space-8) var(--space-4); border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--rule)); border-radius: var(--radius-xl); background: color-mix(in srgb, var(--surface-1) 75%, transparent); box-shadow: var(--shadow-lift); color: var(--ink); cursor: pointer; transition: transform .2s, box-shadow .2s; }
+.sg-bigf-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-pop); }
+.sg-bigf-tex { display: block; }
+.sg-bigf-tex .katex-display { margin: 0; }
+.sg-bigf-tex .katex { font-size: clamp(1.6em, 4.6vw, 2.6em); }
+.sg-bigf-cap { display: flex; align-items: baseline; gap: var(--space-3); min-height: 48px; padding: var(--space-2) var(--space-4); border-radius: var(--radius-lg); background: var(--surface-1); border: 1px solid var(--rule); font: 600 15px/22px var(--font-sans); }
+.sg-bigf-sym { flex: none; min-width: 28px; color: var(--accent-text); font-size: 1.2em; }
+.sg-bigf-note { font: 600 13px/18px var(--font-sans); color: var(--ink-muted); text-align: center; }
+
+/* Диалог поиска */
+.sg-search { max-width: 640px; }
+.sg-search-box { display: flex; flex-direction: column; max-height: inherit; }
+.sg-search-field { position: sticky; top: 0; display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--rule); background: var(--surface-1); }
+.sg-search-field svg { flex: none; width: 20px; height: 20px; fill: none; stroke: var(--ink-muted); stroke-width: 2.2; stroke-linecap: round; }
+.sg-search-field input { flex: 1; min-width: 0; height: 44px; border: 0; background: transparent; color: var(--ink); font: 600 17px/24px var(--font-sans); outline: none; }
+.sg-search-field input::-webkit-search-cancel-button { display: none; }
+.sg-search-esc { flex: none; min-height: 32px; padding: 0 10px; border: 1px solid var(--rule); border-radius: var(--radius-sm); background: var(--surface-2); color: var(--ink-muted); font: 700 12px/16px var(--font-sans); cursor: pointer; }
+.sg-search-list { padding: var(--space-2); overflow-y: auto; }
+.sg-search-empty { margin: 0; padding: var(--space-6) var(--space-4); text-align: center; font: 500 14px/22px var(--font-sans); color: var(--ink-muted); }
+.sg-search-group + .sg-search-group { margin-top: var(--space-2); }
+.sg-search-gtitle { padding: var(--space-2) var(--space-3) 4px; font: 750 11px/14px var(--font-sans); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-muted); }
+.sg-search-hit { display: flex; align-items: center; gap: var(--space-3); min-height: 52px; padding: 8px var(--space-3); border-radius: var(--radius-md); color: var(--ink); }
+.sg-search-hit[aria-selected="true"] { background: var(--accent-soft); }
+.sg-search-hit[aria-selected="true"] .sg-search-title { color: var(--accent-text); }
+.sg-search-ico { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: var(--radius-md); background: var(--surface-2); color: var(--ink-muted); font: 700 16px/1 var(--font-serif); }
+.sg-search-ico.is-lab { color: var(--accent-text); }
+.sg-search-ico.is-formula { color: var(--signal-text); font-style: italic; }
+.sg-search-text { display: flex; flex-direction: column; min-width: 0; }
+.sg-search-title { font: 650 15px/20px var(--font-sans); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sg-search-tex { overflow: hidden; white-space: nowrap; font-size: 13px; color: var(--ink-muted); }
+.sg-search-sub { font: 500 12px/16px var(--font-sans); color: var(--ink-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

@@ -41,6 +41,16 @@ const labSource = (path: string) => Object.entries(LAB_SOURCES).find(([p]) => p.
 const isLab = (path: string) => labSource(path).includes('<LabFrame');
 const isLab3D = (path: string) => isLab(path) && /kind="3D"/.test(labSource(path));
 
+/** Номер и название лабораторий урока — из их исходников (n="1.1", title="…" у LabFrame), для поиска. */
+export function lessonLabs(entry: { body?: string }): { n: string; title: string }[] {
+  const body = entry.body ?? '';
+  return [...body.matchAll(/^import\s+\w+\s+from\s+['"]@labs\/([\w/]+)['"]/gm)]
+    .map((m) => labSource(m[1]!))
+    .filter((src) => src.includes('<LabFrame'))
+    .map((src) => ({ n: /\bn="([\d.]+)"/.exec(src)?.[1] ?? '', title: /\btitle="([^"]+)"/.exec(src)?.[1] ?? '' }))
+    .filter((l) => l.n && l.title);
+}
+
 /** Лаборатории (пути из @labs), тренажёры и вопросы урока — по исходнику MDX. */
 export function lessonStats(entry: { body?: string }) {
   const body = entry.body ?? '';

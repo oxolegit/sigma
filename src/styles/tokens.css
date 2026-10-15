@@ -1,26 +1,37 @@
-/* Sigma — токены: светлая и тёмная тема, отступы, радиусы, шрифты */
+/* Sigma — токены: светлая и тёмная тема, отступы, радиусы, шрифты.
+   Акцент #1481BA — заливки, кривые, фокус; для текста акцентом — --accent-text (контраст AA на фоне).
+   Второй цвет — коралл: вторые серии на графиках, «что спросят», предупреждения. */
 :root, [data-theme="light"] {
-  --paper: #f6f4ee; --surface-1: #fffdf8; --surface-2: #eceae2; --rule: #d9d5c9; --rule-strong: #8f8a7c;
-  --ink: #1b1d21; --ink-muted: #5d6068;
-  --accent: #c2410c; --accent-strong: #9a3412; --accent-soft: #feefe3; --on-accent: #ffffff;
-  --signal: #6d3fd0; --signal-soft: #efe8fc;
-  --correct: #2f6b3a; --correct-soft: #e4efe3; --wrong: #b4233c; --wrong-soft: #f9e1e5;
-  --plot-grid: #d6d2c6;
-  --shadow-lift: 0 1px 2px rgba(27,29,33,0.06), 0 4px 12px rgba(27,29,33,0.06);
+  --paper: #f4f7fa; --surface-1: #ffffff; --surface-2: #eaf0f5; --surface-3: #dde6ee;
+  --rule: #dbe3ea; --rule-strong: #93a3b1;
+  --ink: #0f1b26; --ink-muted: #556575;
+  --accent: #1481ba; --accent-strong: #0d6896; --accent-text: #0e6c9c; --accent-soft: #e2f1fa; --on-accent: #ffffff;
+  --signal: #e8664a; --signal-text: #b8452c; --signal-soft: #fdebe6;
+  --correct: #23784a; --correct-soft: #e2f3e9; --wrong: #c0283f; --wrong-soft: #fbe5e8;
+  --plot-grid: #dfe6ec;
+  --glass: rgba(244, 247, 250, 0.78);
+  --hero-glow: radial-gradient(60% 80% at 80% 10%, rgba(20, 129, 186, 0.16), transparent 70%), radial-gradient(50% 60% at 10% 90%, rgba(232, 102, 74, 0.10), transparent 70%);
+  --shadow-lift: 0 1px 2px rgba(15, 27, 38, 0.05), 0 6px 20px rgba(15, 27, 38, 0.07);
+  --shadow-pop: 0 12px 40px rgba(15, 27, 38, 0.18);
 }
 [data-theme="dark"] {
-  --paper: #14161a; --surface-1: #1c1f24; --surface-2: #23272d; --rule: #343a42; --rule-strong: #6b727c;
-  --ink: #ecebe6; --ink-muted: #a3a6ad;
-  --accent: #ff8a3d; --accent-strong: #ffb07a; --accent-soft: #3b2112; --on-accent: #1f1206;
-  --signal: #b69cff; --signal-soft: #2a2045;
-  --correct: #7cc489; --correct-soft: #1c2e20; --wrong: #ff8a9a; --wrong-soft: #3a1a20;
-  --plot-grid: #353b43;
-  --shadow-lift: 0 1px 2px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+  --paper: #0d1218; --surface-1: #141b23; --surface-2: #1b242e; --surface-3: #243040;
+  --rule: #263240; --rule-strong: #5b6b7b;
+  --ink: #e8eef3; --ink-muted: #9aa8b5;
+  --accent: #4fb3e6; --accent-strong: #84cbef; --accent-text: #6cc0ec; --accent-soft: #10293a; --on-accent: #06202f;
+  --signal: #ff8f73; --signal-text: #ff9c84; --signal-soft: #3a1d16;
+  --correct: #6fcf97; --correct-soft: #13291d; --wrong: #ff8597; --wrong-soft: #3a1820;
+  --plot-grid: #233040;
+  --glass: rgba(13, 18, 24, 0.78);
+  --hero-glow: radial-gradient(60% 80% at 80% 10%, rgba(79, 179, 230, 0.20), transparent 70%), radial-gradient(50% 60% at 10% 90%, rgba(255, 143, 115, 0.10), transparent 70%);
+  --shadow-lift: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 20px rgba(0, 0, 0, 0.35);
+  --shadow-pop: 0 16px 48px rgba(0, 0, 0, 0.6);
 }
 :root {
   --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-6: 24px; --space-8: 32px; --space-12: 48px; --space-16: 64px;
-  --radius-sm: 3px; --radius-md: 6px; --radius-lg: 10px; --radius-pill: 999px;
-  --measure: 68ch; --sidebar: 264px; --content-max: 1200px; --breakpoint: 900px;
-  --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --radius-sm: 6px; --radius-md: 10px; --radius-lg: 16px; --radius-xl: 24px; --radius-pill: 999px;
+  --measure: 70ch; --sidebar: 264px; --content-max: 1240px; --breakpoint: 900px;
+  --header-h: 60px;
+  --font-sans: "Manrope Variable", "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "IBM Plex Serif", Georgia, "Times New Roman", serif;
 }

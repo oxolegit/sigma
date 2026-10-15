@@ -33,22 +33,23 @@ export default function BraggLab() {
   const [T0, setT0] = useState(6.5);
   const P = PARTICLES[kind];
   const t = useMemo(() => track(P.m, P.z, T0), [kind, T0]);
+  // Оси — по самой большой энергии ползунка: при движении T₀ шкала стоит, меняется только кривая.
+  const scale = useMemo(() => { const m = track(P.m, P.z, 10); return { x: m.range * 1.05, y: Math.max(...m.pts.map((p) => p.loss)) * 1.12 }; }, [kind]);
   const first = T0 - (t.pts.find((p) => p.x >= 1)?.T ?? 0);
   const last = t.pts.find((p) => p.x >= t.range - 1)?.T ?? 0;
   const emp = kind === 'alpha' ? alphaRangeAir(T0) : protonRangeAir(T0);
 
   const ref = useCanvas((g, w, h) => {
-    const xMax = Math.max(1.5, t.range * 1.08);
-    const yMax = Math.max(...t.pts.map((p) => p.loss)) * 1.15;
+    const xMax = scale.x, yMax = scale.y;
     const xt = niceTicks(0, xMax, 6), yt = niceTicks(0, yMax, 5);
     const f = drawFrame(g, w, h, { min: 0, max: xMax, ticks: xt, format: tickFormat(xt), label: 'x, см воздуха' }, { min: 0, max: yMax, ticks: yt, format: tickFormat(yt), label: 'МэВ/см' });
     f.clip(() => {
       vband(g, f, 0, 1, token(SERIES.ends.color), 0.14);
       vband(g, f, Math.max(0, t.range - 1), t.range, token(SERIES.ends.color), 0.14);
-      strokeCurve(g, t.pts.map((p) => [f.X(p.x), f.Y((p.T / T0) * yMax * 0.9)]), token(SERIES.energy.color), 1.8, [6, 5]);
+      strokeCurve(g, t.pts.map((p) => [f.X(p.x), f.Y((p.T / 10) * yMax * 0.9)]), token(SERIES.energy.color), 1.8, [6, 5]);
       strokeCurve(g, t.pts.map((p) => [f.X(p.x), f.Y(p.loss)]), token(SERIES.loss.color), 2.4);
     });
-  }, [t]);
+  }, [t, scale]);
 
   return (
     <LabFrame

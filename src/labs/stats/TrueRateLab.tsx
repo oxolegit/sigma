@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { LabFrame, Slider, type LegendItem } from '../../components';
 import { useCanvas } from '../../lib/canvas';
-import { decadeLabel, decadeTicks, drawFrame, niceTicks, strokeCurve, tickFormat } from '../../lib/plot';
+import { decadeLabel, decadeTicks, drawFrame, niceTicks, strokeCurve, tickFormat, stepCeil } from '../../lib/plot';
 import { token } from '../../lib/theme';
 import { dot, hline } from './draw';
 import { measuredParalyzable, paralyzableIterations, paralyzableRoots, secondOrderRoots, trueRate } from './poisson';
@@ -30,7 +30,7 @@ export default function TrueRateLab() {
   const ref = useCanvas((g, w, h) => {
     const xmin = Math.max(1, m / 4), xmax = 40 / tau;
     const peak = measuredParalyzable(1 / tau, tau);
-    const ymax = Math.max(peak, m) * 1.25;
+    const ymax = stepCeil(Math.max(peak, m) * 1.25);
     const xt = decadeTicks(xmin, xmax), yt = niceTicks(0, ymax, 4);
     const f = drawFrame(g, w, h, { min: xmin, max: xmax, ticks: xt, format: decadeLabel, label: 'истинная ν_и, с⁻¹', log: true }, { min: 0, max: ymax, ticks: yt, format: tickFormat(yt), label: 'ν_д, с⁻¹' });
     f.clip(() => {

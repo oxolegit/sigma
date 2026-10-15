@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Button, LabFrame, Slider, type LegendItem } from '../../components';
 import { useCanvas } from '../../lib/canvas';
-import { drawFrame, niceTicks, strokeCurve, tickFormat } from '../../lib/plot';
+import { drawFrame, niceTicks, strokeCurve, tickFormat, stepCeil } from '../../lib/plot';
 import { mulberry32 } from '../../lib/rng';
 import { token } from '../../lib/theme';
 import { poissonPmf, samplePoisson, sampleStats } from './ensemble';
@@ -44,7 +44,7 @@ export default function PoissonDetector() {
     }
     for (const x of xs) { const b = Math.floor((x - lo) / bw); if (b >= 0 && b < nb) counts[b]!++; }
     const share = counts.map((c) => c / RUNS);
-    const ymax = Math.max(...theory, ...share) * 1.15;
+    const ymax = stepCeil(Math.max(...theory, ...share) * 1.15);
     const xmax = lo + nb * bw;
     const xt = niceTicks(lo, xmax, w < 480 ? 4 : 7), yt = niceTicks(0, ymax, 4);
     const f = drawFrame(

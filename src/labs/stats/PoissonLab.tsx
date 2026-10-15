@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { LabFrame, Slider, type LegendItem } from '../../components';
 import { useCanvas } from '../../lib/canvas';
-import { drawFrame, markerLine, niceTicks, strokeCurve, tickFormat } from '../../lib/plot';
+import { drawFrame, markerLine, niceTicks, strokeCurve, tickFormat, stepCeil } from '../../lib/plot';
 import { token } from '../../lib/theme';
 import { gauss } from './density';
 import { bars, fnPath } from './draw';
@@ -26,7 +26,7 @@ export default function PoissonLab() {
 
   const ref = useCanvas((g, w, h) => {
     const ps = Array.from({ length: nmax + 1 }, (_, n) => poissonPmf(lambda, n));
-    const ymax = Math.max(...ps) * 1.2;
+    const ymax = stepCeil(Math.max(...ps) * 1.2);
     const xt = niceTicks(0, nmax, w < 480 ? 6 : 12), yt = niceTicks(0, ymax, 4);
     const f = drawFrame(g, w, h, { min: -0.6, max: nmax + 0.6, ticks: xt, format: tickFormat(xt), label: 'n' }, { min: 0, max: ymax, ticks: yt, format: tickFormat(yt), label: 'Pₙ' });
     f.clip(() => {

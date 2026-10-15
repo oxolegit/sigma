@@ -7,6 +7,8 @@ const makeVariant = (work: number, v: number) => anyVariant('stats', work, v);
 const lab = async (page: Page, n: string) => hydrated(page.locator('.rz-lab').filter({ hasText: `Лаборатория ${n}` }));
 
 test('математическая статистика: все уроки и самостоятельные без прокрутки вбок, битого TeX и ошибок', async ({ page }) => {
+  // Десять страниц с десятками островов — дольше стандартных 30 с.
+  test.setTimeout(120_000);
   await page.goto('/stats/');
   const hrefs = await page.locator('a.sg-outline-row').evaluateAll((as) => as.map((a) => a.getAttribute('href')!));
   expect(hrefs).toHaveLength(10);

@@ -46,56 +46,70 @@ function Swatch({ color, mark = 'line' }: Pick<LegendItem, 'color' | 'mark'>) {
   );
 }
 
-/** Рамка лаборатории: метка, заголовок, сцена, легенда, строка чисел (объявляется скринридером), ручки, подпись. */
+/**
+ * Рамка лаборатории. На широкой рамке — сцена слева, панель (числа, ручки, вывод) справа рядом с ней;
+ * на узкой — сцена прилипает к верху экрана, пока под ней крутят ручки.
+ * Порядок в панели продуман против «прыжков»: числа — сетка ячеек постоянной ширины, вывод словами — после ручек,
+ * поэтому смена текста не сдвигает ползунок под пальцем. Легенда и подпись — под сценой, вне панели.
+ */
 export function LabFrame({ n, title, kind, readout, legend, controls, actions, caption, children, status, stage = 'figure', table }: LabFrameProps) {
+  const hasPanel = !!(readout || table || controls || status);
   return (
-    <figure className={cx('rz-lab', kind === '3D' && 'rz-lab-3d')}>
+    <figure id={n ? `lab-${n}` : undefined} className={cx('rz-lab', kind === '3D' && 'rz-lab-3d', !hasPanel && 'is-bare')}>
       <figcaption className="rz-lab-head">
         <span className="rz-lab-tag">{'Лаборатория' + (n ? ` ${n}` : '') + (kind ? ` · ${kind}` : '')}</span>
         <span className="rz-lab-title">{title}</span>
         {actions && <span className="rz-lab-actions">{actions}</span>}
       </figcaption>
-      <div className={cx('rz-lab-stage', stage !== 'figure' && `is-${stage}`)}>{children}</div>
-      {legend && (
-        <ul className="rz-lab-legend" aria-label="Легенда">
-          {legend.map((it, i) => {
-            const body = <>
-              <Swatch color={it.color} mark={it.mark} />
-              <span className="rz-legend-label">{it.label}</span>
-              {it.value !== undefined && <span className="rz-legend-value">{it.value}</span>}
-            </>;
-            return (
-              <li key={i}>
-                {it.onToggle ? (
-                  <button type="button" className={cx('rz-legend-item', it.hidden && 'is-hidden')} aria-pressed={!it.hidden} onClick={it.onToggle}>{body}</button>
-                ) : (
-                  <span className="rz-legend-item">{body}</span>
-                )}
-              </li>
-            );
-          })}
-        </ul>
-      )}
-      {readout && (
-        <div className="rz-lab-readout" aria-live="polite">
-          {readout.map((r, i) => (
-            <span key={i} className="rz-readout">
-              <span className="rz-readout-k">{r.tex ? <TeX tex={r.tex} /> : r.label}</span>
-              <span className="rz-readout-v">{r.value}</span>
-              {r.unit && <span className="rz-readout-u">{r.unit}</span>}
-            </span>
-          ))}
-        </div>
-      )}
-      {table && <div className="rz-lab-table">{table}</div>}
-      {status && (
-        <p className={`rz-lab-status is-${status.tone}`} role="status">
-          <span className="rz-lab-status-mark" aria-hidden="true">{STATUS_MARK[status.tone]}</span>
-          <span><Rich>{status.text}</Rich></span>
-        </p>
-      )}
-      {controls && <div className="rz-lab-controls">{controls}</div>}
-      {caption && <p className="rz-lab-caption"><Rich>{caption}</Rich></p>}
+      <div className="rz-lab-body">
+        <div className={cx('rz-lab-stage', stage !== 'figure' && `is-${stage}`)}>{children}</div>
+        {hasPanel && (
+          <div className="rz-lab-panel">
+            {readout && (
+              <div className="rz-lab-readout" aria-live="polite">
+                {readout.map((r, i) => (
+                  <span key={i} className="rz-readout">
+                    <span className="rz-readout-k">{r.tex ? <TeX tex={r.tex} /> : r.label}</span>
+                    <span className="rz-readout-line">
+                      <span className="rz-readout-v">{r.value}</span>
+                      {r.unit && <span className="rz-readout-u">{r.unit}</span>}
+                    </span>
+                  </span>
+                ))}
+              </div>
+            )}
+            {table && <div className="rz-lab-table">{table}</div>}
+            {controls && <div className="rz-lab-controls">{controls}</div>}
+            {status && (
+              <p className={`rz-lab-status is-${status.tone}`} role="status">
+                <span className="rz-lab-status-mark" aria-hidden="true">{STATUS_MARK[status.tone]}</span>
+                <span><Rich>{status.text}</Rich></span>
+              </p>
+            )}
+          </div>
+        )}
+        {legend && (
+          <ul className="rz-lab-legend" aria-label="Легенда">
+            {legend.map((it, i) => {
+              const body = <>
+                <Swatch color={it.color} mark={it.mark} />
+                <span className="rz-legend-label">{it.label}</span>
+                {it.value !== undefined && <span className="rz-legend-value">{it.value}</span>}
+              </>;
+              return (
+                <li key={i}>
+                  {it.onToggle ? (
+                    <button type="button" className={cx('rz-legend-item', it.hidden && 'is-hidden')} aria-pressed={!it.hidden} onClick={it.onToggle}>{body}</button>
+                  ) : (
+                    <span className="rz-legend-item">{body}</span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+        {caption && <p className="rz-lab-caption"><Rich>{caption}</Rich></p>}
+      </div>
     </figure>
   );
 }

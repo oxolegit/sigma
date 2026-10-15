@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Button, LabFrame, Select, Slider, type LegendItem } from '../../components';
 import { useCanvas } from '../../lib/canvas';
-import { drawFrame, niceTicks, strokeCurve, tickFormat } from '../../lib/plot';
+import { drawFrame, niceTicks, strokeCurve, tickFormat, stepCeil } from '../../lib/plot';
 import { mulberry32 } from '../../lib/rng';
 import { token } from '../../lib/theme';
 import { histogram, sampleMoments } from './core';
@@ -40,7 +40,7 @@ export default function HistogramDensity() {
     const dens = counts.map((c) => c / (n * bw));
     let fmax = 0;
     for (let i = 0; i <= 400; i++) fmax = Math.max(fmax, d.f(v0 + ((v1 - v0) * i) / 400));
-    const ymax = Math.max(fmax, ...dens) * 1.15;
+    const ymax = stepCeil(Math.max(fmax, ...dens) * 1.15);
     const xt = niceTicks(v0, v1, w < 480 ? 5 : 8), yt = niceTicks(0, ymax, 4);
     const f = drawFrame(g, w, h, { min: v0, max: v1, ticks: xt, format: tickFormat(xt), label: 'x' }, { min: 0, max: ymax, ticks: yt, format: tickFormat(yt), label: 'плотность' });
     f.clip(() => {
