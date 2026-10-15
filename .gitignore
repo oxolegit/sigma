@@ -7,3 +7,6 @@ dist/
 Thumbs.db
 test-results/
 playwright-report/
+
+# Материалы к курсам: презентации, учебники — не для репозитория
+stash/
