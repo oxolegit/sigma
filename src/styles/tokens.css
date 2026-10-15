@@ -10,7 +10,7 @@
   --correct: #23784a; --correct-soft: #e2f3e9; --wrong: #c0283f; --wrong-soft: #fbe5e8;
   --plot-grid: #dfe6ec;
   --glass: rgba(244, 247, 250, 0.78);
-  --hero-glow: radial-gradient(60% 80% at 80% 10%, rgba(20, 129, 186, 0.16), transparent 70%), radial-gradient(50% 60% at 10% 90%, rgba(232, 102, 74, 0.10), transparent 70%);
+  --dot: rgba(15, 27, 38, 0.13);
   --shadow-lift: 0 1px 2px rgba(15, 27, 38, 0.05), 0 6px 20px rgba(15, 27, 38, 0.07);
   --shadow-pop: 0 12px 40px rgba(15, 27, 38, 0.18);
 }
@@ -23,7 +23,7 @@
   --correct: #6fcf97; --correct-soft: #13291d; --wrong: #ff8597; --wrong-soft: #3a1820;
   --plot-grid: #233040;
   --glass: rgba(13, 18, 24, 0.78);
-  --hero-glow: radial-gradient(60% 80% at 80% 10%, rgba(79, 179, 230, 0.20), transparent 70%), radial-gradient(50% 60% at 10% 90%, rgba(255, 143, 115, 0.10), transparent 70%);
+  --dot: rgba(232, 238, 243, 0.09);
   --shadow-lift: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 20px rgba(0, 0, 0, 0.35);
   --shadow-pop: 0 16px 48px rgba(0, 0, 0, 0.6);
 }

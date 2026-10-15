@@ -5,6 +5,7 @@ import CourseCatalog from '../components/live/CourseCatalog';
 import ContinueCard from '../components/live/ContinueCard';
 import SlabMC3D from '../labs/tpn/SlabMC3D';
 import BigFormula from '../components/live/BigFormula';
+import DotField from '../components/live/DotField';
 import { getEntry } from 'astro:content';
 import { getCourse, listCourses, siteStats } from '../lib/courses';
 import { plural } from '../lib/plural';
@@ -46,6 +47,7 @@ const features: { mark: string; title: string; text: string; wide?: boolean; ton
 <Base title={SITE.title} description={SITE.description} type="website">
   <div class="sg-page">
     <SiteHeader current="courses" />
+    <DotField client:idle />
 
     <section class="sg-hero">
       <div class="sg-hero-text">
@@ -138,11 +140,10 @@ const features: { mark: string; title: string; text: string; wide?: boolean; ton
 
 <style is:global>
   .sg-hero { position: relative; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: center; gap: var(--space-8) var(--space-12); padding: 72px 0 48px; }
-  .sg-hero::before { content: ""; position: absolute; inset: -40px 0 0; z-index: -1; background: var(--hero-glow); pointer-events: none; }
   .sg-hero-text { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4); min-width: 0; }
   .sg-pill { display: inline-flex; align-items: center; min-height: 32px; padding: 0 14px; border: 1px solid var(--rule); border-radius: var(--radius-pill); background: var(--surface-1); font: 650 13px/18px var(--font-sans); color: var(--ink-muted); }
   .sg-hero h1 { margin: 0; font: 800 clamp(36px, 5.6vw, 68px)/1.02 var(--font-sans); letter-spacing: -0.04em; text-wrap: balance; }
-  .sg-grad { background: linear-gradient(100deg, var(--accent), color-mix(in srgb, var(--accent) 45%, var(--signal)) 60%, var(--signal)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .sg-grad { color: var(--accent-text); text-decoration: underline wavy var(--signal); text-decoration-thickness: 3px; text-underline-offset: 10px; text-decoration-skip-ink: none; }
   .sg-hero p { margin: 0; max-width: 34em; font: 400 19px/31px var(--font-serif); color: var(--ink-muted); }
   .sg-hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-2); }
   .sg-hero-art { min-width: 0; }
@@ -167,7 +168,7 @@ const features: { mark: string; title: string; text: string; wide?: boolean; ton
   .sg-bento li { display: flex; flex-direction: column; gap: var(--space-2); padding: 24px; background: var(--surface-1); border: 1px solid var(--rule); border-radius: var(--radius-xl); transition: transform .2s, box-shadow .2s; }
   .sg-bento li:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); }
   .sg-bento li.is-wide { grid-column: span 2; }
-  .sg-bento li.is-accent { background: linear-gradient(140deg, #1481ba, #0b4f75); border-color: transparent; color: #ffffff; }
+  .sg-bento li.is-accent { background: #1481ba; border-color: transparent; color: #ffffff; }
   .sg-bento li.is-accent p { color: rgba(255, 255, 255, .86); }
   .sg-bento li.is-accent .sg-feature-mark { background: rgba(255, 255, 255, .18); color: #ffffff; }
   .sg-bento li.is-signal { background: var(--signal-soft); border-color: color-mix(in srgb, var(--signal) 30%, transparent); }
@@ -179,8 +180,9 @@ const features: { mark: string; title: string; text: string; wide?: boolean; ton
   .sg-land-catalog { scroll-margin-top: var(--header-h); }
   .sg-land-note { margin: var(--space-4) 0 0; font: 500 15px/24px var(--font-sans); color: var(--ink-muted); }
 
-  .sg-split-land { display: grid; grid-template-columns: 300px 1fr; gap: var(--space-4) var(--space-12); padding: var(--space-8); background: var(--surface-1); border: 1px solid var(--rule); border-radius: var(--radius-xl); }
-  .sg-split-land .sg-land-head { margin: 0; }
+  .sg-split-land { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: var(--space-4) var(--space-12); padding: var(--space-8); background: var(--surface-1); border: 1px solid var(--rule); border-radius: var(--radius-xl); }
+  .sg-split-land .sg-land-head { margin: 0; min-width: 0; }
+  .sg-split-land .sg-land-head h2 { flex: 1 1 auto; min-width: 0; font-size: clamp(26px, 2.6vw, 34px); overflow-wrap: anywhere; }
   .sg-land-body { max-width: var(--measure); }
   .sg-land-body p { margin: 0 0 14px; font: 400 17px/28px var(--font-serif); color: var(--ink-muted); }
   .sg-stack { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-4) 0; padding: 0; list-style: none; }

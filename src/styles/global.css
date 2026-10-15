@@ -13,12 +13,16 @@
 *, *::before, *::after { box-sizing: border-box; }
 html { color-scheme: light; scroll-padding-top: calc(var(--header-h) + var(--space-4)); }
 html[data-theme="dark"] { color-scheme: dark; }
-body { margin: 0; background: var(--paper); color: var(--ink); font: 450 15px/22px var(--font-sans); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+body { margin: 0; background: radial-gradient(circle at 1px 1px, var(--dot) 1.1px, transparent 1.6px) 0 0 / 24px 24px, var(--paper); color: var(--ink); font: 450 15px/22px var(--font-sans); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 a { color: var(--ink); text-decoration: none; transition: color .15s; }
 a:hover { color: var(--accent-text); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 ::selection { background: color-mix(in srgb, var(--accent) 28%, transparent); }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+
+/* Живые точки главной поверх точечного фона: весь экран, не ловят события */
+.sg-dotfield { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; }
+@media print { body { background: var(--paper); } .sg-dotfield { display: none; } }
 
 /* Оглавление: урок ещё не написан */
 .rz-nav-item.is-soon { color: var(--ink-muted); cursor: default; }
