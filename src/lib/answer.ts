@@ -26,13 +26,14 @@ export type AnswerVerdict = 'ok' | 'close' | 'wrong' | 'unreadable';
 /**
  * Верно, если ответ отличается от эталона не больше чем на tol (доля, по умолчанию 2 %).
  * «close» — в пределах 10 %: скорее всего, ошибка округления или промежуточного шага.
+ * abs — абсолютный допуск для ответов около нуля (сдвиг прямой, среднее со знаком).
  */
-export function checkAnswer(input: string, value: number, tol = 0.02): AnswerVerdict {
+export function checkAnswer(input: string, value: number, tol = 0.02, abs = 0): AnswerVerdict {
   const u = parseAnswer(input);
   if (!Number.isFinite(u)) return 'unreadable';
   const d = Math.abs(u - value);
   const scale = Math.abs(value) || 1;
-  if (d <= tol * scale + 1e-12) return 'ok';
+  if (d <= Math.max(tol * scale, abs) + 1e-12) return 'ok';
   if (d <= 0.1 * scale) return 'close';
   return 'wrong';
 }

@@ -8,6 +8,7 @@ import LiveCourseProgress from '../../components/live/LiveCourseProgress';
 import Literature from '../../components/Literature.astro';
 import { examHref, getCourse, lessonStats, sheetHref, type CourseData } from '../../lib/courses';
 import { plural } from '../../lib/plural';
+import { FIXED_VARIANTS } from '../../labs/stats/variants';
 
 export async function getStaticPaths() {
   const courses = (await getCollection('courses')).filter((c) => !c.data.example);
@@ -33,19 +34,19 @@ const written = data.lessons.filter((l) => l.href).map((l) => ({ n: l.n, href: l
 // Самостоятельные: что покрывают и сколько в них задач.
 const works = data.works.map((w) => {
   const st = lessonStats(w.entry);
-  const tasks = st.tasks + st.solved;
+  // Вариант — задачи с генерацией чисел, четыре фиксированных варианта и случайные; иначе — все задачи страницы.
+  const tasks = st.variant ? `вариант из ${st.tasks} ${plural(st.tasks, 'задачи', 'задач', 'задач')}, ${FIXED_VARIANTS} варианта и случайные` : `${st.tasks + st.solved} ${plural(st.tasks + st.solved, 'задача', 'задачи', 'задач')}`;
   const from = w.entry.data.lessons;
   return {
     n: w.n, href: w.href, title: w.entry.data.title, scope: w.entry.data.scope,
-    meta: [from.length ? `уроки ${Math.min(...from)}–${Math.max(...from)}` : '', `${tasks} ${plural(tasks, 'задача', 'задачи', 'задач')}`].filter(Boolean).join(' · '),
+    meta: [from.length ? `уроки ${Math.min(...from)}–${Math.max(...from)}` : '', tasks].filter(Boolean).join(' · '),
   };
 });
-const workTasks = data.works.reduce((sum, w) => sum + lessonStats(w.entry).tasks, 0);
 const stats = [
   [data.lessons.length, plural(data.lessons.length, 'урок', 'урока', 'уроков')],
   [data.labs, labWord(data.labs)],
   ...(examQuestions ? [[examQuestions, 'в контрольной']] : []),
-  ...(workTasks ? [[workTasks, 'задач в СР']] : []),
+  ...(data.works.length ? [[data.works.length, plural(data.works.length, 'самостоятельная', 'самостоятельные', 'самостоятельных')]] : []),
 ] as [number, string][];
 ---
 <Base title={`${c.title} — Sigma`} description={c.description}>

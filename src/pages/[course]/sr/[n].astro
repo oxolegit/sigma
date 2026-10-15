@@ -43,9 +43,11 @@ const others = data.works.filter((w) => w.n !== work.n);
         )}
       </div>
 
-      <div class="sg-exam-sticky">
-        <ExamScore client:load total={total} />
-      </div>
+      {!s.variant && total > 0 && (
+        <div class="sg-exam-sticky">
+          <ExamScore client:load total={total} />
+        </div>
+      )}
 
       <div class="sg-exam-body">
         <Content />

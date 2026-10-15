@@ -1,5 +1,6 @@
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
 import type { NavLesson } from '../components';
+import { variantSize } from '../labs/stats/variants';
 
 type Formula = { title: string; tex: string; note?: string };
 export type Source = { id: string; cite: string; url?: string; note?: string };
@@ -49,8 +50,11 @@ export function lessonStats(entry: { body?: string }) {
     labs3d: labPaths.filter(isLab3D).length,
     trainers: (body.match(/<Trainer\b/g) ?? []).length,
     questions: (body.match(/<(?:Exam)?Quiz\b/g) ?? []).length,
-    /** Задачи с проверкой ответа (в самостоятельных). */
-    tasks: (body.match(/<SrTask\b/g) ?? []).length,
+    /** Задачи с проверкой ответа (в самостоятельных): отдельные и задачи одного варианта SrVariant. */
+    tasks: (body.match(/<SrTask\b/g) ?? []).length
+      + [...body.matchAll(/<SrVariant\b[^>]*work=\{(\d+)\}/g)].reduce((s, m) => s + variantSize(Number(m[1])), 0),
+    /** Есть ли вариант со своим счётом. */
+    variant: /<SrVariant\b/.test(body),
     /** Задачи с пошаговым решением. */
     solved: (body.match(/<Steps\b/g) ?? []).length,
   };

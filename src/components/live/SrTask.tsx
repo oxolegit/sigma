@@ -10,12 +10,16 @@ export interface SrAnswer {
   value: number;
   /** Допуск — доля от ответа; по умолчанию 2 %. */
   tol?: number;
+  /** Абсолютный допуск — для ответов около нуля. */
+  abs?: number;
   unit?: string;
 }
 
 interface Props {
   /** Номер задачи: «1.2». */
   n: string;
+  /** Тема задачи — рядом с номером. */
+  title?: string;
   /** Условие с формулами в `$…$`. */
   q: string;
   answers: SrAnswer[];
@@ -37,7 +41,7 @@ const MESSAGE: Record<AnswerVerdict, string> = {
  * Задача самостоятельной: решаете на бумаге, вводите числа — проверка с допуском на округление.
  * В общий счёт идёт задача, решённая до того, как открыт ответ.
  */
-export default function SrTask({ n, q, answers, answer, hint, solution }: Props) {
+export default function SrTask({ n, title, q, answers, answer, hint, solution }: Props) {
   const id = useId();
   const [inputs, setInputs] = useState(() => answers.map(() => ''));
   const [verdicts, setVerdicts] = useState<(AnswerVerdict | null)[]>(() => answers.map(() => null));
@@ -45,7 +49,7 @@ export default function SrTask({ n, q, answers, answer, hint, solution }: Props)
   const [state, setState] = useState<'open' | 'solved' | 'revealed'>('open');
 
   const check = () => {
-    const v = answers.map((a, i) => (inputs[i]!.trim() ? checkAnswer(inputs[i]!, a.value, a.tol) : null));
+    const v = answers.map((a, i) => (inputs[i]!.trim() ? checkAnswer(inputs[i]!, a.value, a.tol, a.abs) : null));
     setVerdicts(v);
     if (state !== 'open') return;
     const all = v.every((x) => x === 'ok');
@@ -62,6 +66,7 @@ export default function SrTask({ n, q, answers, answer, hint, solution }: Props)
     <section className="sg-trainer sg-sr-task" aria-labelledby={`${id}-h`}>
       <header className="sg-trainer-head">
         <span className="rz-lab-tag" id={`${id}-h`}>Задача {n}</span>
+        {title && <span className="sg-trainer-title">{title}</span>}
         <span className="sg-trainer-score" aria-live="polite">
           {state === 'solved' ? '✓ решена' : state === 'revealed' ? 'ответ открыт' : ''}
         </span>
