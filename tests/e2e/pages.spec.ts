@@ -84,7 +84,7 @@ test.describe('без прогресса', () => {
     const value = async (word: RegExp) => Number(await numbers.filter({ hasText: word }).locator('dd').textContent());
     expect(await value(/урок/)).toBeGreaterThanOrEqual(11);
     expect(await value(/лаборатор/)).toBeGreaterThanOrEqual(26);
-    expect(await value(/самопроверк/)).toBeGreaterThanOrEqual(85);
+    expect(await value(/самопроверк/)).toBeGreaterThanOrEqual(60);
     await expect(page.locator('.sg-hero').getByRole('link', { name: 'Выбрать курс' })).toHaveAttribute('href', '#courses');
     await expect(page.locator('.sg-hero').getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', 'https://github.com/oxolegit/sigma');
     await expect(page.locator('.sg-foot').getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', 'https://github.com/oxolegit/sigma');

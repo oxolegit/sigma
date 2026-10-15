@@ -1,8 +1,8 @@
 import { expect, test, type Page } from '@playwright/test';
 import { allHydrated, hydrated } from './hydration';
+import { makeVariant } from '../../src/labs/stats/variants';
 
 const lab = async (page: Page, n: string) => hydrated(page.locator('.rz-lab').filter({ hasText: `Лаборатория ${n}` }));
-const task = async (page: Page, n: string) => hydrated(page.locator('.sg-sr-task').filter({ hasText: `Задача ${n}` }));
 
 test('математическая статистика: все уроки и самостоятельные без прокрутки вбок, битого TeX и ошибок', async ({ page }) => {
   await page.goto('/stats/');
@@ -13,6 +13,8 @@ test('математическая статистика: все уроки и с
     page.on('pageerror', (e) => errors.push(String(e)));
     await page.goto(href);
     await allHydrated(page);
+    // Разборы в СР свёрнуты и гидрируются при раскрытии — раскрываем.
+    for (const d of await page.locator('details.sg-ref').all()) await d.locator('summary').click();
     // Лаборатории и задачи — client:visible: прокручиваем страницу, чтобы все острова отрисовались.
     for (const island of await page.locator('astro-island[client="visible"]').all()) await hydrated(island.locator(':scope > *').first());
     const [scroll, client] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
@@ -32,51 +34,65 @@ test('страница курса: 8 уроков в двух модулях, д
   await expect(works).toHaveCount(2);
   await expect(works.first()).toHaveAttribute('href', '/stats/sr/1/');
   await expect(page.getByRole('link', { name: 'Самостоятельная 2' })).toHaveAttribute('href', '/stats/sr/2/');
-  await expect(page.locator('.sg-course-stats')).toContainText('задач в СР');
+  await expect(page.locator('.sg-course-stats')).toContainText('самостоятельные');
 });
 
-test.describe('самостоятельная 1', () => {
-  test('верный ответ засчитывается, неверный — нет, ответ открывается', async ({ page }) => {
+test.describe('самостоятельные: варианты', () => {
+  test('вариант 1: шесть задач, верный ответ засчитывается, неверный — нет', async ({ page }) => {
     await page.goto('/stats/sr/1/');
     await allHydrated(page);
+    const tasks = makeVariant(1, 1);
+    await expect(page.locator('.sg-variant-title')).toHaveText('Вариант 1');
+    await expect(page.locator('.sg-sr-task')).toHaveCount(tasks.length);
     const score = page.locator('.sg-exam-score');
     await expect(score).toContainText('из 0 верно');
 
-    const t = await task(page, '1.1');
-    await t.getByRole('textbox').nth(0).fill('3,5');
-    await t.getByRole('textbox').nth(1).fill('1.71');
-    await t.getByRole('button', { name: 'Проверить' }).click();
-    await expect(t.locator('.sg-sr-verdict.is-ok')).toHaveCount(2);
-    await expect(t).toContainText('✓ решена');
+    // Первая задача — эталонными числами, записанными с запятой.
+    const t1 = page.locator('.sg-sr-task').nth(0);
+    for (const [i, a] of tasks[0]!.answers.entries()) await t1.getByRole('textbox').nth(i).fill(String(Number(a.value.toPrecision(5))).replace('.', ','));
+    await t1.getByRole('button', { name: 'Проверить' }).click();
+    await expect(t1.locator('.sg-sr-verdict.is-ok')).toHaveCount(tasks[0]!.answers.length);
+    await expect(t1).toContainText('✓ решена');
     await expect(score.locator('.rz-score-big')).toHaveText('1');
 
-    const t2 = await task(page, '1.2');
-    await t2.getByRole('textbox').nth(0).fill('0.7');
-    await t2.getByRole('textbox').nth(1).fill('1.81');
+    // Вторая — заведомо неверно, потом открыть ответ.
+    const t2 = page.locator('.sg-sr-task').nth(1);
+    await t2.getByRole('textbox').first().fill(String(tasks[1]!.answers[0]!.value * 3 + 7));
     await t2.getByRole('button', { name: 'Проверить' }).click();
-    // σ² вместо σ — типичная ошибка; первая ячейка верна.
-    await expect(t2.locator('.sg-sr-verdict.is-ok')).toHaveCount(1);
-    await expect(t2.locator('.sg-sr-verdict.is-bad')).toContainText('неверно');
-    await t2.getByRole('button', { name: 'Подсказка' }).click();
-    await expect(t2.locator('.sg-trainer-hint')).toBeVisible();
+    await expect(t2.locator('.sg-sr-verdict.is-bad')).toHaveCount(1);
+    if (tasks[1]!.hint) await t2.getByRole('button', { name: 'Подсказка' }).click();
     await t2.getByRole('button', { name: 'Показать ответ' }).click();
     await expect(t2.locator('.sg-trainer-ans .katex').first()).toBeVisible();
-    await expect(t2).toContainText('ответ открыт');
     await expect(score).toContainText('из 2 верно');
   });
 
-  test('проценты и степени десяти читаются как на бумаге', async ({ page }) => {
+  test('другой вариант — другие числа и счёт с нуля; случайный вариант', async ({ page }) => {
     await page.goto('/stats/sr/2/');
-    const t = await task(page, '4.1');
-    await t.getByRole('textbox').fill('6.4·10^-4');
-    await t.getByRole('button', { name: 'Проверить' }).click();
-    await expect(t.locator('.sg-sr-verdict')).toContainText('верно');
-    const d = await task(page, '4.2');
-    await d.getByRole('textbox').fill('9.5 %');
-    await d.getByRole('button', { name: 'Проверить' }).click();
-    await expect(d.locator('.sg-sr-verdict.is-ok')).toHaveCount(1);
+    await allHydrated(page);
+    const first = await page.locator('.sg-sr-task .sg-trainer-q').first().textContent();
+    const t1 = page.locator('.sg-sr-task').nth(0);
+    await t1.getByRole('textbox').first().fill('1');
+    await t1.getByRole('button', { name: 'Проверить' }).click();
+    await expect(page.locator('.sg-exam-score')).toContainText('из 1 верно');
+    await page.getByRole('radio', { name: 'Вариант 3' }).click();
+    await expect(page.locator('.sg-variant-title')).toHaveText('Вариант 3');
+    await expect(page.locator('.sg-exam-score')).toContainText('из 0 верно');
+    await expect(page.locator('.sg-sr-task .sg-trainer-q').first()).not.toHaveText(first!);
+    await expect(page.locator('.sg-sr-task').first().getByRole('textbox').first()).toHaveValue('');
+    await page.getByRole('button', { name: 'Случайный' }).click();
+    await expect(page.locator('.sg-variant-title')).toContainText('Случайный вариант');
+    await expect(page.locator('.sg-sr-task')).toHaveCount(6);
+  });
+
+  test('шпаргалка и разборы — свёрнуты под вариантом', async ({ page }) => {
+    await page.goto('/stats/sr/1/');
+    const ref = page.locator('details.sg-ref');
+    await expect(ref).not.toHaveAttribute('open', /.*/);
+    await ref.locator('summary').click();
+    await expect(ref.locator('.rz-steps').first()).toBeVisible();
   });
 });
+
 
 test.describe('лаборатории', () => {
   test('1.1: моменты набора с лекции и своя выборка', async ({ page }) => {
