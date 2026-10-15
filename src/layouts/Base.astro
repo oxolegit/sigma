@@ -70,6 +70,26 @@ const image = new URL(SITE.image.src, Astro.site);
     </script>
   </head>
   <body>
+    <div class="sg-navbar" aria-hidden="true"></div>
+    <script is:inline>
+      // Полоска загрузки при переходе: появляется, только если страница грузится дольше 150 мс,
+      // ничего не блокирует; при возврате «назад» из кэша прячется.
+      (function () {
+        var bar = document.querySelector('.sg-navbar'), timer = 0;
+        var start = function () { clearTimeout(timer); timer = setTimeout(function () { bar.setAttribute('data-on', ''); }, 150); };
+        var stop = function () { clearTimeout(timer); bar.removeAttribute('data-on'); };
+        document.addEventListener('click', function (e) {
+          if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+          var a = e.target.closest && e.target.closest('a[href]');
+          if (!a || a.target || a.hasAttribute('download') || a.origin !== location.origin) return;
+          // Якорь на той же странице — не переход.
+          if (a.pathname === location.pathname && a.search === location.search) return;
+          start();
+        });
+        addEventListener('pageshow', stop);
+        addEventListener('pagehide', stop);
+      })();
+    </script>
     <slot />
     <SiteFooter />
     <ProgressImport client:idle />

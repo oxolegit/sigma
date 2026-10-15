@@ -36,6 +36,16 @@ html { scrollbar-color: color-mix(in srgb, var(--ink-muted) 45%, transparent) tr
   :is(input:not([type="range"]):not([type="checkbox"]), textarea) { cursor: text; }
 }
 
+/* Полоска загрузки при переходе между страницами: тонкая, над шапкой, ничего не закрывает */
+.sg-navbar { position: fixed; top: 0; left: 0; z-index: 70; width: 100%; height: 3px; pointer-events: none; transform: scaleX(0); transform-origin: left; background: var(--accent); box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 60%, transparent); opacity: 0; }
+.sg-navbar[data-on] { opacity: 1; animation: sg-navbar 8s cubic-bezier(.1, .7, .2, 1) forwards; }
+@keyframes sg-navbar { from { transform: scaleX(0.05); } to { transform: scaleX(0.9); } }
+@media print { .sg-navbar { display: none; } }
+
+/* Скелетон графика, пока лаборатория не ожила: мягкий перелив поверх пустой сцены, исчезает после гидрации */
+astro-island[ssr] .rz-lab-stage:not(.is-table)::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, color-mix(in srgb, var(--surface-1) 70%, transparent) 50%, transparent 70%) 0 0 / 220% 100%; animation: sg-shimmer 1.4s linear infinite; pointer-events: none; }
+@keyframes sg-shimmer { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+
 /* Живые точки главной поверх точечного фона: весь экран, не ловят события */
 .sg-dotfield { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; }
 @media print { body { background: var(--paper); } .sg-dotfield { display: none; } }
