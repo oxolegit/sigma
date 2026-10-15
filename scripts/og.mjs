@@ -86,7 +86,7 @@ p{position:absolute;left:72px;top:372px;width:600px;font-family:"Source Serif 4"
 <div class="bar"></div>
 <div class="logo"><svg viewBox="0 0 24 24">${sigma(C.accent, 2.6)}</svg>Sigma</div>
 <h1>Физика и математика, которые можно покрутить руками</h1>
-<p>Интерактивные курсы для магистратуры МИФИ: теория переноса нейтронов и матанализ</p>
+<p>Интерактивные курсы для магистратуры МИФИ: перенос нейтронов, матанализ, матстатистика</p>
 <div class="card"><div class="tag">Лаборатория · пробег нейтрона</div>${plot()}</div>
 <div class="chips">${chips.map((c) => `<span>${c}</span>`).join('')}</div>
 <div class="url">sigma.mslv.space</div>
