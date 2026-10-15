@@ -64,17 +64,21 @@ test.describe('без прогресса', () => {
     await page.evaluate(() => localStorage.clear());
   });
 
-  test('главная: только настоящие курсы, без заглушек и лишних фильтров', async ({ page }) => {
+  test('главная: только настоящие курсы, без заглушек; с четырёх курсов — фильтры', async ({ page }) => {
     await page.goto('/');
     await allHydrated(page);
     const cards = page.locator('.rz-course');
-    await expect(cards).toHaveCount(3);
+    await expect(cards).toHaveCount(4);
     await expect(page.locator('.rz-badge-example')).toHaveCount(0);
-    await expect(page.locator('.sg-filters')).toHaveCount(0);
+    await expect(page.locator('.sg-filters')).toHaveCount(1);
     await expect(cards.filter({ hasText: 'Теория переноса нейтронов' }).getByRole('link')).toHaveAttribute('href', '/tpn/');
     await expect(cards.filter({ hasText: 'Математический анализ' }).getByRole('link')).toHaveAttribute('href', '/math/');
     await expect(cards.filter({ hasText: 'Математическая статистика' }).getByRole('link')).toHaveAttribute('href', '/stats/');
+    await expect(cards.filter({ hasText: 'Ядерная физика' }).getByRole('link')).toHaveAttribute('href', '/nuclear/');
     await expect(page.locator('.sg-continue')).toContainText('Начать');
+    await page.locator('.sg-filters select').selectOption('Физика');
+    await expect(cards).toHaveCount(1);
+    await expect(cards).toContainText('Ядерная физика');
   });
 
   test('главная: цифры посчитаны по контенту, ссылки на курс и GitHub, живая лаборатория', async ({ page }) => {

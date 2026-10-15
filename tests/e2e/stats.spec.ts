@@ -1,6 +1,8 @@
 import { expect, test, type Page } from '@playwright/test';
 import { allHydrated, hydrated } from './hydration';
-import { makeVariant } from '../../src/labs/stats/variants';
+import { makeVariant as anyVariant } from '../../src/labs/variants';
+
+const makeVariant = (work: number, v: number) => anyVariant('stats', work, v);
 
 const lab = async (page: Page, n: string) => hydrated(page.locator('.rz-lab').filter({ hasText: `Лаборатория ${n}` }));
 

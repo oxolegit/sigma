@@ -8,7 +8,7 @@ import LiveCourseProgress from '../../components/live/LiveCourseProgress';
 import Literature from '../../components/Literature.astro';
 import { examHref, getCourse, lessonStats, sheetHref, type CourseData } from '../../lib/courses';
 import { plural } from '../../lib/plural';
-import { FIXED_VARIANTS } from '../../labs/stats/variants';
+import { FIXED_VARIANTS } from '../../lib/variants';
 
 export async function getStaticPaths() {
   const courses = (await getCollection('courses')).filter((c) => !c.data.example);

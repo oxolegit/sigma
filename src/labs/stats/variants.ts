@@ -3,55 +3,13 @@
  * У темы несколько типов задач; числа разыгрываются от зерна варианта, ответ считается здесь же.
  * Варианты 1–4 фиксированы (одинаковы у всех), остальные зёрна — «случайный вариант».
  *
- * В meta лежат исходные данные: tests/stats-variants.test.ts пересчитывает по ним каждый ответ
+ * В meta лежат исходные данные: tests/stats-sr.test.ts пересчитывает по ним каждый ответ
  * другим путём — численными интегралами, таблицами моментов, функциями урока — на сотнях зёрен.
  */
-import { mulberry32, type Rng } from '../../lib/rng';
+import { fmt, pick, ri, type Slot, type Works } from '../../lib/variants';
 import { deadFraction, deadFractionTwoChannels, measuredNonParalyzable, measuredParalyzable, poissonCdf, poissonPmf, protonLifetime, trueRate, zeroEventLimit } from './poisson';
 import { linearFit, mlePosition, weightedMean } from './fit';
 
-export interface VariantAnswer {
-  /** Что ввести: «$\bar n$». */
-  label: string;
-  value: number;
-  /** Относительный допуск; по умолчанию 2 %. */
-  tol?: number;
-  /** Абсолютный допуск — для ответов около нуля. */
-  abs?: number;
-  unit?: string;
-}
-
-export interface VariantTask {
-  /** Тема — заголовок задачи. */
-  topic: string;
-  q: string;
-  answers: VariantAnswer[];
-  answer: string;
-  hint?: string;
-  meta: { kind: string } & Record<string, unknown>;
-}
-
-type Gen = (rng: Rng) => VariantTask;
-interface Slot { topic: string; gens: Gen[] }
-
-/* ---------- случайные числа и запись чисел ---------- */
-
-const ri = (rng: Rng, a: number, b: number) => a + Math.floor(rng() * (b - a + 1));
-const pick = <T>(rng: Rng, xs: readonly T[]): T => xs[Math.floor(rng() * xs.length)]!;
-
-const SUP: Record<string, string> = { '-': '-' };
-/** Число для TeX: 4 значащие цифры, 1.5·10^{32} для больших и маленьких. */
-export function fmt(v: number, digits = 4): string {
-  if (!Number.isFinite(v)) return '—';
-  if (v === 0) return '0';
-  const a = Math.abs(v);
-  if (a >= 1e5 || a < 1e-3) {
-    const e = Math.floor(Math.log10(a));
-    const m = Number((v / 10 ** e).toPrecision(3));
-    return `${m}\\cdot10^{${String(e).split('').map((c) => SUP[c] ?? c).join('')}}`;
-  }
-  return String(Number(v.toPrecision(digits)));
-}
 /** Число в тексте условия без TeX. */
 const n = (v: number) => String(Number(v.toPrecision(6)));
 /** Доля в процентах для подсказки: 0.0952 → «9.52 %». */
@@ -591,28 +549,5 @@ const SR2: Slot[] = [
   },
 ];
 
-const WORKS: Record<number, Slot[]> = { 1: SR1, 2: SR2 };
-
-/** Сколько задач в варианте самостоятельной. */
-export const variantSize = (work: number) => WORKS[work]?.length ?? 0;
-/** Темы варианта — для подписи. */
-export const variantTopics = (work: number) => (WORKS[work] ?? []).map((s) => s.topic);
-/** Фиксированных вариантов — как на настоящей самостоятельной. */
-export const FIXED_VARIANTS = 4;
-
-/**
- * Вариант: для фиксированных (1–4) тип задачи в теме — по кругу, чтобы варианты различались;
- * для случайных — тип тоже случайный. Числа — от зерна варианта и номера темы.
- */
-export function makeVariant(work: number, variant: number): VariantTask[] {
-  const slots = WORKS[work];
-  if (!slots) throw new Error(`Нет самостоятельной ${work}`);
-  return slots.map((slot, i) => {
-    const rng = mulberry32(variant * 7919 + i * 104729 + work * 15485863);
-    const gen = variant <= FIXED_VARIANTS ? slot.gens[(variant - 1 + i) % slot.gens.length]! : pick(rng, slot.gens);
-    return { ...gen(rng), topic: slot.topic };
-  });
-}
-
-/** Все генераторы темы — для тестов. */
-export const generators = (work: number) => (WORKS[work] ?? []).map((s) => s.gens);
+/** Самостоятельные курса: номер → темы. */
+export const WORKS: Works = { 1: SR1, 2: SR2 };

@@ -7,7 +7,12 @@ import { fwhm, normalize, simpson } from '../src/labs/stats/density';
 import { exactlyK, randomCoincidenceRate } from '../src/labs/stats/geometry';
 import { poissonPmf, poissonTail } from '../src/labs/stats/poisson';
 import { BAR, negLogL, sumSquares } from '../src/labs/stats/fit';
-import { FIXED_VARIANTS, generators, makeVariant, variantSize, type VariantTask } from '../src/labs/stats/variants';
+import { FIXED_VARIANTS, type VariantTask } from '../src/lib/variants';
+import { generators as allGenerators, makeVariant as anyVariant, variantSize as anySize } from '../src/labs/variants';
+
+const generators = (work: number) => allGenerators('stats', work);
+const makeVariant = (work: number, v: number) => anyVariant('stats', work, v);
+const variantSize = (work: number) => anySize('stats', work);
 
 /**
  * Варианты самостоятельных: каждый генератор на сотнях зёрен, ответ пересчитан другим путём —
@@ -134,7 +139,7 @@ describe.each([1, 2])('самостоятельная %i: генераторы �
 
   it(`страница sr${work}.mdx показывает вариант, а не отдельные задачи`, () => {
     const src = readFileSync(`src/content/exams/stats/sr${work}.mdx`, 'utf8');
-    expect(src).toContain(`<SrVariant client:load work={${work}} />`);
+    expect(src).toContain(`<SrVariant client:load course="stats" work={${work}} />`);
     expect(src).not.toContain('<SrTask');
   });
 });

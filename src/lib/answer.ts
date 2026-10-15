@@ -9,6 +9,9 @@ import { parseNum } from './expr';
 export function parseAnswer(input: string): number {
   const s = input.trim().replace(/\s+/g, ' ');
   if (!s) return NaN;
+  // Чётность пишут одним знаком: «+» — это +1, «−» — −1.
+  if (/^\+$/.test(s)) return 1;
+  if (/^[−-]$/.test(s)) return -1;
   const pct = /%\s*$/.test(s);
   // «1.5 · 10^32» и «1,5×10³²» → mathjs; пробелы внутри числа («1 000») убираем.
   const body = s.replace(/%\s*$/, '').replace(/(\d) (?=\d{3}\b)/g, '$1').replace(/10([⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+)/g, (_, p: string) => `10^(${[...p].map((ch) => SUP[ch]).join('')})`);

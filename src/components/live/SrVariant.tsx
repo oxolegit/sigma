@@ -1,7 +1,8 @@
 import { useStore } from '@nanostores/react';
 import { useEffect, useMemo, useState } from 'react';
 import { $answers, resetAnswers, score } from '../../lib/exam';
-import { FIXED_VARIANTS, makeVariant } from '../../labs/stats/variants';
+import { FIXED_VARIANTS } from '../../lib/variants';
+import { makeVariant } from '../../labs/variants';
 import { Button } from '../Button';
 import { Score } from '../Score';
 import SrTask from './SrTask';
@@ -10,9 +11,9 @@ import SrTask from './SrTask';
  * Вариант самостоятельной: по задаче на каждую тему, числа разыграны от номера варианта.
  * Варианты 1–4 одинаковы у всех — их удобно решать вместе и сверять; «Случайный» даёт новый набор чисел.
  */
-export default function SrVariant({ work }: { work: number }) {
+export default function SrVariant({ course, work }: { course: string; work: number }) {
   const [variant, setVariant] = useState(1);
-  const tasks = useMemo(() => makeVariant(work, variant), [work, variant]);
+  const tasks = useMemo(() => makeVariant(course, work, variant), [course, work, variant]);
   const { answered, correct } = score(useStore($answers));
   // Счёт — только этого варианта.
   useEffect(() => { resetAnswers(); }, [variant]);

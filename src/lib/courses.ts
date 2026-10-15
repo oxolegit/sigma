@@ -1,6 +1,6 @@
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
 import type { NavLesson } from '../components';
-import { variantSize } from '../labs/stats/variants';
+import { variantSize } from '../labs/variants';
 
 type Formula = { title: string; tex: string; note?: string };
 export type Source = { id: string; cite: string; url?: string; note?: string };
@@ -52,7 +52,7 @@ export function lessonStats(entry: { body?: string }) {
     questions: (body.match(/<(?:Exam)?Quiz\b/g) ?? []).length,
     /** Задачи с проверкой ответа (в самостоятельных): отдельные и задачи одного варианта SrVariant. */
     tasks: (body.match(/<SrTask\b/g) ?? []).length
-      + [...body.matchAll(/<SrVariant\b[^>]*work=\{(\d+)\}/g)].reduce((s, m) => s + variantSize(Number(m[1])), 0),
+      + [...body.matchAll(/<SrVariant\b[^>]*>/g)].reduce((s, [tag]) => s + variantSize(/course="(\w+)"/.exec(tag)?.[1] ?? '', Number(/work=\{(\d+)\}/.exec(tag)?.[1])), 0),
     /** Есть ли вариант со своим счётом. */
     variant: /<SrVariant\b/.test(body),
     /** Задачи с пошаговым решением. */
