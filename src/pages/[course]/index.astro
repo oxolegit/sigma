@@ -30,10 +30,22 @@ const chapters = data.chapters.map((ch) => ({
   }),
 }));
 const written = data.lessons.filter((l) => l.href).map((l) => ({ n: l.n, href: l.href! }));
+// Самостоятельные: что покрывают и сколько в них задач.
+const works = data.works.map((w) => {
+  const st = lessonStats(w.entry);
+  const tasks = st.tasks + st.solved;
+  const from = w.entry.data.lessons;
+  return {
+    n: w.n, href: w.href, title: w.entry.data.title, scope: w.entry.data.scope,
+    meta: [from.length ? `уроки ${Math.min(...from)}–${Math.max(...from)}` : '', `${tasks} ${plural(tasks, 'задача', 'задачи', 'задач')}`].filter(Boolean).join(' · '),
+  };
+});
+const workTasks = data.works.reduce((sum, w) => sum + lessonStats(w.entry).tasks, 0);
 const stats = [
   [data.lessons.length, plural(data.lessons.length, 'урок', 'урока', 'уроков')],
   [data.labs, labWord(data.labs)],
   ...(examQuestions ? [[examQuestions, 'в контрольной']] : []),
+  ...(workTasks ? [[workTasks, 'задач в СР']] : []),
 ] as [number, string][];
 ---
 <Base title={`${c.title} — Sigma`} description={c.description}>
@@ -47,7 +59,7 @@ const stats = [
         <h1>{c.title}</h1>
         {c.source && <p class="sg-course-source">{c.source}</p>}
         {c.description && <p class="sg-course-desc">{c.description}</p>}
-        <CourseActions client:idle course={data.id} written={written} examHref={data.exam ? examHref(data.id) : undefined} sheetHref={sheetHref(data.id)} />
+        <CourseActions client:idle course={data.id} written={written} examHref={data.exam ? examHref(data.id) : undefined} works={works.map((w) => ({ n: w.n, href: w.href }))} sheetHref={sheetHref(data.id)} />
       </div>
       <div class="sg-course-card">
         <LiveCourseProgress client:idle course={data.id} lessons={data.lessons.map((l) => l.n)} label="Мой прогресс" />
@@ -58,6 +70,29 @@ const stats = [
     </section>
 
     <CourseOutline client:idle course={data.id} chapters={chapters} />
+
+    {works.length > 0 && (
+      <section class="sg-works" aria-labelledby="works-h">
+        <div class="sg-outline-head">
+          <div class="sg-eyebrow">Проверка</div>
+          <h2 id="works-h">Самостоятельные работы</h2>
+        </div>
+        <ul class="sg-outline-list">
+          {works.map((w) => (
+            <li>
+              <a class="sg-outline-row" href={w.href}>
+                <span class="sg-outline-mark" aria-hidden="true">С{w.n}</span>
+                <span class="sg-outline-text">
+                  <span class="sg-outline-title">{w.title}</span>
+                  <span class="sg-outline-meta">{[w.scope, w.meta].filter(Boolean).join(' · ')}</span>
+                </span>
+                <span class="sg-outline-status">решать →</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
 
     <div class="sg-course-lit"><Literature sources={c.literature} /></div>
   </div>
@@ -78,6 +113,7 @@ const stats = [
   .sg-course-stats dd { margin: 0; font: 600 24px/28px var(--font-sans); font-variant-numeric: tabular-nums; }
 
   .sg-course-lit { margin-top: var(--space-12); }
+  .sg-works { display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-12); margin-top: 40px; }
   .sg-outline { display: flex; flex-direction: column; gap: 40px; padding-top: var(--space-8); }
   .sg-outline-chapter { display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-12); }
   .sg-outline-head { flex: 0 0 240px; display: flex; flex-direction: column; gap: 6px; }

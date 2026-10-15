@@ -1,0 +1,61 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import '../../../styles/exam.css';
+import SiteHeader from '../../../components/SiteHeader.astro';
+import { Button } from '../../../components';
+import ExamScore from '../../../components/live/ExamScore';
+import { courseHref, getCourse, lessonStats, sheetHref, type CourseData, type Work } from '../../../lib/courses';
+
+export async function getStaticPaths() {
+  const courses = (await getCollection('courses')).filter((c) => !c.data.example);
+  const out = [];
+  for (const c of courses) {
+    const data = await getCourse(c.id);
+    for (const work of data.works) out.push({ params: { course: c.id, n: String(work.n) }, props: { data, work } });
+  }
+  return out;
+}
+
+const { data, work } = Astro.props as { data: CourseData; work: Work };
+const e = work.entry;
+const { Content } = await render(e);
+const s = lessonStats(e);
+const total = s.tasks + s.questions;
+const courseTitle = data.course.data.title;
+const covered = data.lessons.filter((l) => e.data.lessons.includes(l.n));
+const others = data.works.filter((w) => w.n !== work.n);
+---
+<Base title={`Самостоятельная ${work.n} — ${courseTitle} — Sigma`} description={e.data.lead}>
+  <div class="sg-page">
+    <SiteHeader course={{ title: courseTitle, href: courseHref(data.id) }} />
+
+    <article class="sg-exam">
+      <div class="sg-exam-head">
+        <div class="sg-eyebrow sg-eyebrow-accent">Самостоятельная работа {work.n}{e.data.scope ? ` · ${e.data.scope}` : ''}</div>
+        <h1>{e.data.title}</h1>
+        {e.data.lead && <p class="sg-lead">{e.data.lead}</p>}
+        {covered.length > 0 && (
+          <p class="sg-sr-lessons">
+            Повторить перед работой:{' '}
+            {covered.map((l, i) => <>{i > 0 && ', '}{l.href ? <a href={l.href}>урок {l.n} «{l.title}»</a> : `урок ${l.n} «${l.title}»`}</>)}.
+          </p>
+        )}
+      </div>
+
+      <div class="sg-exam-sticky">
+        <ExamScore client:load total={total} />
+      </div>
+
+      <div class="sg-exam-body">
+        <Content />
+      </div>
+
+      <div class="sg-row">
+        <Button variant="primary" href={sheetHref(data.id)}>Открыть шпаргалку</Button>
+        {others.map((w) => <Button href={w.href}>Самостоятельная {w.n}</Button>)}
+        <Button href={courseHref(data.id)}>К урокам курса</Button>
+      </div>
+    </article>
+  </div>
+</Base>

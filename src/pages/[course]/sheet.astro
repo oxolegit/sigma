@@ -31,6 +31,7 @@ const range = groups.length ? `Уроки ${groups[0]!.n}–${groups[groups.leng
       <div class="sg-row sg-no-print">
         <PrintButton client:idle />
         {data.exam && <Button href={examHref(data.id)}>Пробная контрольная</Button>}
+        {data.works.map((w) => <Button href={w.href}>Самостоятельная {w.n}</Button>)}
       </div>
     </section>
 

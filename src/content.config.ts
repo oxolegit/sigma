@@ -67,13 +67,20 @@ const lessons = defineCollection({
   }),
 });
 
-/** Пробная контрольная курса — MDX: src/content/exams/<курс>.mdx. */
+/**
+ * Пробная контрольная курса — MDX: src/content/exams/<курс>.mdx.
+ * Самостоятельные работы — src/content/exams/<курс>/sr<номер>.mdx, страница /<курс>/sr/<номер>/.
+ */
 const exams = defineCollection({
-  loader: glob({ pattern: '*.mdx', base: './src/content/exams' }),
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/exams' }),
   schema: z.object({
     title: z.string(),
     scope: z.string().optional(),
     lead: z.string().optional(),
+    /** Номер самостоятельной работы; у пробной контрольной его нет. */
+    n: z.number().int().positive().optional(),
+    /** Уроки курса, которые покрывает самостоятельная. */
+    lessons: z.array(z.number().int().positive()).default([]),
   }),
 });
 

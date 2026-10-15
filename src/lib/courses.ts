@@ -20,14 +20,18 @@ export interface CourseData {
   lessons: OutlineLesson[];
   chapters: { title: string; label: string; name: string; lessons: NavLesson[] }[];
   exam?: CollectionEntry<'exams'>;
+  /** Самостоятельные работы по порядку номеров. */
+  works: Work[];
   labs: number;
 }
+export interface Work { n: number; href: string; entry: CollectionEntry<'exams'> }
 
 export const lessonSlug = (entry: CollectionEntry<'lessons'>) => entry.id.split('/')[1]!;
 export const lessonHref = (course: string, entry: CollectionEntry<'lessons'>) => `/${course}/${lessonSlug(entry)}/`;
 export const courseHref = (course: string) => `/${course}/`;
 export const examHref = (course: string) => `/${course}/exam/`;
 export const sheetHref = (course: string) => `/${course}/sheet/`;
+export const workHref = (course: string, n: number) => `/${course}/sr/${n}/`;
 
 /** Исходники компонентов из src/labs: по ним видно, что лаборатория (LabFrame), а что трёхмерная (kind="3D"). */
 const LAB_SOURCES = import.meta.glob('../labs/**/*.tsx', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
@@ -45,6 +49,10 @@ export function lessonStats(entry: { body?: string }) {
     labs3d: labPaths.filter(isLab3D).length,
     trainers: (body.match(/<Trainer\b/g) ?? []).length,
     questions: (body.match(/<(?:Exam)?Quiz\b/g) ?? []).length,
+    /** Задачи с проверкой ответа (в самостоятельных). */
+    tasks: (body.match(/<SrTask\b/g) ?? []).length,
+    /** Задачи с пошаговым решением. */
+    solved: (body.match(/<Steps\b/g) ?? []).length,
   };
 }
 
@@ -57,7 +65,15 @@ export async function getCourse(id: string): Promise<CourseData> {
   if (!course) throw new Error(`Курс «${id}» не найден в src/content/courses`);
   const written = (await getCollection('lessons')).filter((l) => l.id.startsWith(`${id}/`));
   // Через коллекцию, а не getEntry: у курсов без контрольной getEntry шумит предупреждениями.
-  const exam = (await getCollection('exams')).find((e) => e.id === id);
+  const allExams = await getCollection('exams');
+  const exam = allExams.find((e) => e.id === id);
+  const works = allExams
+    .filter((e) => e.id.startsWith(`${id}/`))
+    .map((entry) => {
+      if (!entry.data.n) throw new Error(`Самостоятельная ${entry.id}: не задан номер n`);
+      return { n: entry.data.n, href: workHref(id, entry.data.n), entry };
+    })
+    .sort((a, b) => a.n - b.n);
 
   const lessons: OutlineLesson[] = [];
   const chapters = course.data.chapters.map((ch) => {
@@ -91,7 +107,7 @@ export async function getCourse(id: string): Promise<CourseData> {
   const labs = course.data.example
     ? course.data.labs ?? 0
     : written.reduce((sum, w) => sum + lessonStats(w).labs, 0);
-  return { id, course, lessons, chapters, exam, labs };
+  return { id, course, lessons, chapters, exam, works, labs };
 }
 
 /** Цифры для главной — считаются по контенту, а не пишутся руками. */
@@ -109,9 +125,13 @@ export async function siteStats() {
       labs3d += s.labs3d;
       trainers += s.trainers;
     }
-    const body = d.exam?.body ?? '';
-    questions += (body.match(/<ExamQuiz\b/g) ?? []).length;
-    tasks += (body.match(/<Steps\b/g) ?? []).length;
+    // Контрольная и самостоятельные: вопросы с вариантами, задачи с решением и с проверкой ответа.
+    for (const e of [d.exam, ...d.works.map((w) => w.entry)]) {
+      if (!e) continue;
+      const s = lessonStats(e);
+      questions += s.questions;
+      tasks += s.solved + s.tasks;
+    }
   }
   return { courses: courses.length, lessons, labs, labs3d, trainers, formulas, questions, tasks };
 }

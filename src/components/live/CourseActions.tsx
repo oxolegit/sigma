@@ -4,9 +4,10 @@ import { Button } from '../Button';
 import { useProgress } from './useProgress';
 
 interface Written { n: number; href: string }
+interface WorkLink { n: number; href: string }
 
-/** Кнопки страницы курса: «Продолжить с урока N», контрольная, шпаргалка и ссылка для переноса прогресса. */
-export default function CourseActions({ course, written, examHref, sheetHref }: { course: string; written: Written[]; examHref?: string; sheetHref: string }) {
+/** Кнопки страницы курса: «Продолжить с урока N», контрольная, самостоятельные, шпаргалка и ссылка для переноса прогресса. */
+export default function CourseActions({ course, written, examHref, works = [], sheetHref }: { course: string; written: Written[]; examHref?: string; works?: WorkLink[]; sheetHref: string }) {
   const map = useProgress();
   const [last, setLast] = useState<number | null>(null);
   const [message, setMessage] = useState('');
@@ -32,6 +33,7 @@ export default function CourseActions({ course, written, examHref, sheetHref }: 
       <div className="sg-row">
         {target && <Button variant="primary" href={target.href}>{started ? 'Продолжить' : 'Начать'} с урока {target.n}</Button>}
         {examHref && <Button href={examHref}>Пробная контрольная</Button>}
+        {works.map((w) => <Button key={w.n} href={w.href}>Самостоятельная {w.n}</Button>)}
         <Button href={sheetHref}>Шпаргалка формул</Button>
       </div>
       <div className="sg-row">
