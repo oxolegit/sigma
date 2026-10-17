@@ -4,8 +4,9 @@
 import { buildVariant, type Works } from '../lib/variants';
 import { WORKS as stats } from './stats/variants';
 import { WORKS as nuclear } from './nuclear/variants';
+import { WORKS as tpn } from './tpn/variants';
 
-const COURSES: Record<string, Works> = { stats, nuclear };
+const COURSES: Record<string, Works> = { stats, nuclear, tpn };
 
 const slots = (course: string, work: number) => COURSES[course]?.[work];
 
