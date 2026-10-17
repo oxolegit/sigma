@@ -5,11 +5,12 @@ import { makeVariant } from '../../src/labs/variants';
 const lab = async (page: Page, n: string) => hydrated(page.locator('.rz-lab').filter({ hasText: `Лаборатория ${n} ` }));
 
 test('ядерная физика: все уроки и контрольная без прокрутки вбок, битого TeX и ошибок', async ({ page }) => {
-  // Одиннадцать страниц с десятками островов — дольше стандартных 30 с.
+  // Двенадцать страниц с десятками островов — дольше стандартных 30 с.
   test.setTimeout(120_000);
   await page.goto('/nuclear/');
   const hrefs = await page.locator('a.sg-outline-row').evaluateAll((as) => as.map((a) => a.getAttribute('href')!));
-  expect(hrefs).toHaveLength(11);
+  // 10 уроков, самостоятельная и подготовка к ней.
+  expect(hrefs).toHaveLength(12);
   for (const href of hrefs) {
     const errors: string[] = [];
     page.on('pageerror', (e) => errors.push(String(e)));
@@ -30,7 +31,8 @@ test('страница курса: 10 уроков в четырёх модул�
   await allHydrated(page);
   await expect(page.locator('.sg-outline-chapter')).toHaveCount(4);
   await expect(page.locator('.sg-outline .sg-outline-row')).toHaveCount(10);
-  await expect(page.locator('.sg-works a.sg-outline-row')).toHaveCount(1);
+  await expect(page.locator('.sg-works:not(.sg-preps) a.sg-outline-row')).toHaveCount(1);
+  await expect(page.locator('.sg-preps a.sg-outline-row')).toHaveAttribute('href', '/nuclear/prep/1/');
   await expect(page.getByRole('link', { name: 'Самостоятельная 1' })).toHaveAttribute('href', '/nuclear/sr/1/');
 });
 

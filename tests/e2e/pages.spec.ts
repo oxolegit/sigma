@@ -120,9 +120,9 @@ test.describe('без прогресса', () => {
   test('страница курса: оглавление из 10 уроков, ссылка только у написанных', async ({ page }) => {
     await page.goto('/tpn/');
     await allHydrated(page);
-    await expect(page.locator('.sg-outline-row')).toHaveCount(10);
-    const written = page.locator('a.sg-outline-row');
-    const soon = page.locator('span.sg-outline-row.is-soon');
+    await expect(page.locator('.sg-outline .sg-outline-row')).toHaveCount(10);
+    const written = page.locator('.sg-outline a.sg-outline-row');
+    const soon = page.locator('.sg-outline span.sg-outline-row.is-soon');
     expect((await written.count()) + (await soon.count())).toBe(10);
     // Без прогресса — «Начать» с первого написанного урока.
     const first = await written.first().getAttribute('href');
