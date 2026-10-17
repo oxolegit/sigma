@@ -42,6 +42,11 @@ const works = data.works.map((w) => {
     meta: [from.length ? `уроки ${Math.min(...from)}–${Math.max(...from)}` : '', tasks].filter(Boolean).join(' · '),
   };
 });
+// Подготовка: дни, часы и формулы наизусть.
+const preps = data.preps.map((p) => ({
+  n: p.n, href: p.href, title: p.work?.entry.data.title ?? p.title,
+  meta: [`${p.days.length} ${plural(p.days.length, 'день', 'дня', 'дней')}`, `≈ ${Number((p.minutes / 60).toFixed(1)).toString().replace('.', ',')} ч`, `${p.formulas} ${plural(p.formulas, 'формула', 'формулы', 'формул')} наизусть`].join(' · '),
+}));
 const stats = [
   [data.lessons.length, plural(data.lessons.length, 'урок', 'урока', 'уроков')],
   [data.labs, labWord(data.labs)],
@@ -71,6 +76,30 @@ const stats = [
     </section>
 
     <CourseOutline client:idle course={data.id} chapters={chapters} />
+
+    {preps.length > 0 && (
+      <section class="sg-works sg-preps" aria-labelledby="preps-h">
+        <div class="sg-outline-head">
+          <div class="sg-eyebrow">Подготовка</div>
+          <h2 id="preps-h">Подготовка к самостоятельным</h2>
+          <p class="sg-preps-lead">План по дням и формулы, которые на работе не дадут, — с проверкой себя.</p>
+        </div>
+        <ul class="sg-outline-list">
+          {preps.map((p) => (
+            <li>
+              <a class="sg-outline-row" href={p.href}>
+                <span class="sg-outline-mark" aria-hidden="true">П{p.n}</span>
+                <span class="sg-outline-text">
+                  <span class="sg-outline-title">К самостоятельной {p.n}: {p.title}</span>
+                  <span class="sg-outline-meta">{p.meta}</span>
+                </span>
+                <span class="sg-outline-status">готовиться →</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
 
     {works.length > 0 && (
       <section class="sg-works" aria-labelledby="works-h">
@@ -117,6 +146,9 @@ const stats = [
   .sg-outline { display: flex; flex-direction: column; gap: var(--space-4); padding-top: var(--space-4); }
   .sg-outline > .sg-chips { margin-bottom: var(--space-2); }
   .sg-works { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: var(--space-3) var(--space-8); margin-top: var(--space-4); padding: var(--space-6); border: 1px solid color-mix(in srgb, var(--signal) 30%, var(--rule)); border-radius: var(--radius-xl); background: var(--signal-soft); }
+  .sg-preps { border-color: color-mix(in srgb, var(--accent) 30%, var(--rule)); background: var(--accent-soft); }
+  .sg-works .sg-preps-lead { margin: 0; font: 400 14px/21px var(--font-sans); color: var(--ink-muted); }
+  .sg-works.sg-preps .sg-outline-mark { background: var(--accent); color: var(--on-accent); }
   .sg-outline-chapter { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: var(--space-3) var(--space-8); padding: var(--space-6); background: var(--surface-1); border: 1px solid var(--rule); border-radius: var(--radius-xl); }
   .sg-outline-head { display: flex; flex-direction: column; gap: 6px; }
   .sg-outline-head h2 { margin: 0; font: 800 22px/28px var(--font-sans); letter-spacing: -0.02em; }

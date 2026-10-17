@@ -1,0 +1,82 @@
+work: 1
+title: Подготовка к самостоятельной по ядерной физике
+lead: 'Четыре дня по два часа: по дню на темы варианта и прогон в конце. На СР дадут только формулу Вайцзеккера и числа к задачам, а массы атомов впишут в условие. Всё ниже — константы, кинематика, энергии отделения, оболочки, Резерфорд и потери — нужно знать наизусть.'
+days:
+  - title: Кинематика и константы
+    minutes: 110
+    steps:
+      - { text: 'Урок 1: $E$, $T$, $pc$, $\gamma$, $\beta$, $\bar\lambda$ — одно через другое', lesson: 1 }
+      - { text: 'Урок 2: распад покоящейся частицы, порог реакции, система центра масс', lesson: 2 }
+      - { text: 'Тема 1 варианта в вариантах 1–4: четыре разных типа задач', to: sr }
+      - { text: 'Карточки: «Константы» и «Кинематика»' }
+  - title: Свойства ядер и капельная модель
+    minutes: 120
+    steps:
+      - { text: 'Урок 3: энергия связи по массам атомов, $\varepsilon_n$, $\varepsilon_p$, $\varepsilon_\alpha$', lesson: 3 }
+      - { text: 'Урок 4: $R$, $S$, $V$, плотность ядерного вещества, зеркальные ядра', lesson: 4 }
+      - { text: 'Урок 5: смысл пяти слагаемых Вайцзеккера, $Z_{\text{опт}}$, энергия деления', lesson: 5 }
+      - { text: 'Темы 2 и 3 варианта в вариантах 1–4', to: sr }
+      - { text: 'Карточки: «Свойства ядер», «Капельная модель»' }
+  - title: 'Оболочки: спин, чётность, μ'
+    minutes: 120
+    steps:
+      - { text: 'Урок 6: порядок уровней, правила $J^P$, формула Шмидта', lesson: 6 }
+      - { text: 'Выписать порядок уровней до 1i13/2 по памяти три раза, сверить с карточкой' }
+      - { text: 'Урок 7: квадрупольный момент и ферми-газ', lesson: 7 }
+      - { text: 'Тема 4 варианта в вариантах 1–4', to: sr }
+      - { text: 'Карточки: «Оболочки», «Квадруполь и ферми-газ»' }
+  - title: Частицы в веществе и прогон
+    minutes: 130
+    steps:
+      - { text: 'Урок 8: Резерфорд, прицельный параметр, кулоновский барьер', lesson: 8 }
+      - { text: 'Уроки 9–10: формула Бете, вид кривой, радиационные потери и $T_{\text{крит}}$', lesson: 9 }
+      - { text: 'Вариант целиком за 80 минут — со справочным листком, но без конспекта', to: sr }
+      - { text: 'Карточки в режиме «Проверка себя», скрыв выученные' }
+memorize:
+  - title: Константы
+    items:
+      - { title: Конверсионная константа, tex: '\hbar c \approx 200\ \text{МэВ}\cdot\text{фм}\ (197.3),\qquad \hbar = 6.58\cdot10^{-22}\ \text{МэВ}\cdot\text{с}' }
+      - { title: Атомная единица массы, tex: '1\ \text{а.е.м.} = 931.5\ \text{МэВ}' }
+      - { title: Массы частиц, tex: 'm_pc^2 = 938.3,\quad m_nc^2 = 939.6,\quad m_ec^2 = 0.511\ \text{МэВ}' }
+      - { title: Кулоновская константа, tex: '\frac{e^2}{4\pi\varepsilon_0} = 1.44\ \text{МэВ}\cdot\text{фм}' }
+      - { title: Единицы, tex: '1\ \text{эВ} = 1.6\cdot10^{-19}\ \text{Дж},\qquad 1\ \text{б} = 100\ \text{фм}^2,\qquad r_0 \approx 1.4\ \text{фм}' }
+  - title: Кинематика
+    items:
+      - { title: Энергия и импульс, tex: 'E = \gamma mc^2 = T + mc^2,\qquad E^2 = (pc)^2 + (mc^2)^2' }
+      - { title: Импульс через кинетическую энергию, tex: 'pc = \sqrt{T(T + 2mc^2)}' }
+      - { title: Скорость и лоренц-фактор, tex: '\beta = \frac{pc}{E},\qquad \gamma = \frac{E}{mc^2} = \frac1{\sqrt{1 - \beta^2}},\qquad pc = \beta\gamma\,mc^2' }
+      - { title: Длина волны де Бройля, tex: '\bar\lambda = \frac{\hbar c}{pc},\qquad \lambda = 2\pi\bar\lambda' }
+      - { title: Время жизни и пробег до распада, tex: '\tau = \gamma\tau_0,\qquad L = \beta\gamma c\tau_0' }
+      - { title: Распад покоящейся частицы, tex: 'E_1 = \frac{M^2 + m_1^2 - m_2^2}{2M}\,c^2' }
+      - { title: Порог реакции на покоящейся мишени, tex: 'T_{\text{пор}} = \frac{(\sum m_f)^2 - (m_1 + m_2)^2}{2m_2}\,c^2' }
+  - title: Свойства ядер
+    items:
+      - { title: Энергия связи, tex: 'W = [Z\,M(^1\text{H}) + N m_n - M(A, Z)]\,c^2,\qquad \varepsilon = W/A', note: 'Массы — атомов, поэтому с протоном берут массу атома водорода: электроны сокращаются.' }
+      - { title: Энергия отделения нейтрона, tex: '\varepsilon_n = [M(A - 1, Z) + m_n - M(A, Z)]\,c^2' }
+      - { title: Энергия отделения протона, tex: '\varepsilon_p = [M(A - 1, Z - 1) + M(^1\text{H}) - M(A, Z)]\,c^2' }
+      - { title: Энергия отделения α-частицы, tex: '\varepsilon_\alpha = [M(A - 4, Z - 2) + M(^4\text{He}) - M(A, Z)]\,c^2' }
+      - { title: Размер ядра, tex: 'R = r_0A^{1/3},\qquad S = 4\pi R^2,\qquad V = \tfrac43\pi R^3' }
+      - { title: Зеркальные ядра, tex: '\Delta W = \frac35\,\frac{e^2}{4\pi\varepsilon_0}\,\frac{2Z + 1}{R}', note: 'Разность энергий связи пары $(A, Z+1)$ и $(A, Z)$ — кулоновская; отсюда $R$.' }
+  - title: Капельная модель
+    items:
+      - { title: Оптимальный заряд изобары, tex: 'Z_{\text{опт}} = \frac{A}{0.015A^{2/3} + 1.973}', note: 'Выводится из $\partial M/\partial Z = 0$ при формуле Вайцзеккера.' }
+      - { title: Энергия деления, tex: 'Q = \sum W_{\text{оск}} - W,\qquad Q_{\text{симм}} = 2W(A/2, Z/2) - W(A, Z)' }
+      - { title: Кулоновская энергия шара, tex: 'E_C = \frac35\,\frac{Z^2e^2}{4\pi\varepsilon_0R}' }
+  - title: Оболочки
+    items:
+      - { title: Порядок уровней, tex: '\begin{gathered}1s_{1/2}\ |\ 1p_{3/2}\ 1p_{1/2}\ |\ 1d_{5/2}\ 2s_{1/2}\ 1d_{3/2}\ |\ 1f_{7/2}\ | \\ 2p_{3/2}\ 1f_{5/2}\ 2p_{1/2}\ 1g_{9/2}\ | \\ 1g_{7/2}\ 2d_{5/2}\ 2d_{3/2}\ 3s_{1/2}\ 1h_{11/2}\ | \\ 1h_{9/2}\ 2f_{7/2}\ 2f_{5/2}\ 3p_{3/2}\ 3p_{1/2}\ 1i_{13/2}\ |\end{gathered}', note: 'Черта — магическое число: 2, 8, 20, 28, 50, 82, 126.' }
+      - { title: Спин и чётность, tex: '\begin{gathered}\text{чёт-чёт}: 0^+ \\ \text{нечётное}: J = j,\ P = (-1)^l \\ \text{нечёт-нечёт}: |j_p - j_n| \le J \le j_p + j_n,\ P = (-1)^{l_p + l_n}\end{gathered}' }
+      - { title: Формула Шмидта, tex: '\mu = gJ,\qquad g = g_l \pm \frac{g_s - g_l}{2l + 1},\quad j = l \pm \tfrac12' }
+      - { title: g-факторы нуклонов, tex: 'p:\ g_s = 5.586,\ g_l = 1;\qquad n:\ g_s = -3.826,\ g_l = 0' }
+  - title: Квадруполь и ферми-газ
+    items:
+      - { title: Квадрупольный момент, tex: 'Q_0 = \tfrac45 Z\bar R^2\beta,\qquad \langle Q\rangle = \frac{J(2J - 1)}{(J + 1)(2J + 3)}\,Q_0' }
+      - { title: Импульс и энергия Ферми, tex: 'p_Fc = \frac{\hbar c}{r_0}\left(\frac{9\pi}{8}\right)^{1/3},\qquad T_F = \frac{(p_Fc)^2}{2m_Nc^2}' }
+      - { title: Глубина ямы и средняя энергия, tex: 'U = T_F + \varepsilon,\qquad \langle T\rangle = \tfrac35T_F' }
+  - title: Частицы в веществе
+    items:
+      - { title: Угол Резерфорда, tex: '\operatorname{tg}\frac\theta2 = \frac{d}{2b},\qquad d = \frac{zZe^2}{4\pi\varepsilon_0T}', note: '$d$ — расстояние наибольшего сближения при лобовом ударе.' }
+      - { title: Сечение Резерфорда, tex: '\frac{d\sigma}{d\Omega} = \left(\frac{zZe^2}{4\pi\varepsilon_0\cdot4T}\right)^2\frac{1}{\sin^4(\theta/2)}' }
+      - { title: Кулоновский барьер, tex: 'B = \frac{zZe^2}{4\pi\varepsilon_0R},\qquad R = r_0\,(a^{1/3} + A^{1/3})' }
+      - { title: Формула Бете, tex: '-\frac{dE}{dx} = K\frac{z^2Z}{A\beta^2}\ln\frac{2m_ec^2\beta^2}{I},\qquad K = 0.307\ \text{МэВ}\cdot\text{см}^2/\text{моль}' }
+      - { title: Радиационные потери электрона, tex: '-\frac{dE}{dx} = \frac{T}{l_{\text{рад}}},\qquad T = T_0e^{-x/l_{\text{рад}}},\qquad T_{\text{крит}} \approx \frac{800}{Z}\ \text{МэВ}' }

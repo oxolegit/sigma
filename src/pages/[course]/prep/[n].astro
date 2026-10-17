@@ -1,0 +1,137 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import '../../../styles/exam.css';
+import SiteHeader from '../../../components/SiteHeader.astro';
+import { Button } from '../../../components';
+import MemoCards from '../../../components/live/MemoCards';
+import PrepPlan from '../../../components/live/PrepPlan';
+import PrintButton from '../../../components/live/PrintButton';
+import { courseHref, getCourse, sheetHref, type CourseData, type Prep } from '../../../lib/courses';
+import { plural } from '../../../lib/plural';
+
+export async function getStaticPaths() {
+  const courses = (await getCollection('courses')).filter((c) => !c.data.example);
+  const out = [];
+  for (const c of courses) {
+    const data = await getCourse(c.id);
+    for (const prep of data.preps) out.push({ params: { course: c.id, n: String(prep.n) }, props: { data, prep } });
+  }
+  return out;
+}
+
+const { data, prep } = Astro.props as { data: CourseData; prep: Prep };
+const courseTitle = data.course.data.title;
+const hours = Number((prep.minutes / 60).toFixed(1)).toString().replace('.', ',');
+const stats = [
+  [prep.days.length, plural(prep.days.length, 'день', 'дня', 'дней')],
+  [`≈ ${hours}`, 'часа всего'],
+  [prep.formulas, `${plural(prep.formulas, 'формула', 'формулы', 'формул')} наизусть`],
+] as [number | string, string][];
+---
+<Base title={`Подготовка к самостоятельной ${prep.n} — ${courseTitle} — Sigma`} description={prep.lead}>
+  <div class="sg-page">
+    <div class="sg-no-print"><SiteHeader course={{ title: courseTitle, href: courseHref(data.id) }} /></div>
+
+    <article class="sg-prep">
+      <header class="sg-prep-head">
+        <div class="sg-eyebrow sg-eyebrow-accent">Подготовка к самостоятельной {prep.n}</div>
+        <h1>{prep.work?.entry.data.title ?? prep.title}</h1>
+        <p class="sg-lead">{prep.lead}</p>
+        <dl class="sg-prep-stats">
+          {stats.map(([n, word]) => <div><dt>{word}</dt><dd>{n}</dd></div>)}
+        </dl>
+        <div class="sg-row sg-no-print">
+          {prep.work && <Button variant="primary" href={prep.work.href}>Решать самостоятельную</Button>}
+          <Button href={sheetHref(data.id)}>Шпаргалка курса</Button>
+          <Button href={courseHref(data.id)}>К урокам курса</Button>
+        </div>
+      </header>
+
+      <section class="sg-prep-section sg-no-print" aria-labelledby="plan-h">
+        <h2 id="plan-h">План по дням</h2>
+        <PrepPlan client:load storageKey={`sigma:${data.id}:prep${prep.n}`} days={prep.days} />
+      </section>
+
+      <section class="sg-prep-section" aria-labelledby="memo-h">
+        <div class="sg-prep-memo-head">
+          <h2 id="memo-h">Выучить наизусть</h2>
+          <div class="sg-no-print"><PrintButton client:idle /></div>
+        </div>
+        <p class="sg-prep-memo-lead sg-no-print">На работе этих формул не будет. В режиме «Проверка себя» видно только название: вспомните формулу на бумаге, откройте и отметьте честно. Печать — все формулы на одном-двух листах.</p>
+        <MemoCards client:load storageKey={`sigma:${data.id}:prep${prep.n}:known`} groups={prep.memorize} />
+      </section>
+    </article>
+  </div>
+</Base>
+
+<style is:global>
+  .sg-prep { max-width: 860px; margin: 0 auto; padding-top: 40px; display: flex; flex-direction: column; gap: 40px; }
+  .sg-prep-head { display: flex; flex-direction: column; gap: 14px; }
+  .sg-prep-head h1 { margin: 0; font: 800 clamp(30px, 4vw, 44px)/1.08 var(--font-sans); letter-spacing: -0.03em; }
+  .sg-prep-stats { display: flex; flex-wrap: wrap; gap: var(--space-3); margin: 0; }
+  .sg-prep-stats div { display: flex; flex-direction: column-reverse; padding: 10px 14px; border-radius: var(--radius-md); background: var(--surface-2); }
+  .sg-prep-stats dt { font: 600 12px/16px var(--font-sans); color: var(--ink-muted); }
+  .sg-prep-stats dd { margin: 0; font: 800 24px/28px var(--font-sans); font-variant-numeric: tabular-nums; }
+  .sg-prep-section { display: flex; flex-direction: column; gap: var(--space-4); }
+  .sg-prep-section h2 { margin: 0; font: 800 24px/30px var(--font-sans); letter-spacing: -0.02em; }
+
+  .sg-prep-plan { display: flex; flex-direction: column; gap: var(--space-4); }
+  .sg-prep-days { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--space-3); }
+  .sg-prep-day { padding: var(--space-4) var(--space-6); background: var(--surface-1); border: 1px solid var(--rule); border-radius: var(--radius-lg); }
+  .sg-prep-day.is-done { border-color: color-mix(in srgb, var(--correct) 40%, var(--rule)); }
+  .sg-prep-day-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px var(--space-4); align-items: baseline; margin-bottom: var(--space-2); }
+  .sg-prep-day-n { grid-column: 1 / -1; font: 700 12px/16px var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; color: var(--signal-text); }
+  .sg-prep-day.is-done .sg-prep-day-n { color: var(--correct); }
+  .sg-prep-day-head h3 { margin: 0; font: 700 18px/24px var(--font-sans); }
+  .sg-prep-day-time { font: 600 13px/18px var(--font-sans); color: var(--ink-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .sg-prep-steps { margin: 0; padding: 0; list-style: none; }
+  .sg-prep-steps li { display: flex; align-items: center; gap: var(--space-3); }
+  .sg-prep-step { flex: 1; display: flex; align-items: flex-start; gap: var(--space-3); min-height: 44px; padding: 10px 0; cursor: pointer; font: 400 16px/24px var(--font-sans); }
+  .sg-prep-step input { flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--accent); }
+  .sg-prep-step.is-done .sg-prep-step-text { color: var(--ink-muted); text-decoration: line-through; text-decoration-color: var(--rule-strong); }
+  .sg-prep-step-link { flex: none; display: inline-flex; align-items: center; min-height: 44px; font: 700 13px/18px var(--font-sans); color: var(--accent-text); white-space: nowrap; }
+
+  .sg-prep-memo-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); }
+  .sg-prep-memo-lead { margin: 0; font: 400 16px/26px var(--font-serif); color: var(--ink-muted); }
+  .sg-memo { display: flex; flex-direction: column; gap: var(--space-6); }
+  .sg-memo-bar { position: sticky; top: 8px; z-index: 2; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-6); padding: 10px 16px; background: var(--surface-1); border: 1px solid var(--rule); border-radius: var(--radius-lg); }
+  .sg-memo-progress { flex: 1 1 200px; }
+  .sg-memo-tools { display: flex; align-items: center; gap: var(--space-3); }
+  .sg-memo-hide { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font: 500 14px/20px var(--font-sans); cursor: pointer; }
+  .sg-memo-hide input { width: 18px; height: 18px; accent-color: var(--accent); }
+  .sg-memo-empty { margin: 0; font: 500 15px/22px var(--font-sans); color: var(--ink-muted); }
+  .sg-memo-group h3 { margin: 0 0 var(--space-3); font: 700 18px/24px var(--font-sans); }
+  .sg-memo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: var(--space-3); }
+  .sg-memo-card { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; padding: 12px 16px; background: var(--surface-1); border: 1px solid var(--rule); border-radius: var(--radius-md); }
+  .sg-memo-card.is-known { border-color: color-mix(in srgb, var(--correct) 45%, var(--rule)); }
+  .sg-memo-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); }
+  .sg-memo-title { font: 650 15px/20px var(--font-sans); }
+  .sg-memo-badge { flex: none; font: 700 12px/16px var(--font-sans); color: var(--correct); }
+  .sg-memo-body { overflow-x: auto; }
+  .sg-memo-body .rz-tex-block { margin: 4px 0; }
+  .sg-memo-body.is-hidden { display: none; }
+  .sg-memo-note { margin: 0; font: 400 14px/21px var(--font-serif); color: var(--ink-muted); }
+  .sg-memo-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+  @media (max-width: 600px) {
+    .sg-prep { padding-top: var(--space-6); }
+    .sg-prep-day { padding: var(--space-3) var(--space-4); }
+    .sg-memo-bar { position: static; padding: 10px 12px; }
+  }
+  @media print {
+    @page { size: A4; margin: 12mm; }
+    body { background: #fff; }
+    .sg-page { max-width: none; padding: 0; }
+    .sg-no-print { display: none !important; }
+    .sg-prep { padding: 0; gap: 8px; max-width: none; }
+    .sg-prep-head h1 { font-size: 20px; }
+    .sg-prep-head .sg-lead, .sg-prep-stats { display: none; }
+    .sg-memo-body.is-hidden { display: block; }
+    .sg-memo { gap: 8px; }
+    .sg-memo-grid { display: block; }
+    .sg-memo-body .katex { font-size: 1em; }
+    .sg-memo-card { break-inside: avoid; margin-bottom: 6px; padding: 6px 8px; border-color: #ccc; }
+    .sg-memo-badge { display: none; }
+  }
+</style>

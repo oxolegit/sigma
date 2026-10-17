@@ -108,4 +108,31 @@ const formulas = defineCollection({
   }),
 });
 
-export const collections = { courses, lessons, exams, formulas };
+/**
+ * Подготовка к самостоятельной — YAML: src/content/preps/<курс>/sr<номер>.yaml, страница /<курс>/prep/<номер>/.
+ * План по дням (шаги ссылаются на уроки по номеру или на саму работу) и формулы, которые на работе не дадут.
+ */
+const preps = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/preps' }),
+  schema: z.object({
+    /** Номер самостоятельной, к которой готовит. */
+    work: z.number().int().positive(),
+    title: z.string(),
+    lead: z.string(),
+    days: z.array(z.object({
+      title: z.string(),
+      minutes: z.number().int().positive(),
+      steps: z.array(z.object({
+        text: z.string(),
+        /** Урок курса по номеру — ссылка строится по оглавлению. */
+        lesson: z.number().int().positive().optional(),
+        /** Ссылка на самостоятельную или шпаргалку курса. */
+        to: z.enum(['sr', 'sheet']).optional(),
+      })).min(1),
+    })).min(1),
+    /** Выучить наизусть — по группам. */
+    memorize: z.array(z.object({ title: z.string(), items: z.array(formula).min(1) })).min(1),
+  }),
+});
+
+export const collections = { courses, lessons, exams, formulas, preps };

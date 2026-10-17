@@ -23,9 +23,18 @@ export interface CourseData {
   exam?: CollectionEntry<'exams'>;
   /** Самостоятельные работы по порядку номеров. */
   works: Work[];
+  /** Подготовка к самостоятельным — по номеру работы. */
+  preps: Prep[];
   labs: number;
 }
 export interface Work { n: number; href: string; entry: CollectionEntry<'exams'> }
+export interface PrepStep { text: string; href?: string }
+export interface Prep {
+  n: number; href: string; title: string; lead: string; work?: Work;
+  days: { title: string; minutes: number; steps: PrepStep[] }[];
+  memorize: { title: string; items: Formula[] }[];
+  minutes: number; formulas: number;
+}
 
 export const lessonSlug = (entry: CollectionEntry<'lessons'>) => entry.id.split('/')[1]!;
 export const lessonHref = (course: string, entry: CollectionEntry<'lessons'>) => `/${course}/${lessonSlug(entry)}/`;
@@ -33,6 +42,7 @@ export const courseHref = (course: string) => `/${course}/`;
 export const examHref = (course: string) => `/${course}/exam/`;
 export const sheetHref = (course: string) => `/${course}/sheet/`;
 export const workHref = (course: string, n: number) => `/${course}/sr/${n}/`;
+export const prepHref = (course: string, n: number) => `/${course}/prep/${n}/`;
 
 /** Исходники компонентов из src/labs: по ним видно, что лаборатория (LabFrame), а что трёхмерная (kind="3D"). */
 const LAB_SOURCES = import.meta.glob('../labs/**/*.tsx', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
@@ -118,10 +128,38 @@ export async function getCourse(id: string): Promise<CourseData> {
       throw new Error(`Урок ${w.id}: номера ${w.data.n} нет в оглавлении курса «${id}»`);
     }
   }
+  // Подготовка: шаги плана ссылаются на уроки по номеру — ненаписанный урок или чужой номер роняют сборку.
+  const preps: Prep[] = (await getCollection('preps'))
+    .filter((p) => p.id.startsWith(`${id}/`))
+    .map((p) => {
+      const work = works.find((w) => w.n === p.data.work);
+      const days = p.data.days.map((d) => ({
+        title: d.title, minutes: d.minutes,
+        steps: d.steps.map((st) => {
+          if (st.lesson) {
+            const l = lessons.find((x) => x.n === st.lesson);
+            if (!l?.href) throw new Error(`Подготовка ${p.id}: урок ${st.lesson} не написан или его нет в оглавлении`);
+            return { text: st.text, href: l.href };
+          }
+          if (st.to === 'sr') {
+            if (!work) throw new Error(`Подготовка ${p.id}: нет самостоятельной ${p.data.work}`);
+            return { text: st.text, href: work.href };
+          }
+          return { text: st.text, href: st.to === 'sheet' ? sheetHref(id) : undefined };
+        }),
+      }));
+      return {
+        n: p.data.work, href: prepHref(id, p.data.work), title: p.data.title, lead: p.data.lead, work, days, memorize: p.data.memorize,
+        minutes: days.reduce((s, d) => s + d.minutes, 0),
+        formulas: p.data.memorize.reduce((s, g) => s + g.items.length, 0),
+      };
+    })
+    .sort((a, b) => a.n - b.n);
+
   const labs = course.data.example
     ? course.data.labs ?? 0
     : written.reduce((sum, w) => sum + lessonStats(w).labs, 0);
-  return { id, course, lessons, chapters, exam, works, labs };
+  return { id, course, lessons, chapters, exam, works, preps, labs };
 }
 
 /** Цифры для главной — считаются по контенту, а не пишутся руками. */

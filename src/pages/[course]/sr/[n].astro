@@ -25,6 +25,7 @@ const total = s.tasks + s.questions;
 const courseTitle = data.course.data.title;
 const covered = data.lessons.filter((l) => e.data.lessons.includes(l.n));
 const others = data.works.filter((w) => w.n !== work.n);
+const prep = data.preps.find((p) => p.n === work.n);
 ---
 <Base title={`Самостоятельная ${work.n} — ${courseTitle} — Sigma`} description={e.data.lead}>
   <div class="sg-page">
@@ -41,6 +42,7 @@ const others = data.works.filter((w) => w.n !== work.n);
             {covered.map((l, i) => <>{i > 0 && ', '}{l.href ? <a href={l.href}>урок {l.n} «{l.title}»</a> : `урок ${l.n} «${l.title}»`}</>)}.
           </p>
         )}
+        {prep && <p class="sg-sr-lessons"><a href={prep.href}>Подготовка к этой работе</a>: план по дням и формулы, которые нужно знать наизусть.</p>}
       </div>
 
       {!s.variant && total > 0 && (
