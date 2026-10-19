@@ -92,6 +92,7 @@ test.describe('без прогресса', () => {
     await expect(page.locator('.sg-hero').getByRole('link', { name: 'Выбрать курс' })).toHaveAttribute('href', '#courses');
     await expect(page.locator('#about').getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', 'https://github.com/oxolegit/sigma');
     await expect(page.locator('.sg-foot').getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', 'https://github.com/oxolegit/sigma');
+    await expect(page.locator('.sg-foot').getByRole('link', { name: /mslv\.space/ })).toHaveAttribute('href', 'https://mslv.space');
     const demo = await hydrated(page.locator('.rz-lab').filter({ hasText: 'Лаборатория 4.3' }));
     await expect(demo.locator('.rz-lab-readout')).toBeVisible();
   });
