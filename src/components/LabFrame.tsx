@@ -19,7 +19,9 @@ export interface LegendItem {
 }
 
 export interface LabFrameProps {
-  n?: string; title: string; kind?: '2D' | '3D';
+  n?: string; title: string;
+  /** Якорь рамки, если на лабораторию ссылаются извне (QR-код в методичке): «lab-chadwick». По умолчанию — lab-<n>. */
+  id?: string; kind?: '2D' | '3D';
   readout?: Readout[]; legend?: LegendItem[]; controls?: ReactNode; actions?: ReactNode; caption?: ReactNode; children: ReactNode;
   /** Вывод из чисел словами: «ƛ ≥ R — нейтрон ведёт себя как волна». Тон — знаком и словом, не только цветом. */
   status?: { tone: 'ok' | 'warn' | 'bad'; text: ReactNode };
@@ -52,10 +54,10 @@ function Swatch({ color, mark = 'line' }: Pick<LegendItem, 'color' | 'mark'>) {
  * Порядок в панели продуман против «прыжков»: числа — сетка ячеек постоянной ширины, вывод словами — после ручек,
  * поэтому смена текста не сдвигает ползунок под пальцем. Легенда и подпись — под сценой, вне панели.
  */
-export function LabFrame({ n, title, kind, readout, legend, controls, actions, caption, children, status, stage = 'figure', table }: LabFrameProps) {
+export function LabFrame({ n, id, title, kind, readout, legend, controls, actions, caption, children, status, stage = 'figure', table }: LabFrameProps) {
   const hasPanel = !!(readout || table || controls || status);
   return (
-    <figure id={n ? `lab-${n}` : undefined} className={cx('rz-lab', kind === '3D' && 'rz-lab-3d', !hasPanel && 'is-bare')}>
+    <figure id={id ?? (n ? `lab-${n}` : undefined)} className={cx('rz-lab', kind === '3D' && 'rz-lab-3d', !hasPanel && 'is-bare')}>
       <figcaption className="rz-lab-head">
         <span className="rz-lab-tag">{'Лаборатория' + (n ? ` ${n}` : '') + (kind ? ` · ${kind}` : '')}</span>
         <span className="rz-lab-title">{title}</span>

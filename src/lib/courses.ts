@@ -52,12 +52,16 @@ const isLab = (path: string) => labSource(path).includes('<LabFrame');
 const isLab3D = (path: string) => isLab(path) && /kind="3D"/.test(labSource(path));
 
 /** Номер и название лабораторий урока — из их исходников (n="1.1", title="…" у LabFrame), для поиска. */
-export function lessonLabs(entry: { body?: string }): { n: string; title: string }[] {
+export function lessonLabs(entry: { body?: string }): { n: string; title: string; id: string }[] {
   const body = entry.body ?? '';
   return [...body.matchAll(/^import\s+\w+\s+from\s+['"]@labs\/([\w/]+)['"]/gm)]
     .map((m) => labSource(m[1]!))
     .filter((src) => src.includes('<LabFrame'))
-    .map((src) => ({ n: /\bn="([\d.]+)"/.exec(src)?.[1] ?? '', title: /\btitle="([^"]+)"/.exec(src)?.[1] ?? '' }))
+    .map((src) => {
+      const n = /\bn="([\d.]+)"/.exec(src)?.[1] ?? '';
+      // Свой якорь (id="lab-…" у LabFrame) — у лабораторий, на которые ссылаются извне.
+      return { n, title: /\btitle="([^"]+)"/.exec(src)?.[1] ?? '', id: /\bid="(lab-[\w-]+)"/.exec(src)?.[1] ?? `lab-${n}` };
+    })
     .filter((l) => l.n && l.title);
 }
 

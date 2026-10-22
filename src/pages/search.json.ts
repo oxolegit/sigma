@@ -15,7 +15,7 @@ export const GET: APIRoute = async () => {
       if (!l.href || !l.entry) continue;
       items.push({ type: 'lesson', title: `${l.n}. ${l.title}`, sub: course, href: l.href, text: [l.ref, l.entry.data.lead, ...l.entry.data.ask].filter(Boolean).join(' ') });
       for (const lab of lessonLabs(l.entry)) {
-        items.push({ type: 'lab', title: `${lab.n}. ${lab.title}`, sub: `${course} · урок ${l.n}`, href: `${l.href}#lab-${lab.n}` });
+        items.push({ type: 'lab', title: `${lab.n}. ${lab.title}`, sub: `${course} · урок ${l.n}`, href: `${l.href}#${lab.id}` });
       }
     }
     for (const l of d.lessons) {
