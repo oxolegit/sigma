@@ -85,8 +85,11 @@ test.describe('лаборатории', () => {
   test('19.3: 57 слоёв без кадмия — критика, с кадмием — нет', async ({ page }) => {
     await page.goto('/npyat/19-cp1/');
     const lab = await hydrated(page.locator('#lab-pile-3d'));
-    await lab.getByRole('slider').fill('57');
-    await expect(lab.locator('.rz-lab-readout')).toContainText('1.0006');
+    // Под нагрузкой первый ввод может прийти раньше, чем React подхватит ползунок, — повторяем до результата.
+    await expect(async () => {
+      await lab.getByRole('slider').fill('57');
+      await expect(lab.locator('.rz-lab-readout')).toContainText('1.0006', { timeout: 1000 });
+    }).toPass();
     await expect(lab.locator('.rz-lab-status')).toContainText('Кладка критична');
     await lab.getByRole('radio', { name: 'вставлены' }).click();
     await expect(lab.locator('.rz-lab-readout')).toContainText('0.9600');
